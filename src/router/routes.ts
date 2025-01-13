@@ -1,5 +1,6 @@
 import type { ComponentType } from "react";
 import HomePage from "@/pages/home";
+import TokenDetailPage from "@/pages/TokenDetailPage";
 
 export interface Route {
   path: string;
@@ -16,6 +17,11 @@ export const routes: Route[] = [
   {
     path: "/home",
     Component: HomePage,
+    exact: true,
+  },
+  {
+    path: "/token/:address", // 使用动态路由参数
+    Component: TokenDetailPage,
     exact: true,
   },
 ];

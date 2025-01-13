@@ -19,6 +19,7 @@ import {
 } from "@/components/ui/pagination";
 import { cn } from "@/lib/utils";
 import { getColorByAgentName } from "@/utils";
+import { useNavigate } from "react-router-dom";
 
 const HomePage = () => {
   const agentList = [
@@ -31,6 +32,7 @@ const HomePage = () => {
       tvl: "$25m",
       holderCount: "123,345",
       volume: "$250.00",
+      address: "xxxxxxx",
     },
     {
       name: "G.A.M.E",
@@ -41,6 +43,7 @@ const HomePage = () => {
       tvl: "$25m",
       holderCount: "123,345",
       volume: "$250.00",
+      address: "xxxxxxx",
     },
     {
       name: "Toshi",
@@ -51,6 +54,7 @@ const HomePage = () => {
       tvl: "$25m",
       holderCount: "123,345",
       volume: "$250.00",
+      address: "xxxxxxx",
     },
     {
       name: "Toshi",
@@ -61,6 +65,7 @@ const HomePage = () => {
       tvl: "$25m",
       holderCount: "123,345",
       volume: "$250.00",
+      address: "xxxxxxx",
     },
     {
       name: "G.A.M.E",
@@ -71,6 +76,7 @@ const HomePage = () => {
       tvl: "$25m",
       holderCount: "123,345",
       volume: "$250.00",
+      address: "xxxxxxx",
     },
     {
       name: "Toshi",
@@ -81,6 +87,7 @@ const HomePage = () => {
       tvl: "$25m",
       holderCount: "123,345",
       volume: "$250.00",
+      address: "xxxxxxx",
     },
     {
       name: "Toshi",
@@ -91,6 +98,7 @@ const HomePage = () => {
       tvl: "$25m",
       holderCount: "123,345",
       volume: "$250.00",
+      address: "xxxxxxx",
     },
     {
       name: "G.A.M.E",
@@ -101,6 +109,7 @@ const HomePage = () => {
       tvl: "$25m",
       holderCount: "123,345",
       volume: "$250.00",
+      address: "xxxxxxx",
     },
     {
       name: "Toshi",
@@ -111,6 +120,7 @@ const HomePage = () => {
       tvl: "$25m",
       holderCount: "123,345",
       volume: "$250.00",
+      address: "xxxxxxx",
     },
     {
       name: "Toshi",
@@ -121,8 +131,10 @@ const HomePage = () => {
       tvl: "$25m",
       holderCount: "123,345",
       volume: "$250.00",
+      address: "xxxxxxx",
     },
   ];
+  const navigate = useNavigate();
   return (
     <Container>
       <div className="flex items-center justify-between">
@@ -156,7 +168,10 @@ const HomePage = () => {
           <TableBody>
             {agentList.map((agent) => (
               <TableRow>
-                <TableCell className="flex items-center gap-3">
+                <TableCell
+                  onClick={() => navigate(`/token/${agent.address}`)}
+                  className="flex items-center gap-3"
+                >
                   <img src={agent.icon} alt="icon" className="w-8 h-8" />
                   <div className="flex flex-col gap-1">
                     <div className="text-14 font-SwitzerMedium">

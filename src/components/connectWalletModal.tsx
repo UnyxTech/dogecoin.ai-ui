@@ -31,6 +31,7 @@ export const ConnectWalletModal = ({
   useEffect(() => {
     getInstalledWallet();
   }, []);
+
   const connectWallet = async (wallet: WalletItem) => {
     try {
       const walletInstalled = installWallets.find(
