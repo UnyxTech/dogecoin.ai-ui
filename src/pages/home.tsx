@@ -139,7 +139,7 @@ const HomePage = () => {
             alt=""
           />
         </div>
-        <Button>Create new AI agent</Button>
+        <Button variant="yellow">Create new AI agent</Button>
       </div>
       <div className="mt-5 w-full h-[calc(100vh-260px)]">
         <Table>

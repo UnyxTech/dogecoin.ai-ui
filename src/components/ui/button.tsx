@@ -9,8 +9,12 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        default:
-          "bg-yellow text-first hover:bg-yellow/80 rounded-full border-none",
+        default: "text-first",
+        yellow:
+          "rounded-[2px] bg-linear-yellow hover:bg-hover-yellow text-first border-[1.5px] border-first hover:border-first border-b-[3.5px]",
+        green:
+          "rounded-[2px] bg-linear-green hover:bg-hover-green text-first border-[1.5px] border-first hover:border-first border-b-[3.5px]",
+        pink: "rounded-[2px] bg-linear-pink hover:bg-hover-pink text-first border-[1.5px] border-first hover:border-first border-b-[3.5px]",
         destructive:
           "bg-destructive text-destructive-foreground hover:bg-destructive/90",
         outline:

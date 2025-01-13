@@ -27,9 +27,11 @@ const Navbar = () => {
               className="w-[32px] h-[32px]"
               alt="logo"
             />
-            <div className="text-black font-SwitzerBold text-20">
-              DogeCoin.Ai
-            </div>
+            <img
+              src="/images/logo_title.svg"
+              className="w-[143px] h-[34px]"
+              alt="logo"
+            />
           </div>
           <div className="relative">
             <Input className="w-[560px] pl-10" placeholder="Search Agent/CA" />
