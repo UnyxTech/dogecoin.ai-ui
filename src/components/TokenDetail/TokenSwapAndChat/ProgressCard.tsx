@@ -1,5 +1,3 @@
-"use client";
-
 import * as React from "react";
 import { CustomProgress } from "@/components/ui/custom/CustomProgress";
 
