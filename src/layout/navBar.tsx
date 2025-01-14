@@ -1,26 +1,32 @@
 import { useState } from "react";
 import { copyToClipboard, formatAddress } from "@/utils";
 import { useAuth } from "@/hooks/useAuth";
-import { ToastContainer, toast } from "react-toastify";
 import { ConnectWalletModal } from "@/components/connectWalletModal";
 import { Input } from "@/components/ui/input";
+import { useNavigate } from "react-router-dom";
+import { Search } from "lucide-react";
+import { toast } from "@/hooks/use-toast";
 
 const Navbar = () => {
   const { evmAddress } = useAuth();
-
+  const navigate = useNavigate();
   const [showModal, setShowModal] = useState(false);
-
   const handleCopy = (text: string | number) => {
     copyToClipboard(text).then(() => {
-      toast.success("Copied to clipboard");
+      toast({
+        title: "Copied!",
+        variant: "default",
+      });
     });
   };
 
   return (
     <>
       <header className="bg-yellow w-full h-16 flex justify-between items-center">
-        <ToastContainer position="top-center" autoClose={1500} />
-        <div className="w-full h-full flex justify-between items-center py-4 px-6">
+        <div
+          onClick={() => navigate("/home")}
+          className="w-full h-full flex justify-between items-center py-4 px-6 cursor-pointer"
+        >
           <div className="flex items-center gap-3">
             <img
               src="/images/logo.svg"
@@ -35,11 +41,7 @@ const Navbar = () => {
           </div>
           <div className="relative">
             <Input className="w-[560px] pl-10" placeholder="Search Agent/CA" />
-            <img
-              src="/images/icon_search.svg"
-              className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5"
-              alt="search"
-            />
+            <Search className="absolute text-second left-3 top-1/2 transform -translate-y-1/2 w-5 h-5" />
           </div>
           <div className="flex gap-6">
             {evmAddress && (

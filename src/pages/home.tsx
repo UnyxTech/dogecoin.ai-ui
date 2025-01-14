@@ -19,8 +19,16 @@ import {
 } from "@/components/ui/pagination";
 import { cn } from "@/lib/utils";
 import { getColorByAgentName } from "@/utils";
+import { useAuth } from "@/hooks/useAuth";
+import { useState } from "react";
+import { ConnectWalletModal } from "@/components/connectWalletModal";
+import { useNavigate } from "react-router-dom";
+import { ChevronDown, Users } from "lucide-react";
 
 const HomePage = () => {
+  const { evmAddress } = useAuth();
+  const navigate = useNavigate();
+  const [showConnectWallet, setShowConnectWallet] = useState(false);
   const agentList = [
     {
       name: "Aixbt",
@@ -125,21 +133,25 @@ const HomePage = () => {
   ];
   return (
     <Container>
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-1 py-2 px-6 rounded-full bg-gray">
+      <div className="flex items-center justify-between pt-4">
+        <div className="flex items-center gap-3 py-[10px] px-[14px] rounded-[4px] bg-white">
+          <Users size={16} />
           <span className="text-14 font-SwitzerMedium">All sentient</span>
-          <img
-            className="w-[16px] h-[16px]"
-            src="/images/icon_people.svg"
-            alt=""
-          />
-          <img
-            className="w-[16px] h-[16px]"
-            src="/images/arrow_down.svg"
-            alt=""
-          />
+          <ChevronDown size={16} />
         </div>
-        <Button variant="yellow">Create new AI agent</Button>
+        <Button
+          variant="yellow"
+          onClick={() => {
+            if (!evmAddress) {
+              setShowConnectWallet(true);
+            } else {
+              navigate("/create");
+            }
+          }}
+        >
+          <img className="w-7 h-7" src="/images/logo2.svg" alt="" />
+          Create new AI agent
+        </Button>
       </div>
       <div className="mt-5 w-full h-[calc(100vh-260px)]">
         <Table>
@@ -175,11 +187,7 @@ const HomePage = () => {
                           )}
                         >
                           <span className="text-10">{agent.type}</span>
-                          <img
-                            className="w-[10px] h-[10px]"
-                            src="/images/white_people.svg"
-                            alt=""
-                          />
+                          <Users size={10} color="white" />
                         </div>
                         <span>$GAME</span>
                       </div>
@@ -226,6 +234,13 @@ const HomePage = () => {
           </PaginationContent>
         </Pagination>
       </div>
+      {showConnectWallet && (
+        <ConnectWalletModal
+          open={showConnectWallet}
+          nestStep={() => navigate("/create")}
+          onClose={() => setShowConnectWallet(false)}
+        />
+      )}
     </Container>
   );
 };

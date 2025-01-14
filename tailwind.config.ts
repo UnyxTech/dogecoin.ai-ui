@@ -26,7 +26,10 @@ const config: Config = {
       white: "#ffffff",
       black: "#000000",
       first: "#12122A",
+      second: "#8989AB",
       gray: "#F6F6F6",
+      border: "#EBEBF4",
+      red: "#EB4B6D",
     },
     container: {
       center: true,
@@ -38,10 +41,12 @@ const config: Config = {
     extend: {
       fontSize: {
         "10": "10px",
+        "12": "12px",
         "14": "14px",
         "16": "16px",
         "20": "20px",
         "22": "22px",
+        "24": "24px",
         "25": "25px",
         "50": "50px",
         "60": "60px",
@@ -49,7 +54,7 @@ const config: Config = {
       },
       boxShadow: {
         custom:
-          "0px 0px 3px 0px rgba(0, 0, 0, 0.05), 0px 12px 56px 0px rgba(0, 0, 0, 0.08)",
+          "0px 0px 0.225px 0.225px rgba(0, 0, 0, 0.07), 0px 0px 0.225px 0.675px rgba(0, 0, 0, 0.05), 0px 2.698px 2.923px -1.349px rgba(0, 0, 0, 0.25), 0px 0.899px 3.598px 0.899px rgba(0, 0, 0, 0.12), 0px 0px 0px 4px #F2F2F2",
       },
       colors: {
         customGrey: "#7646E6",
@@ -101,6 +106,8 @@ const config: Config = {
           "linear-gradient(194deg, #68F5A7 -9.05%, #04C159 51.88%)",
         "linear-pink":
           "linear-gradient(194deg, #FF8FA6 -9.05%, #EB4B6D 51.88%)",
+        "linear-white": "linear-gradient(180deg, #F4F4F4 0%, #FEFEFE 100%)",
+        "linear-gray": "linear-gradient(180deg, #F5F5FA 0%, #DADADE 100%)",
         "hover-yellow":
           "linear-gradient(7deg, rgba(252, 212, 54, 0.50) 22.18%, rgba(255, 228, 120, 0.50) 70.41%)",
         "hover-green":

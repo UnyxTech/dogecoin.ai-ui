@@ -1,5 +1,4 @@
-import type { ComponentType } from "react";
-import HomePage from "@/pages/home";
+import { lazy, type ComponentType } from "react";
 
 export interface Route {
   path: string;
@@ -7,6 +6,9 @@ export interface Route {
   exact?: boolean;
   children?: Route[];
 }
+
+const HomePage = lazy(() => import("@/pages/home"));
+const CreatePage = lazy(() => import("@/pages/create"));
 
 export const routes: Route[] = [
   {
@@ -16,6 +18,11 @@ export const routes: Route[] = [
   {
     path: "/home",
     Component: HomePage,
+    exact: true,
+  },
+  {
+    path: "/create",
+    Component: CreatePage,
     exact: true,
   },
 ];

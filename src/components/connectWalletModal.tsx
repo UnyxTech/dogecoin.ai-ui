@@ -3,22 +3,18 @@ import { evmWalletList } from "@/lib/wallet/walletList";
 import { WalletItem } from "@/types/wallet";
 import { useEffect } from "react";
 import { createWalletClient, custom } from "viem";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from "./ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "./ui/dialog";
 
 interface ConnectWalletModalProps {
   open: boolean;
   onClose: () => void;
+  nestStep?: () => void;
 }
 
 export const ConnectWalletModal = ({
   open,
   onClose,
+  nestStep,
 }: ConnectWalletModalProps) => {
   const wallets = evmWalletList;
   const {
@@ -53,6 +49,7 @@ export const ConnectWalletModal = ({
       // const evmWallet = createWalletClient({
       //   transport: custom(provider),
       // });
+      nestStep && nestStep();
       onClose();
     } catch (error) {
       console.error("Error connecting to wallet:", error);
