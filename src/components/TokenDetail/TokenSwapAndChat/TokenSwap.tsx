@@ -165,9 +165,7 @@ const TokenSwap = () => {
       ) : (
         <Button
           onClick={() => setShowModal(true)}
-          className={`trade-button
-          bg-[linear-gradient(to_bottom,#626286_-9.05%,#34344B_51.88%)]
-          transition-all duration-700`}
+          className={`w-full rounded-sm py-6 bg-[linear-gradient(to_bottom,#626286_-9.05%,#34344B_51.88%)]`}
         >
           <img src="/public/images/wallet.svg" alt="" />
           <span className="text-white [-webkit-text-stroke:1.5px_#12122A] [text-stroke:1.5px_#12122A] font-WendyOne text-xl leading-[140%] tracking-wide capitalize">
