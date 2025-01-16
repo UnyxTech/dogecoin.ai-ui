@@ -2,8 +2,9 @@ import { useAuth } from "@/hooks/useAuth";
 import { evmWalletList } from "@/lib/wallet/walletList";
 import { WalletItem } from "@/types/wallet";
 import { useEffect } from "react";
-import { createWalletClient, custom } from "viem";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "./ui/dialog";
+import useWalletService from "@/hooks/useWalletService";
+import { defaultChain } from "@/constant";
 
 interface ConnectWalletModalProps {
   open: boolean;
@@ -24,6 +25,7 @@ export const ConnectWalletModal = ({
     updateCurrentEvmWallet,
     currentEvmWallet,
   } = useAuth();
+  const { switchChain } = useWalletService();
   useEffect(() => {
     getInstalledWallet();
   }, []);
@@ -42,6 +44,7 @@ export const ConnectWalletModal = ({
       const accounts = await provider.request({
         method: "eth_requestAccounts",
       });
+      switchChain(defaultChain);
       if (!!accounts) {
         updateEvmAddress(accounts[0]);
         updateCurrentEvmWallet(wallet.rdns);

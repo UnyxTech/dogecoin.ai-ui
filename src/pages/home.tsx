@@ -166,8 +166,11 @@ const HomePage = () => {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {agentList.map((agent) => (
-              <TableRow className="last:mb-0 border-none">
+            {agentList.map((agent, index) => (
+              <TableRow
+                key={`agent_${index}`}
+                className="last:mb-0 border-none"
+              >
                 <TableCell colSpan={6} className="px-0 pt-3 pb-0">
                   <div className="bg-white rounded-[4px] flex items-center gap-4">
                     <div className="flex items-center gap-3 w-[30%] p-3">

@@ -1,24 +1,15 @@
 import { useState } from "react";
-import { copyToClipboard, formatAddress } from "@/utils";
+import { formatAddress } from "@/utils";
 import { useAuth } from "@/hooks/useAuth";
 import { ConnectWalletModal } from "@/components/connectWalletModal";
 import { Input } from "@/components/ui/input";
 import { useNavigate } from "react-router-dom";
 import { Search } from "lucide-react";
-import { toast } from "@/hooks/use-toast";
 
 const Navbar = () => {
   const { evmAddress } = useAuth();
   const navigate = useNavigate();
   const [showModal, setShowModal] = useState(false);
-  const handleCopy = (text: string | number) => {
-    copyToClipboard(text).then(() => {
-      toast({
-        title: "Copied!",
-        variant: "default",
-      });
-    });
-  };
 
   return (
     <>

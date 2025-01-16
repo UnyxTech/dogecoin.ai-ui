@@ -152,7 +152,7 @@ const CreatePage = () => {
                 <FormField
                   control={form.control}
                   name="file"
-                  render={({ field }) => (
+                  render={() => (
                     <FormItem>
                       <FormControl>
                         <div>
@@ -252,7 +252,7 @@ const CreatePage = () => {
                 <FormField
                   control={form.control}
                   name="agentType"
-                  render={({ field }) => (
+                  render={() => (
                     <FormItem>
                       <FormLabel>
                         Agent type<span className="text-red">*</span>

@@ -4,7 +4,6 @@ import { Route, Routes } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { type Route as RouteConfig, routes } from "./router/routes";
 import { MainContentLayout } from "./layout/mainContentLayout";
-import "react-toastify/dist/ReactToastify.css";
 import { Toaster } from "./components/ui/toaster";
 
 function App() {
