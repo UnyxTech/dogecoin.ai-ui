@@ -1,8 +1,5 @@
 export enum agentType {
-  None = "None",
   Productivity = "Productivity",
-  Entertainment = "Entertainment",
-  Creative = "Creative",
+  Meme = "Meme",
   OnChain = "On-chain",
-  Infomation = "Infomation",
 }
