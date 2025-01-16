@@ -17,13 +17,15 @@ export default function useWalletService() {
       switchChain(defaultChain);
     }
   }, [currentEvmWallet]);
-  const getWalletClient = () => {
+  const getWalletClient = (chain: Chain) => {
+    if (!currentEvmWallet || !installWallets) return null;
     const currentWallet = installWallets?.find(
       (item: any) => item.info.rdns === currentEvmWallet
     );
     console.log(currentWallet?.provider);
     const client = createWalletClient({
       transport: custom(currentWallet?.provider),
+      chain: chain,
     });
     if (!client) {
       throw new Error("walletClient not found");
@@ -41,15 +43,15 @@ export default function useWalletService() {
     return publicClient;
   };
   const switchChain = async (chain: any) => {
-    const walletClient = getWalletClient();
-    const chainId = await walletClient.getChainId();
+    const walletClient = getWalletClient(defaultChain);
+    const chainId = await walletClient?.getChainId();
     if (chainId !== chain.id) {
       try {
         await walletClient?.switchChain({ id: chain.id });
       } catch (e: any) {
         if (e?.code === 4902) {
-          await walletClient.addChain({ chain: chain });
-          await walletClient.switchChain({ id: chain.id });
+          await walletClient?.addChain({ chain: chain });
+          await walletClient?.switchChain({ id: chain.id });
         }
       }
     }

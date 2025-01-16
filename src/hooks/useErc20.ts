@@ -2,7 +2,6 @@ import { Address, erc20Abi, getContract } from "viem";
 import useWalletService from "@/hooks/useWalletService";
 import { defaultChain } from "@/constant";
 import { useAuth } from "./useAuth";
-import { useQuery } from "@tanstack/react-query";
 
 export function useErc20() {
   const walletService = useWalletService();
@@ -17,7 +16,8 @@ export function useErc20() {
       contractAddress: Address;
     }) => {
       const publicClient = walletService.getPublicClient(defaultChain);
-      const walletClient = walletService.getWalletClient();
+      const walletClient = walletService.getWalletClient(defaultChain);
+      if (!walletClient) throw new Error("walletClient not found");
       const contract = getContract({
         address: tokenAddress,
         abi: erc20Abi,
@@ -46,27 +46,3 @@ export function useErc20() {
     },
   };
 }
-// TODO: multiCall
-export const useErc20Balance = (tokenAddress: Address) => {
-  const walletService = useWalletService();
-  const { evmAddress } = useAuth();
-  return useQuery({
-    queryKey: ["tokenBalance", tokenAddress, evmAddress],
-    queryFn: async () => {
-      const publicClient = walletService.getPublicClient(defaultChain);
-      const contract = getContract({
-        address: tokenAddress,
-        abi: erc20Abi,
-        client: publicClient,
-      });
-      if (!evmAddress) {
-        throw new Error("No address provided");
-      }
-
-      const balance = contract.read.balanceOf([evmAddress as Address]);
-
-      return balance;
-    },
-    enabled: !!tokenAddress && !!evmAddress,
-  });
-};
