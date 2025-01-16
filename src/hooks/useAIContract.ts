@@ -2,23 +2,18 @@ import { Address, getContract, parseEventLogs } from "viem";
 import { dogeCoinAbi } from "@/constant/dogeCoinAbi";
 import useWalletService from "@/hooks/useWalletService";
 import { useQuery } from "@tanstack/react-query";
-import { CONTRACT_AI_ADDRESS, BASE_TOKEN, defaultChain } from "@/constant";
-import { useErc20 } from "./useErc20";
+import { CONTRACT_AI_ADDRESS, defaultChain } from "@/constant";
 import { useAuth } from "./useAuth";
 
 export type CreateAgentParams = {
   name: string;
   symbol: string;
-  description: string;
-  image: string;
-  links: string[];
   buyAmount: bigint;
-  chatId: string;
+  agentId: string;
 };
 
 export function useAIContract() {
   const walletService = useWalletService();
-  const erc20Service = useErc20();
   const { evmAddress } = useAuth();
 
   const getViemContract = () => {
@@ -34,31 +29,27 @@ export function useAIContract() {
     createAgent: async ({
       name,
       symbol,
-      description,
-      image,
-      links,
       buyAmount,
-      chatId,
+      agentId,
     }: CreateAgentParams) => {
       await walletService.switchChain(defaultChain);
-      const walletClient = walletService.getWalletClient();
+      const walletClient = walletService.getWalletClient(defaultChain);
       const publicClient = walletService.getPublicClient(defaultChain);
+      if (!walletClient) throw new Error("walletClient not found");
 
-      await erc20Service.approve({
-        tokenAddress: BASE_TOKEN.address,
-        contractAddress: CONTRACT_AI_ADDRESS,
-      });
-
+      // await erc20Service.approve({
+      //   tokenAddress: BASE_TOKEN.address,
+      //   contractAddress: CONTRACT_AI_ADDRESS,
+      // });
       const { request } = await publicClient.simulateContract({
-        value: 0n,
+        value: buyAmount,
         account: evmAddress! as Address,
         address: CONTRACT_AI_ADDRESS,
         abi: dogeCoinAbi,
         functionName: "launchAIAgent",
-        args: [name, symbol, description, image, chatId, links, buyAmount],
+        args: [name, symbol, agentId, buyAmount],
       });
 
-      console.log("request", request);
       const hash = await walletClient.writeContract(request);
       const transaction = await publicClient.waitForTransactionReceipt({
         hash: hash,
@@ -76,8 +67,17 @@ export function useAIContract() {
         hash: hash,
       };
     },
-    getCreateFee: async () => {
-      return (await getViemContract().read._fee()) as bigint;
+    getBuyAmountOut: async ({
+      token,
+      amountIn,
+    }: {
+      token: Address;
+      amountIn: bigint;
+    }) => {
+      return (await getViemContract().read.getBuyAmountOut([
+        token,
+        amountIn,
+      ])) as bigint;
     },
     getInitLiquidity: async () => {
       return (await getViemContract().read._initialVirtualliquidity()) as bigint;
@@ -87,12 +87,13 @@ export function useAIContract() {
     },
     buy: async ({ token, amount }: { token: Address; amount: bigint }) => {
       await walletService.switchChain(defaultChain);
-      const walletClient = walletService.getWalletClient();
+      const walletClient = walletService.getWalletClient(defaultChain);
       const publicClient = walletService.getPublicClient(defaultChain);
-      await erc20Service.approve({
-        tokenAddress: BASE_TOKEN.address,
-        contractAddress: CONTRACT_AI_ADDRESS,
-      });
+      if (!walletClient) throw new Error("walletClient not found");
+      // await erc20Service.approve({
+      //   tokenAddress: BASE_TOKEN.address,
+      //   contractAddress: CONTRACT_AI_ADDRESS,
+      // });
       const { request } = await publicClient.simulateContract({
         value: 0n,
         account: evmAddress! as Address,
@@ -112,26 +113,15 @@ export function useAIContract() {
       }
       return hash;
     },
-    getBuyAmountOut: async ({
-      token,
-      amountIn,
-    }: {
-      token: Address;
-      amountIn: bigint;
-    }) => {
-      return (await getViemContract().read.getBuyAmountOut([
-        token,
-        amountIn,
-      ])) as bigint;
-    },
     sell: async ({ token, amount }: { token: Address; amount: bigint }) => {
       await walletService.switchChain(defaultChain);
-      const walletClient = walletService.getWalletClient();
+      const walletClient = walletService.getWalletClient(defaultChain);
       const publicClient = walletService.getPublicClient(defaultChain);
-      await erc20Service.approve({
-        tokenAddress: token,
-        contractAddress: CONTRACT_AI_ADDRESS,
-      });
+      if (!walletClient) throw new Error("walletClient not found");
+      // await erc20Service.approve({
+      //   tokenAddress: token,
+      //   contractAddress: CONTRACT_AI_ADDRESS,
+      // });
       const { request } = await publicClient.simulateContract({
         value: 0n,
         account: evmAddress! as Address,
@@ -167,20 +157,6 @@ export function useAIContract() {
 }
 
 export const AI_MAX_SUPPLY = 1_000_000_000n * 10n ** 18n;
-
-export function useAISettingQuery() {
-  const aiContract = useAIContract();
-  return useQuery({
-    queryKey: ["hubSetting"],
-    queryFn: async () => {
-      const [createFee, initLiquidity] = await Promise.all([
-        aiContract.getCreateFee(),
-        aiContract.getInitLiquidity(),
-      ]);
-      return { createFee, initLiquidity, maxSupply: AI_MAX_SUPPLY };
-    },
-  });
-}
 
 export function useGetAmountOutQuery({
   token,

@@ -20,7 +20,7 @@ import {
   SelectItem,
   SelectTrigger,
 } from "@/components/ui/select";
-import { agentType } from "@/types";
+import { AgentInfo, AgentType } from "@/types";
 
 const formSchema = z.object({
   file: z
@@ -54,20 +54,22 @@ const formSchema = z.object({
 });
 const agentTypes = [
   {
-    value: agentType.Productivity,
+    value: AgentType.Productivity,
     icon: "/images/icon_productity.svg",
   },
   {
-    value: agentType.Meme,
+    value: AgentType.Meme,
     icon: "/images/icon_meme.svg",
   },
   {
-    value: agentType.OnChain,
+    value: AgentType.OnChain,
     icon: "/images/icon_onchain.svg",
   },
 ];
 const CreatePage = () => {
   const [image, setImage] = useState<string>("");
+  const [agentId, setAgentId] = useState<string>("");
+
   const [showCreateAgentModal, setShowCreateAgentModal] =
     useState<boolean>(false);
   const form = useForm<z.infer<typeof formSchema>>({
@@ -95,6 +97,8 @@ const CreatePage = () => {
       agentType: values.agentType,
     };
     console.log(params);
+    setAgentId("agent_114");
+    setShowCreateAgentModal(true);
   }
 
   const handleFileChange = (e: any) => {
@@ -367,7 +371,7 @@ const CreatePage = () => {
                 className="w-full gap-2"
                 size="lg"
                 disabled={!form.formState.isValid}
-                onClick={() => setShowCreateAgentModal(true)}
+                // onClick={() => setShowCreateAgentModal(true)}
               >
                 <span>🚀</span> Continue
               </Button>
@@ -378,7 +382,13 @@ const CreatePage = () => {
       {showCreateAgentModal && (
         <CreateAgentModal
           open={showCreateAgentModal}
-          ticker={form.getValues().ticker}
+          agentInfo={
+            {
+              agentName: form.getValues().agentName,
+              symbol: form.getValues().ticker,
+              agentId: agentId,
+            } as AgentInfo
+          }
           onClose={() => setShowCreateAgentModal(false)}
         />
       )}
