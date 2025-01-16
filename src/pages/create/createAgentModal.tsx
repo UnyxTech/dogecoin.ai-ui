@@ -75,7 +75,9 @@ export const CreateAgentModal = ({
       token: BASE_TOKEN.address,
       amountIn: buyAmount,
     });
-    setReceiveAmount(formatUnits(receive[2], BASE_TOKEN.decimals));
+    setReceiveAmount(
+      new BigNumber(formatUnits(receive[0], BASE_TOKEN.decimals)).toFixed(2)
+    );
   }, 300);
 
   return (
