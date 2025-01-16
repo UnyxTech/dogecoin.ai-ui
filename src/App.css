@@ -1,7 +1,7 @@
 #root {
   width: 100%;
-  background: #fff;
-  height: 100vh;
+  min-height: 100vh;
+  background-color: #f5f5fa;
 }
 
 @tailwind base;
@@ -11,25 +11,25 @@
 @font-face {
   font-family: "Switzer";
   font-style: normal;
-  src: url("/fonts/Inter/static/Inter-Regular.ttf");
+  src: url("/fonts/Switzer/Switzer-Regular.ttf");
 }
 
 @font-face {
   font-family: "SwitzerLight";
   font-style: normal;
-  src: url("/fonts/Inter/static/Inter-Light.ttf");
+  src: url("/fonts/Switzer/Switzer-Light.ttf");
 }
 
 @font-face {
   font-family: "SwitzerMedium";
   font-style: normal;
-  src: url("/fonts/Inter/static/Inter-Medium.ttf");
+  src: url("/fonts/Switzer/Switzer-Medium.ttf");
 }
 
 @font-face {
   font-family: "SwitzerBold";
   font-style: normal;
-  src: url("/fonts/Inter/static/Inter-Bold.ttf");
+  src: url("/fonts/Switzer/Switzer-Bold.ttf");
 }
 @font-face {
   font-family: "WendyOne";

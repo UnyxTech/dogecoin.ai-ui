@@ -1,6 +1,4 @@
-import type { ComponentType } from "react";
-import HomePage from "@/pages/home";
-import TokenDetailPage from "@/pages/TokenDetailPage";
+import { lazy, type ComponentType } from "react";
 
 export interface Route {
   path: string;
@@ -8,6 +6,10 @@ export interface Route {
   exact?: boolean;
   children?: Route[];
 }
+
+const HomePage = lazy(() => import("@/pages/home"));
+const CreatePage = lazy(() => import("@/pages/create"));
+const TokenDetailPage = lazy(() => import("@/pages/TokenDetailPage"));
 
 export const routes: Route[] = [
   {
@@ -20,8 +22,13 @@ export const routes: Route[] = [
     exact: true,
   },
   {
-    path: "/token/:address", // 使用动态路由参数
+    path: "/token/:address",
     Component: TokenDetailPage,
+    exact: true,
+  },
+  {
+    path: "/create",
+    Component: CreatePage,
     exact: true,
   },
 ];

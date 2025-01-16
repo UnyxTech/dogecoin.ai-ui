@@ -2,23 +2,20 @@ import { useAuth } from "@/hooks/useAuth";
 import { evmWalletList } from "@/lib/wallet/walletList";
 import { WalletItem } from "@/types/wallet";
 import { useEffect } from "react";
-import { createWalletClient, custom } from "viem";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from "./ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "./ui/dialog";
+import useWalletService from "@/hooks/useWalletService";
+import { defaultChain } from "@/constant";
 
 interface ConnectWalletModalProps {
   open: boolean;
   onClose: () => void;
+  nestStep?: () => void;
 }
 
 export const ConnectWalletModal = ({
   open,
   onClose,
+  nestStep,
 }: ConnectWalletModalProps) => {
   const wallets = evmWalletList;
   const {
@@ -28,6 +25,7 @@ export const ConnectWalletModal = ({
     updateCurrentEvmWallet,
     currentEvmWallet,
   } = useAuth();
+  const { switchChain } = useWalletService();
   useEffect(() => {
     getInstalledWallet();
   }, []);
@@ -47,6 +45,7 @@ export const ConnectWalletModal = ({
       const accounts = await provider.request({
         method: "eth_requestAccounts",
       });
+      switchChain(defaultChain);
       if (!!accounts) {
         updateEvmAddress(accounts[0]);
         updateCurrentEvmWallet(wallet.rdns);
@@ -54,6 +53,7 @@ export const ConnectWalletModal = ({
       // const evmWallet = createWalletClient({
       //   transport: custom(provider),
       // });
+      nestStep && nestStep();
       onClose();
     } catch (error) {
       console.error("Error connecting to wallet:", error);

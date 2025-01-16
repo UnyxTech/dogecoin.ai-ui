@@ -5,12 +5,18 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-14 font-SwitzerMedium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
+  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-14 font-SwitzerMedium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:bg-linear-gray disabled:text-second disabled:border-[1.5px] disabled:border-first disabled:border-b-[3.5px] [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
   {
     variants: {
       variant: {
-        default:
-          "bg-yellow text-first hover:bg-yellow/80 rounded-full border-none",
+        default: "text-first",
+        yellow:
+          "rounded-[2px] bg-linear-yellow hover:bg-hover-yellow text-first border-[1.5px] border-first hover:border-first border-b-[3.5px]",
+        green:
+          "rounded-[2px] bg-linear-green hover:bg-hover-green text-white border-[1.5px] border-first hover:border-first border-b-[3.5px]",
+        pink: "rounded-[2px] bg-linear-pink hover:bg-hover-pink text-white border-[1.5px] border-first hover:border-first border-b-[3.5px]",
+        white:
+          "rounded-[4px] bg-linear-white shadow-custom hover:opacity-50 text-first border-[1px] border-border",
         destructive:
           "bg-destructive text-destructive-foreground hover:bg-destructive/90",
         outline:
