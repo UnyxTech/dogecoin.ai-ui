@@ -21,6 +21,7 @@ export default function useWalletService() {
     const currentWallet = installWallets?.find(
       (item: any) => item.info.rdns === currentEvmWallet
     );
+    console.log(currentWallet?.provider);
     const client = createWalletClient({
       transport: custom(currentWallet?.provider),
     });

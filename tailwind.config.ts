@@ -62,9 +62,6 @@ const config: Config = {
       boxShadow: {
         custom:
           "0px 0px 3px 0px rgba(0, 0, 0, 0.05), 0px 12px 56px 0px rgba(0, 0, 0, 0.08)",
-        tokenTrade:
-          "-1px 0px 0.6px 0px rgba(0, 0, 0, 0.25) inset, 1px 1px 1px 0px #FFF inset",
-          "0px 0px 0.225px 0.225px rgba(0, 0, 0, 0.07), 0px 0px 0.225px 0.675px rgba(0, 0, 0, 0.05), 0px 2.698px 2.923px -1.349px rgba(0, 0, 0, 0.25), 0px 0.899px 3.598px 0.899px rgba(0, 0, 0, 0.12), 0px 0px 0px 4px #F2F2F2",
       },
       colors: {
         customGrey: "#7646E6",

@@ -1,5 +1,5 @@
 import { CircleAlert } from "lucide-react";
-import React, { useState } from "react";
+import { useMemo, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { HoverCard, HoverCardTrigger } from "@/components/ui/hover-card";
 import { WrapperHoverCardConnect } from "@/components/ui/custom/WrapperHoverCardConnect";
@@ -7,93 +7,79 @@ import { ConnectWalletModal } from "@/components/connectWalletModal";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { ProgressCard } from "./ProgressCard";
+import TradeTypeButton from "./TradeTypeButton";
+import { useAccount, useBalance } from "wagmi";
+import { parseUnits } from "viem";
 
 const TokenSwap = () => {
+  const account = useAccount();
   const [showModal, setShowModal] = useState(false);
-  const [isBuy, setIsBuy] = useState<boolean>(false);
-  const [tradeAmount, setTradeAmount] = useState<string>("");
-  console.log(tradeAmount);
+  const [tradeData, setTradeData] = useState({
+    isBuy: true,
+    amount: "",
+  });
+  const result = useBalance({
+    address: account.address,
+  });
+
+  // const { data, refetch } = useGetAmountOutQuery({
+  //   token: "0x650b89f5e67927fc9081F211B2a2fAd9487D1A69",
+  //   amountIn: tradeData.isBuy
+  //     ? parseUnits(tradeData.amount, 18)
+  //     : BigInt(Number(tradeData.amount) ** 10 * BASE_TOKEN.decimals),
+  //   isBuy: tradeData.isBuy,
+  // });
+  // isEfficientBalance
+  const isEfficientBalance = useMemo(() => {
+    const amountInWei = parseUnits(tradeData.amount, 18);
+    const balance = result.data?.value || 0n;
+    if (tradeData.isBuy) {
+      return balance ? amountInWei <= balance : false;
+    }
+    return balance ? amountInWei <= balance : false;
+  }, [tradeData.amount, tradeData.isBuy, result.data?.value]);
+  // Doge || Meme token
+  const buyAmountOutUI = tradeData.isBuy && +tradeData.amount > 0;
+  const sellAmountOutUI = !tradeData.isBuy && +tradeData.amount > 0;
+  // tradeAmount
+  const handleAmountChange = (value: string) => {
+    if (!/^\d*\.?\d*$/.test(value)) return;
+    let formattedValue = value;
+    if (value !== "0" && !value.startsWith("0.")) {
+      formattedValue = value.replace(/^0+/, "");
+    }
+    setTradeData((state) => ({
+      ...state,
+      amount: formattedValue,
+    }));
+  };
   return (
     <div className="p-6 pb-8 bg-white">
       <h1 className="text-2xl text-dayT1 font-SwitzerBold">Swap</h1>
-      <div className="h-11 bg-[#D4D3D3]  shadow-tokenTrade text-dayBg1 my-5">
-        <div className="relative h-full w-full items-center px-[3px] py-[2px] overflow-hidden text-base">
-          <div
-            className={`z-10 h-full w-1/2 ${isBuy ? "" : "translate-x-full"} ${
-              isBuy
-                ? "bg-gradient-to-b from-buy-from to-buy-to"
-                : "bg-gradient-to-b from-sell-from to-sell-to"
-            } transition-all duration-700 `}
-          ></div>
-          <div className="absolute bottom-0 left-0 right-0 top-0 flex h-full w-full bg-transparent">
-            <div
-              className={`z-20 flex h-full flex-1 items-center justify-center bg-transparent  ${
-                isBuy ? "text-dayBg1" : "text-dayT3 font-medium"
-              } transition-all duration-700`}
-              onClick={() => {
-                setIsBuy(true);
-              }}
-            >
-              Buy
-            </div>
-            <div
-              className={`z-20 flex h-full flex-1 items-center justify-center bg-transparent ${
-                !isBuy ? "text-dayBg1" : "text-dayT3 font-medium"
-              } transition-all duration-700`}
-              onClick={() => {
-                setIsBuy(false);
-              }}
-            >
-              Sell
-            </div>
-          </div>
-        </div>
-      </div>
-      {/* input */}
+      {/* Trade Type button */}
+      <TradeTypeButton tradeData={tradeData} setTradeData={setTradeData} />
+      {/*Trade input */}
       <div className="flex w-full max-w-sm items-center px-4 border border-dayL1">
         <Input
           type="text"
           placeholder="0"
           className="border-none flex-1 p-0"
-          value={tradeAmount}
-          onChange={(e) => {
-            const value = e.target.value;
-            if (!/^\d*\.?\d*$/.test(value)) {
-              return;
-            }
-
-            if (
-              value.startsWith("0") &&
-              value.length > 1 &&
-              !value.startsWith("0.")
-            ) {
-              setTradeAmount(value.replace(/^0+/, ""));
-              return;
-            }
-            if (value === "0" || value.includes(".")) {
-              setTradeAmount(value);
-              return;
-            }
-            setTradeAmount(e.target.value);
-          }}
+          value={tradeData.amount}
+          onChange={(e) => handleAmountChange(e.target.value)}
         />
         <div className="flex items-center gap-2">
-          <img
-            src="/images/icon_doge.svg"
-            alt="logo"
-            className="flex-shrink-0 w-7 h-7"
-          />
-          <span>Doge</span>
+          <img src="/images/icon_doge.svg" alt="logo" className="w-7 h-7" />
+          <span>{tradeData.isBuy ? "Doge" : "TargetToken"}</span>
         </div>
       </div>
-      {isBuy ? (
+      {tradeData.isBuy ? (
         <div className="flex items-center gap-3 my-4">
           {["10", "100", "1000"].map((value) => {
             return (
               <div
                 key={value}
                 className="flex items-center p-2 bg-dayBg3 gap-1 cursor-pointer"
-                onClick={() => setTradeAmount(value)}
+                onClick={() => handleAmountChange(value)}
               >
                 <span className="text-sm">{value}</span>
                 <img
@@ -112,7 +98,10 @@ const TokenSwap = () => {
               <div
                 key={value}
                 className="flex items-center justify-center p-2 bg-dayBg3 gap-1 cursor-pointer"
-                onClick={() => setTradeAmount(value)}
+                onClick={() => {
+                  const valueC = (123 * +value) / 100;
+                  handleAmountChange(valueC.toString());
+                }}
               >
                 <span className="text-sm">{value}%</span>
               </div>
@@ -120,46 +109,49 @@ const TokenSwap = () => {
           })}
         </div>
       )}
-      {+tradeAmount > 0 ? (
+      {buyAmountOutUI && (
         <div className="text-dayT1">
           <p className="font-semibold text-20 ">111,1111 GAME</p>
           <p className="text-xs">$11.12</p>
         </div>
-      ) : null}
+      )}
+      {sellAmountOutUI && (
+        <div className="text-dayT1">
+          <p className="font-semibold text-20 ">111,1111 Eth</p>
+          <p className="text-xs">$1</p>
+        </div>
+      )}
       <HoverCard>
         <div className="flex items-center mt-4 mb-5 text-dayT3 gap-1.5">
           <span className="text-sm">Trading Fee</span>
           <HoverCardTrigger>
-            <CircleAlert
-              size={16}
-              onMouseEnter={() => {}}
-              className="cursor-pointer"
-            />
+            <CircleAlert size={16} className="cursor-pointer" />
           </HoverCardTrigger>
         </div>
         <WrapperHoverCardConnect
           align="start"
           alignOffset={-20}
           sideOffset={12}
-          className="w-full bg-dayT2  text-white opacity-80 text-xs leading-[130%] rounded-[8px] font-SwitzerLight"
+          className="w-full bg-dayT2 opacity-100 text-white  text-xs leading-[130%] rounded-[8px] font-SwitzerLight"
         >
           1% trading fee applies to all buys and sells
         </WrapperHoverCardConnect>
       </HoverCard>
-      {/* eslint-disable-next-line no-constant-condition */}
-      {false ? (
+      {/*Trade button  */}
+      {account.address ? (
         <Button
           onClick={() => setShowModal(true)}
-          className={`trade-button
+          disabled={!isEfficientBalance || !tradeData.amount}
+          className={`trade-button border-0
           ${
-            isBuy
+            tradeData.isBuy
               ? "bg-gradient-to-b from-buy-from to-buy-to"
               : "bg-gradient-to-b from-sell-from to-sell-to"
           } transition-all duration-700`}
         >
           <img src="/public/images/dage_trade_b_i.png" alt="" />
           <span className="text-white [-webkit-text-stroke:1.5px_#12122A] [text-stroke:1.5px_#12122A] font-WendyOne text-xl leading-[140%] tracking-wide capitalize">
-            Trade
+            {isEfficientBalance ? "Trade" : "Insufficient balance"}
           </span>
         </Button>
       ) : (

@@ -5,6 +5,8 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { type Route as RouteConfig, routes } from "./router/routes";
 import { MainContentLayout } from "./layout/mainContentLayout";
 import { Toaster } from "./components/ui/toaster";
+import { WagmiProvider } from "wagmi";
+import { config } from "./config/wagmiConfig";
 
 function App() {
   const renderRoutes = (routes: RouteConfig[]) => {
@@ -20,12 +22,14 @@ function App() {
   };
   return (
     <>
-      <QueryClientProvider client={new QueryClient()}>
-        <MainContentLayout>
-          <Toaster />
-          <Routes>{renderRoutes(routes)}</Routes>
-        </MainContentLayout>
-      </QueryClientProvider>
+      <WagmiProvider config={config}>
+        <QueryClientProvider client={new QueryClient()}>
+          <MainContentLayout>
+            <Toaster />
+            <Routes>{renderRoutes(routes)}</Routes>
+          </MainContentLayout>
+        </QueryClientProvider>
+      </WagmiProvider>
     </>
   );
 }

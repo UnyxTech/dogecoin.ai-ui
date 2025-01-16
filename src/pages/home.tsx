@@ -138,7 +138,6 @@ const HomePage = () => {
       address: "xxxxxxx",
     },
   ];
-  const navigate = useNavigate();
   return (
     <Container>
       <div className="flex items-center justify-between pt-4">
