@@ -13,7 +13,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useEffect, useState } from "react";
 import { Input } from "@/components/ui/input";
-import { Checkbox } from "@/components/ui/checkbox";
 import { CreateAgentModal } from "./createAgentModal";
 import {
   Select,
@@ -55,28 +54,16 @@ const formSchema = z.object({
 });
 const agentTypes = [
   {
-    value: agentType.None,
-    icon: "/images/icon_none.svg",
-  },
-  {
     value: agentType.Productivity,
     icon: "/images/icon_productity.svg",
   },
   {
-    value: agentType.Entertainment,
-    icon: "/images/icon_entertainment.svg",
-  },
-  {
-    value: agentType.Creative,
-    icon: "/images/icon_creative.svg",
+    value: agentType.Meme,
+    icon: "/images/icon_meme.svg",
   },
   {
     value: agentType.OnChain,
     icon: "/images/icon_onchain.svg",
-  },
-  {
-    value: agentType.Infomation,
-    icon: "/images/icon_infomation.svg",
   },
 ];
 const CreatePage = () => {
@@ -105,7 +92,7 @@ const CreatePage = () => {
       agentName: values.agentName,
       ticker: values.ticker,
       Description: values.description,
-      agentType: values.agentType ?? agentType.None,
+      agentType: values.agentType,
     };
     console.log(params);
   }
@@ -148,12 +135,119 @@ const CreatePage = () => {
               onSubmit={form.handleSubmit(onSubmit)}
               className="grid gap-6 py-4 px-1"
             >
+              <div className="grid grid-cols-2 gap-6">
+                <FormField
+                  control={form.control}
+                  name="agentName"
+                  render={({ field }) => (
+                    <FormItem className="flex-col">
+                      <FormLabel>
+                        AI agent name<span className="text-red">*</span>
+                      </FormLabel>
+                      <FormControl>
+                        <Input placeholder="Agent name" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="ticker"
+                  render={({ field }) => (
+                    <FormItem className="flex-col">
+                      <FormLabel>
+                        Ticker<span className="text-red">*</span>
+                      </FormLabel>
+                      <FormControl>
+                        <Input placeholder="$" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+              <FormField
+                control={form.control}
+                name="agentType"
+                render={() => (
+                  <FormItem>
+                    <FormLabel>
+                      Agent type<span className="text-red">*</span>
+                    </FormLabel>
+                    <FormControl>
+                      <Select
+                        onValueChange={(val) => form.setValue("agentType", val)}
+                      >
+                        <SelectTrigger>
+                          {form.getValues().agentType ? (
+                            <div>{form.getValues().agentType}</div>
+                          ) : (
+                            <span className="text-second">Click to select</span>
+                          )}
+                        </SelectTrigger>
+                        <SelectContent
+                          className="w-[170px]"
+                          alignOffset={0}
+                          side="right"
+                          sideOffset={4}
+                        >
+                          {agentTypes.map((type) => (
+                            <SelectItem key={type.value} value={type.value}>
+                              <div className="flex items-center gap-3">
+                                <img src={type.icon} alt="" />
+                                <div>{type.value}</div>
+                              </div>
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
               <div className="flex items-center gap-4">
+                <div className="flex-1">
+                  <FormField
+                    control={form.control}
+                    name="description"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>
+                          <div className="flex items-center gap-[10px]">
+                            <div>
+                              AI agent description
+                              <span className="text-red">*</span>
+                            </div>
+                            <AiAgent onClick={() => {}} />
+                          </div>
+                        </FormLabel>
+                        <FormControl className="flex flex-col">
+                          <textarea
+                            placeholder="Write something about your meme"
+                            {...field}
+                            className="h-[176px] resize-none placeholder:text-second border border-solid p-2 border-[rgb(226, 232, 240)] rounded-md w-full"
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
                 <FormField
                   control={form.control}
                   name="file"
                   render={() => (
                     <FormItem>
+                      <FormLabel>
+                        <div className="flex items-center gap-[10px]">
+                          <div>
+                            Logo<span className="text-red">*</span>
+                          </div>
+                          <AiAgent onClick={() => {}} />
+                        </div>
+                      </FormLabel>
                       <FormControl>
                         <div>
                           <Input
@@ -187,111 +281,8 @@ const CreatePage = () => {
                     </FormItem>
                   )}
                 />
-                <div className="flex flex-col gap-6 flex-1">
-                  <FormField
-                    control={form.control}
-                    name="agentName"
-                    render={({ field }) => (
-                      <FormItem className="flex-col">
-                        <FormLabel>
-                          AI agent name<span className="text-red">*</span>
-                        </FormLabel>
-                        <FormControl>
-                          <Input placeholder="Agent name" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name="ticker"
-                    render={({ field }) => (
-                      <FormItem className="flex-col">
-                        <FormLabel>
-                          Ticker<span className="text-red">*</span>
-                        </FormLabel>
-                        <FormControl>
-                          <Input placeholder="$" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
-              </div>
-              <FormField
-                control={form.control}
-                name="description"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>
-                      AI agent description<span className="text-red">*</span>
-                    </FormLabel>
-                    <FormControl className="flex flex-col">
-                      <textarea
-                        placeholder="Write something about your meme"
-                        {...field}
-                        className="h-[147px] resize-none placeholder:text-second border border-solid p-2 border-[rgb(226, 232, 240)] rounded-md w-full"
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <div className="flex justify-between items-center">
-                <div className="flex items-center gap-[10px]">
-                  <Checkbox id="terms" />
-                  <label htmlFor="terms" className="text-sm text-second">
-                    Enhance the description for me please
-                  </label>
-                </div>
-                <Button variant="white">Good examples</Button>
               </div>
               <div className="grid grid-cols-2 gap-4">
-                <FormField
-                  control={form.control}
-                  name="agentType"
-                  render={() => (
-                    <FormItem>
-                      <FormLabel>
-                        Agent type<span className="text-red">*</span>
-                      </FormLabel>
-                      <FormControl>
-                        <Select
-                          onValueChange={(val) =>
-                            form.setValue("agentType", val)
-                          }
-                        >
-                          <SelectTrigger>
-                            {form.getValues().agentType ? (
-                              <div>{form.getValues().agentType}</div>
-                            ) : (
-                              <span className="text-second">None</span>
-                            )}
-                          </SelectTrigger>
-                          <SelectContent
-                            className="w-[170px]"
-                            align="end"
-                            alignOffset={0}
-                            side="bottom"
-                            sideOffset={4}
-                          >
-                            {agentTypes.map((type) => (
-                              <SelectItem key={type.value} value={type.value}>
-                                <div className="flex items-center gap-3">
-                                  <img src={type.icon} alt="" />
-                                  <div>{type.value}</div>
-                                </div>
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
                 <FormField
                   control={form.control}
                   name="twitterLink"
@@ -378,7 +369,7 @@ const CreatePage = () => {
                 disabled={!form.formState.isValid}
                 onClick={() => setShowCreateAgentModal(true)}
               >
-                <span>🚀</span> Create agent
+                <span>🚀</span> Continue
               </Button>
             </form>
           </Form>
@@ -396,3 +387,52 @@ const CreatePage = () => {
 };
 
 export default CreatePage;
+
+interface IAiAgent {
+  onClick: () => void;
+}
+const AiAgent: React.FC<IAiAgent> = ({ onClick }) => {
+  const [gapTime, setGapTime] = useState<number>(0);
+  const [sendInterval, setSendInterval] = useState<any>(undefined);
+
+  const startCountdown = async () => {
+    clearInterval(sendInterval);
+    setGapTime(120);
+    const interval = setInterval(() => {
+      setGapTime((prev: number) => {
+        if (prev === 0) {
+          clearInterval(sendInterval);
+          return 0;
+        } else {
+          return prev - 1;
+        }
+      });
+    }, 1000);
+    setSendInterval(interval);
+  };
+
+  return (
+    <div className="flex gap-[10px] items-center">
+      <div
+        onClick={() => {
+          if (gapTime > 0) return;
+          onClick();
+          startCountdown();
+        }}
+        className="py-[2px] px-2 rounded-full bg-white text-second text-14 cursor-pointer"
+      >
+        {gapTime > 0 ? (
+          <span>
+            Wait for{" "}
+            {`${Math.floor(gapTime / 60)}:${String(gapTime % 60).padStart(
+              2,
+              "0"
+            )}`}
+          </span>
+        ) : (
+          "AI generate"
+        )}
+      </div>
+    </div>
+  );
+};
