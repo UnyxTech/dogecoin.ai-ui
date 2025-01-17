@@ -166,7 +166,41 @@ function toast({ ...props }: Toast) {
     update,
   };
 }
-
+/**
+ * Custom hook for managing toast notifications.
+ *
+ * @returns {Object} An object containing:
+ * - toast: Function to show a new toast notification
+ * - dismiss: Function to dismiss one or all toasts
+ * - toasts: Array of current toast notifications
+ *
+ * @example
+ * // Basic usage
+ * const { toast } = useToast()
+ * toast({ title: "Success", description: "Operation completed" })
+ *
+ * // With custom action button
+ * toast({
+ *   title: "Confirm",
+ *   description: "Are you sure?",
+ *   action: <button>Confirm</button>
+ * })
+ *
+ * // With custom styles
+ * toast({
+ *   title: "Note",
+ *   description: "Important message",
+ *   descriptionClassName: "text-red-500"
+ * })
+ *
+ * // Dismiss all toasts
+ * const { dismiss } = useToast()
+ * dismiss()
+ *
+ * // Dismiss specific toast
+ * const { id } = toast({ title: "Hello" })
+ * dismiss(id)
+ */
 function useToast() {
   const [state, setState] = React.useState<State>(memoryState);
 

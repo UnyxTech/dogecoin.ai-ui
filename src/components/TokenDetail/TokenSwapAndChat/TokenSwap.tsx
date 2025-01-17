@@ -8,36 +8,44 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { ProgressCard } from "./ProgressCard";
 import TradeTypeButton from "./TradeTypeButton";
-import { useAccount, useBalance } from "wagmi";
-import { parseUnits } from "viem";
+import { useAccount, useBalance, useReadContract } from "wagmi";
+import { erc20Abi, formatUnits, parseUnits } from "viem";
+import { useAIContract, useTrade } from "@/hooks/useAIContract";
+import { BASE_TOKEN } from "@/constant";
+import { useToast } from "@/hooks/use-toast";
 
 const TokenSwap = () => {
   const account = useAccount();
+  const { toast } = useToast();
+  const { getBuyAmountOut, getSellAmountOut } = useAIContract();
+  const defaultSlippage = 10n;
   const [showModal, setShowModal] = useState(false);
   const [tradeData, setTradeData] = useState({
     isBuy: true,
     amount: "",
   });
-  const result = useBalance({
+  const { data: dogeBalance, refetch: refetchDogeBalance } = useBalance({
     address: account.address,
   });
-
-  // const { data, refetch } = useGetAmountOutQuery({
-  //   token: "0x650b89f5e67927fc9081F211B2a2fAd9487D1A69",
-  //   amountIn: tradeData.isBuy
-  //     ? parseUnits(tradeData.amount, 18)
-  //     : BigInt(Number(tradeData.amount) ** 10 * BASE_TOKEN.decimals),
-  //   isBuy: tradeData.isBuy,
-  // });
+  const { data: memeTokenBalance, refetch: refetchMemeTokenBalance } =
+    useReadContract({
+      abi: erc20Abi,
+      address: "0x650b89f5e67927fc9081F211B2a2fAd9487D1A69",
+      functionName: "balanceOf",
+      args: [account.address!],
+    });
   // isEfficientBalance
   const isEfficientBalance = useMemo(() => {
-    const amountInWei = parseUnits(tradeData.amount, 18);
-    const balance = result.data?.value || 0n;
+    const amountIn = tradeData.isBuy
+      ? parseUnits(tradeData.amount, 18)
+      : parseUnits(tradeData.amount, BASE_TOKEN.decimals);
+    const balance = tradeData.isBuy ? dogeBalance?.value : memeTokenBalance;
     if (tradeData.isBuy) {
-      return balance ? amountInWei <= balance : false;
+      return balance ? amountIn <= balance : false;
     }
-    return balance ? amountInWei <= balance : false;
-  }, [tradeData.amount, tradeData.isBuy, result.data?.value]);
+    return balance ? amountIn <= balance : false;
+  }, [tradeData.isBuy, tradeData.amount, dogeBalance?.value, memeTokenBalance]);
+
   // Doge || Meme token
   const buyAmountOutUI = tradeData.isBuy && +tradeData.amount > 0;
   const sellAmountOutUI = !tradeData.isBuy && +tradeData.amount > 0;
@@ -53,6 +61,53 @@ const TokenSwap = () => {
       amount: formattedValue,
     }));
   };
+  // Swap
+  const { mutateAsync: treadeAsync, isPending: isTradePending } = useTrade({
+    onSuccess: (data) => {
+      toast({
+        title: "Transaction Successful",
+        description: (
+          <div>
+            <p className="mb-2">Your transaction has been confirmed.</p>
+            <a
+              href={`https://sepolia.basescan.org/tx/${data}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-blue-500 hover:text-blue-600 underline"
+            >
+              View on Basescan
+            </a>
+          </div>
+        ),
+      });
+      refetchDogeBalance();
+      refetchMemeTokenBalance();
+    },
+  });
+
+  const handleTrade = async () => {
+    let amountOut;
+    if (tradeData.isBuy) {
+      const buyAmountOut = await getBuyAmountOut({
+        token: "0x650b89f5e67927fc9081F211B2a2fAd9487D1A69",
+        amountIn: parseUnits(tradeData.amount, 18),
+      });
+      amountOut = buyAmountOut[0];
+    }
+    if (!tradeData.isBuy) {
+      const sellAmountOut = await getSellAmountOut({
+        token: "0x650b89f5e67927fc9081F211B2a2fAd9487D1A69",
+        amountIn: parseUnits(tradeData.amount, 18),
+      });
+      amountOut = sellAmountOut[0];
+    }
+    await treadeAsync({
+      token: "0x650b89f5e67927fc9081F211B2a2fAd9487D1A69",
+      amount: parseUnits(tradeData.amount, 18),
+      isBuy: tradeData.isBuy,
+      amountOutMinimum: (amountOut! * (100n - defaultSlippage)) / 100n,
+    });
+  };
   return (
     <div className="p-6 pb-8 bg-white">
       <h1 className="text-2xl text-dayT1 font-SwitzerBold">Swap</h1>
@@ -60,13 +115,24 @@ const TokenSwap = () => {
       <TradeTypeButton tradeData={tradeData} setTradeData={setTradeData} />
       {/*Trade input */}
       <div className="flex w-full max-w-sm items-center px-4 border border-dayL1">
-        <Input
-          type="text"
-          placeholder="0"
-          className="border-none flex-1 p-0"
-          value={tradeData.amount}
-          onChange={(e) => handleAmountChange(e.target.value)}
-        />
+        {tradeData.isBuy ? (
+          <Input
+            type="text"
+            placeholder="0"
+            className="border-none flex-1 p-0"
+            value={tradeData.amount}
+            onChange={(e) => handleAmountChange(e.target.value)}
+          />
+        ) : (
+          <Input
+            type="text"
+            placeholder="0"
+            className="border-none flex-1 p-0"
+            value={tradeData.amount}
+            onChange={(e) => handleAmountChange(e.target.value)}
+          />
+        )}
+
         <div className="flex items-center gap-2">
           <img src="/images/icon_doge.svg" alt="logo" className="w-7 h-7" />
           <span>{tradeData.isBuy ? "Doge" : "TargetToken"}</span>
@@ -79,7 +145,9 @@ const TokenSwap = () => {
               <div
                 key={value}
                 className="flex items-center p-2 bg-dayBg3 gap-1 cursor-pointer"
-                onClick={() => handleAmountChange(value)}
+                onClick={() => {
+                  setTradeData((state) => ({ ...state, amount: value }));
+                }}
               >
                 <span className="text-sm">{value}</span>
                 <img
@@ -93,13 +161,18 @@ const TokenSwap = () => {
         </div>
       ) : (
         <div className="grid grid-cols-4 gap-3 my-4">
-          {["25", "50", "75", "100"].map((value) => {
+          {[25, 50, 75, 100].map((value) => {
             return (
               <div
                 key={value}
                 className="flex items-center justify-center p-2 bg-dayBg3 gap-1 cursor-pointer"
                 onClick={() => {
-                  const valueC = (123 * +value) / 100;
+                  if (!memeTokenBalance) return;
+                  const valueC = formatUnits(
+                    (memeTokenBalance * BigInt(value)) / 100n,
+                    18
+                  );
+
                   handleAmountChange(valueC.toString());
                 }}
               >
@@ -140,8 +213,8 @@ const TokenSwap = () => {
       {/*Trade button  */}
       {account.address ? (
         <Button
-          onClick={() => setShowModal(true)}
-          disabled={!isEfficientBalance || !tradeData.amount}
+          onClick={() => handleTrade()}
+          disabled={!isEfficientBalance}
           className={`trade-button border-0
           ${
             tradeData.isBuy
@@ -149,10 +222,28 @@ const TokenSwap = () => {
               : "bg-gradient-to-b from-sell-from to-sell-to"
           } transition-all duration-700`}
         >
-          <img src="/public/images/dage_trade_b_i.png" alt="" />
-          <span className="text-white [-webkit-text-stroke:1.5px_#12122A] [text-stroke:1.5px_#12122A] font-WendyOne text-xl leading-[140%] tracking-wide capitalize">
-            {isEfficientBalance ? "Trade" : "Insufficient balance"}
-          </span>
+          {isTradePending ? (
+            <div className="flex items-center gap-2">
+              <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
+              <span className="text-white [-webkit-text-stroke:1.5px_#12122A] [text-stroke:1.5px_#12122A] font-WendyOne text-xl leading-[140%] tracking-wide capitalize">
+                Trading...
+              </span>
+            </div>
+          ) : tradeData.isBuy ? (
+            <>
+              <img src="/public/images/dage_trade_b_i.png" alt="" />
+              <span className="text-white [-webkit-text-stroke:1.5px_#12122A] [text-stroke:1.5px_#12122A] font-WendyOne text-xl leading-[140%] tracking-wide capitalize">
+                {isEfficientBalance ? "Trade" : "Insufficient balance"}
+              </span>
+            </>
+          ) : (
+            <>
+              <img src="/public/images/dage_trade_b_i.png" alt="" />
+              <span className="text-white [-webkit-text-stroke:1.5px_#12122A] [text-stroke:1.5px_#12122A] font-WendyOne text-xl leading-[140%] tracking-wide capitalize">
+                {isEfficientBalance ? "Trade" : "Insufficient balance"}
+              </span>
+            </>
+          )}
         </Button>
       ) : (
         <Button

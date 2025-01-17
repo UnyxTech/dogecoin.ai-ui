@@ -5,6 +5,8 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { CONTRACT_AI_ADDRESS, defaultChain } from "@/constant";
 
 import { useAuth } from "./useAuth";
+import { useWalletClient } from "wagmi";
+import { useErc20 } from "./useErc20";
 
 export type CreateAgentParams = {
   name: string;
@@ -12,11 +14,16 @@ export type CreateAgentParams = {
   buyAmount: bigint;
   agentId: string;
 };
-
+export type amountOutType = {
+  amountOut: bigint;
+  newReserve0: bigint;
+  newReserve1: bigint;
+};
 export function useAIContract() {
   const walletService = useWalletService();
   const { evmAddress } = useAuth();
-
+  const { data: walletClient } = useWalletClient();
+  const erc20Service = useErc20();
   const getViemContract = () => {
     const publicClient = walletService.getPublicClient(defaultChain);
     return getContract({
@@ -25,7 +32,6 @@ export function useAIContract() {
       client: publicClient,
     });
   };
-
   return {
     createAgent: async ({
       name,
@@ -78,7 +84,7 @@ export function useAIContract() {
       return (await getViemContract().read.getBuyAmountOut([
         token,
         amountIn,
-      ])) as bigint;
+      ])) as bigint[];
     },
     getInitLiquidity: async () => {
       return (await getViemContract().read._initialVirtualliquidity()) as bigint;
@@ -96,13 +102,8 @@ export function useAIContract() {
       amountOutMinimum: bigint;
     }) => {
       await walletService.switchChain(defaultChain);
-      const walletClient = walletService.getWalletClient(defaultChain);
       const publicClient = walletService.getPublicClient(defaultChain);
       if (!walletClient) throw new Error("walletClient not found");
-      // await erc20Service.approve({
-      //   tokenAddress: BASE_TOKEN.address,
-      //   contractAddress: CONTRACT_AI_ADDRESS,
-      // });
       const { request } = await publicClient.simulateContract({
         value: amount,
         account: evmAddress! as Address,
@@ -130,9 +131,13 @@ export function useAIContract() {
       amountOutMinimum: bigint;
     }) => {
       await walletService.switchChain(defaultChain);
-      const walletClient = walletService.getWalletClient(defaultChain);
       const publicClient = walletService.getPublicClient(defaultChain);
       if (!walletClient) throw new Error("walletClient not found");
+      await erc20Service.approve({
+        tokenAddress: token,
+        contractAddress: CONTRACT_AI_ADDRESS,
+      });
+      console.log("trade", token, amount, amountOutMinimum);
       const { request } = await publicClient.simulateContract({
         value: 0n,
         account: evmAddress! as Address,
@@ -160,7 +165,7 @@ export function useAIContract() {
       return (await getViemContract().read.getSellAmountOut([
         token,
         amountIn,
-      ])) as bigint;
+      ])) as bigint[];
     },
   };
 }
@@ -200,7 +205,22 @@ export function useGetGraduateThresholdQuery() {
   });
 }
 // writeContract
-export function useTrade() {
+export function useTrade({
+  onSuccess,
+}: {
+  onSuccess?:
+    | ((
+        data: `0x${string}`,
+        variables: {
+          token: Address;
+          amount: bigint;
+          isBuy: boolean;
+          amountOutMinimum: bigint;
+        },
+        context: unknown
+      ) => Promise<unknown> | unknown)
+    | undefined;
+} = {}) {
   const aiContract = useAIContract();
   return useMutation({
     mutationFn: async ({
@@ -215,13 +235,19 @@ export function useTrade() {
       amountOutMinimum: bigint;
     }) => {
       if (isBuy) {
-        return await aiContract.buy({ token, amount, amountOutMinimum });
+        return await aiContract.buy({
+          token,
+          amount,
+          amountOutMinimum,
+        });
       } else {
-        return await aiContract.sell({ token, amount, amountOutMinimum });
+        return await aiContract.sell({
+          token,
+          amount,
+          amountOutMinimum,
+        });
       }
     },
-    onSuccess: () => {
-      // ...toast
-    },
+    onSuccess: onSuccess,
   });
 }

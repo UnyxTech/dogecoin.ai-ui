@@ -1,3 +1,5 @@
+import { formatUnits } from "viem";
+
 export const formatBalance = (rawBalance: string) => {
   const balance = (parseInt(rawBalance) / 1000000000000000000).toFixed(2);
   return balance;
@@ -79,7 +81,34 @@ export const copyToClipboard = (textToCopy: string | number) => {
     });
   }
 };
-
+/**
+ * Formats a bigint token amount to a human-readable string with specified decimals
+ *
+ * @param amount The token amount as bigint (e.g., 1000000000000000000n for 1 token)
+ * @param decimals The number of decimals for the token (default: 18 for most ERC20 tokens)
+ * @param displayDecimals The number of decimal places to show in the formatted string (default: 4)
+ * @returns A formatted string representation of the token amount
+ *
+ * @example
+ * // Returns "1.0000"
+ * formatTokenAmount(1000000000000000000n)
+ *
+ * @example
+ * // Returns "1.2345"
+ * formatTokenAmount(1234500000000000000n)
+ *
+ * @example
+ * // Returns "1.23" (USDC with 6 decimals)
+ * formatTokenAmount(1234567n, 6, 2)
+ */
+export const formatTokenAmount = (
+  amount: bigint,
+  decimals: number = 18,
+  displayDecimals: number = 4
+): string => {
+  const formatted = formatUnits(amount, decimals);
+  return Number(formatted).toFixed(displayDecimals);
+};
 export const getColorByAgentName = (agentName: string) => {
   switch (agentName) {
     case "Productivity":
