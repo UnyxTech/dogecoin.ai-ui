@@ -176,10 +176,12 @@ export function useGetAmountOutQuery({
   token,
   amountIn,
   isBuy,
+  refetchInterval = 15000,
 }: {
   token: Address;
   amountIn: bigint;
   isBuy: boolean;
+  refetchInterval?: number;
 }) {
   const aiContract = useAIContract();
   return useQuery({
@@ -192,6 +194,10 @@ export function useGetAmountOutQuery({
         return await aiContract.getSellAmountOut({ token, amountIn });
       }
     },
+    enabled: Boolean(
+      token && amountIn && amountIn > 0n && typeof isBuy === "boolean"
+    ),
+    refetchInterval: refetchInterval,
   });
 }
 
@@ -205,12 +211,26 @@ export function useGetGraduateThresholdQuery() {
   });
 }
 // writeContract
-export function useTrade({
-  onSuccess,
-}: {
-  onSuccess?:
+export function useTrade(
+  {
+    onSuccess,
+  }: {
+    onSuccess?:
+      | ((
+          data: `0x${string}`,
+          variables: {
+            token: Address;
+            amount: bigint;
+            isBuy: boolean;
+            amountOutMinimum: bigint;
+          },
+          context: unknown
+        ) => Promise<unknown> | unknown)
+      | undefined;
+  } = {},
+  onError?:
     | ((
-        data: `0x${string}`,
+        error: Error,
         variables: {
           token: Address;
           amount: bigint;
@@ -219,8 +239,8 @@ export function useTrade({
         },
         context: unknown
       ) => Promise<unknown> | unknown)
-    | undefined;
-} = {}) {
+    | undefined
+) {
   const aiContract = useAIContract();
   return useMutation({
     mutationFn: async ({
@@ -249,5 +269,6 @@ export function useTrade({
       }
     },
     onSuccess: onSuccess,
+    onError: onError,
   });
 }

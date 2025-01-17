@@ -1,5 +1,5 @@
 import { CircleAlert } from "lucide-react";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { HoverCard, HoverCardTrigger } from "@/components/ui/hover-card";
 import { WrapperHoverCardConnect } from "@/components/ui/custom/WrapperHoverCardConnect";
@@ -10,20 +10,49 @@ import { ProgressCard } from "./ProgressCard";
 import TradeTypeButton from "./TradeTypeButton";
 import { useAccount, useBalance, useReadContract } from "wagmi";
 import { erc20Abi, formatUnits, parseUnits } from "viem";
-import { useAIContract, useTrade } from "@/hooks/useAIContract";
+import {
+  useAIContract,
+  useGetAmountOutQuery,
+  useTrade,
+} from "@/hooks/useAIContract";
 import { BASE_TOKEN } from "@/constant";
 import { useToast } from "@/hooks/use-toast";
+import { debounce } from "lodash";
 
+const defaultSlippage = 10n;
 const TokenSwap = () => {
-  const account = useAccount();
   const { toast } = useToast();
-  const { getBuyAmountOut, getSellAmountOut } = useAIContract();
-  const defaultSlippage = 10n;
+  const account = useAccount();
+  // state
   const [showModal, setShowModal] = useState(false);
+  const [debouncedAmount, setDebouncedAmount] = useState<bigint>(0n);
   const [tradeData, setTradeData] = useState({
     isBuy: true,
     amount: "",
   });
+  // amountOut
+  const { getBuyAmountOut, getSellAmountOut } = useAIContract();
+  const { data: amountOut } = useGetAmountOutQuery({
+    token: "0x650b89f5e67927fc9081F211B2a2fAd9487D1A69",
+    amountIn: debouncedAmount,
+    isBuy: tradeData.isBuy,
+  });
+  // debounce
+  const debouncedSetAmount = useMemo(
+    () =>
+      debounce((value: string) => {
+        const amount = value ? parseUnits(value, 18) : 0n;
+        setDebouncedAmount(amount);
+      }, 500),
+    []
+  );
+  useEffect(() => {
+    debouncedSetAmount(tradeData.amount);
+    return () => {
+      debouncedSetAmount.cancel();
+    };
+  }, [tradeData.amount, debouncedSetAmount]);
+  // isEfficientBalance
   const { data: dogeBalance, refetch: refetchDogeBalance } = useBalance({
     address: account.address,
   });
@@ -34,7 +63,6 @@ const TokenSwap = () => {
       functionName: "balanceOf",
       args: [account.address!],
     });
-  // isEfficientBalance
   const isEfficientBalance = useMemo(() => {
     const amountIn = tradeData.isBuy
       ? parseUnits(tradeData.amount, 18)
@@ -45,13 +73,13 @@ const TokenSwap = () => {
     }
     return balance ? amountIn <= balance : false;
   }, [tradeData.isBuy, tradeData.amount, dogeBalance?.value, memeTokenBalance]);
-
   // Doge || Meme token
   const buyAmountOutUI = tradeData.isBuy && +tradeData.amount > 0;
   const sellAmountOutUI = !tradeData.isBuy && +tradeData.amount > 0;
   // tradeAmount
   const handleAmountChange = (value: string) => {
     if (!/^\d*\.?\d*$/.test(value)) return;
+    // ......
     let formattedValue = value;
     if (value !== "0" && !value.startsWith("0.")) {
       formattedValue = value.replace(/^0+/, "");
@@ -115,23 +143,13 @@ const TokenSwap = () => {
       <TradeTypeButton tradeData={tradeData} setTradeData={setTradeData} />
       {/*Trade input */}
       <div className="flex w-full max-w-sm items-center px-4 border border-dayL1">
-        {tradeData.isBuy ? (
-          <Input
-            type="text"
-            placeholder="0"
-            className="border-none flex-1 p-0"
-            value={tradeData.amount}
-            onChange={(e) => handleAmountChange(e.target.value)}
-          />
-        ) : (
-          <Input
-            type="text"
-            placeholder="0"
-            className="border-none flex-1 p-0"
-            value={tradeData.amount}
-            onChange={(e) => handleAmountChange(e.target.value)}
-          />
-        )}
+        <Input
+          type="text"
+          placeholder="0"
+          className="border-none flex-1 p-0"
+          value={tradeData.amount}
+          onChange={(e) => handleAmountChange(e.target.value)}
+        />
 
         <div className="flex items-center gap-2">
           <img src="/images/icon_doge.svg" alt="logo" className="w-7 h-7" />
@@ -182,15 +200,19 @@ const TokenSwap = () => {
           })}
         </div>
       )}
-      {buyAmountOutUI && (
+      {buyAmountOutUI && amountOut && (
         <div className="text-dayT1">
-          <p className="font-semibold text-20 ">111,1111 GAME</p>
+          <p className="font-semibold text-20 ">
+            {Number(formatUnits(amountOut[0], 18)).toFixed(6)} GAME
+          </p>
           <p className="text-xs">$11.12</p>
         </div>
       )}
-      {sellAmountOutUI && (
+      {sellAmountOutUI && amountOut && (
         <div className="text-dayT1">
-          <p className="font-semibold text-20 ">111,1111 Eth</p>
+          <p className="font-semibold text-20 ">
+            {Number(formatUnits(amountOut[0], 18)).toFixed(6)} Eth
+          </p>
           <p className="text-xs">$1</p>
         </div>
       )}
