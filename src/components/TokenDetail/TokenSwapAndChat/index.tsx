@@ -1,4 +1,4 @@
-import React, { lazy, Suspense } from "react";
+import { lazy, Suspense } from "react";
 import TokenSwap from "./TokenSwap";
 const TokenChat = lazy(() => import("./TokenChat"));
 

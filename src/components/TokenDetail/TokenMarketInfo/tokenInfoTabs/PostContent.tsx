@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Masonry } from "masonic";
 import cats from "./cats";
 import { Heart, X } from "lucide-react";

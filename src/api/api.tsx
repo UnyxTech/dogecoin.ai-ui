@@ -1,10 +1,14 @@
+import { AgentInfo } from "@/types";
 import axios, { AxiosResponse } from "axios";
 import { KLineItem, KLineParams, KLineResponse } from "./types";
 export const BASE = import.meta.env.VITE_BASE_API_URL;
-export const BASE_URL = `${BASE}/v1`;
+
+export const BASE_URL = "https://api-dev.dogeos.ai/";
+
 const api = axios.create({ baseURL: BASE_URL });
 
 api.interceptors.request.use((config: any) => {
+  config.headers["debug-mode"] = "true";
   return config;
 });
 
@@ -47,10 +51,18 @@ class ApiError extends Error {
   }
 }
 
-export const getAgentList = async (): Promise<any> => {
-  const { data } = await api.get(``);
+export const uploadImg = async (file: FormData) => {
+  const { data } = await api.post(`v1/upload/agent/image`, file, {
+    headers: { "Content-Type": "multipart/form-data" },
+  });
   return data;
 };
+
+export const createAgent = async (params: AgentInfo) => {
+  const { data } = await api.post(`v1/agents`, params);
+  return data;
+};
+
 export const getKLineHistory = async (
   params: KLineParams
 ): Promise<KLineItem[]> => {

@@ -44,7 +44,7 @@ export const CreateAgentModal = ({
       const obj: CreateAgentParams = {
         agentId: agentInfo.agentId ?? "",
         symbol: agentInfo.symbol,
-        name: agentInfo.agentName,
+        name: agentInfo.name,
         buyAmount,
       };
       const hash = await createAgent(obj);

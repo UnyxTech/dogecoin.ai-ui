@@ -21,6 +21,8 @@ import {
   SelectTrigger,
 } from "@/components/ui/select";
 import { AgentInfo, AgentType } from "@/types";
+import { createAgent, uploadImg } from "@/api/api";
+import { useMutation } from "@tanstack/react-query";
 
 const formSchema = z.object({
   file: z
@@ -88,17 +90,36 @@ const CreatePage = () => {
     form.reset();
   }, []);
 
+  const uploadMutation = useMutation({
+    mutationFn: uploadImg,
+    onSuccess(data) {
+      form.setValue("file", data.data.file);
+    },
+  });
+
+  const createAgentMutation = useMutation({
+    mutationFn: createAgent,
+    onSuccess(data) {
+      console.log(data);
+      setAgentId("agent_114");
+      setShowCreateAgentModal(true);
+    },
+  });
+
   function onSubmit(values: z.infer<typeof formSchema>) {
-    const params = {
-      // file: values.file,
-      agentName: values.agentName,
-      ticker: values.ticker,
-      Description: values.description,
+    const params: AgentInfo = {
+      name: values.agentName,
+      symbol: values.ticker,
       agentType: values.agentType,
+      description: values.description,
+      image: values.file??'',
+      twitter: values.twitterLink,
+      telegram: values.tgLink,
+      youtube: values.youTubeLink,
+      website: values.websiteLink,
+      discord: values.discordLink,
     };
-    console.log(params);
-    setAgentId("agent_114");
-    setShowCreateAgentModal(true);
+    createAgentMutation.mutate(params);
   }
 
   const handleFileChange = (e: any) => {
@@ -110,7 +131,7 @@ const CreatePage = () => {
         const formData = new FormData();
         console.log(file);
         formData.append("file", file);
-        // uploadMutation.mutate(formData);
+        uploadMutation.mutate(formData);
       } else {
         alert("Please upload a valid image file.");
       }
@@ -384,7 +405,7 @@ const CreatePage = () => {
           open={showCreateAgentModal}
           agentInfo={
             {
-              agentName: form.getValues().agentName,
+              name: form.getValues().agentName,
               symbol: form.getValues().ticker,
               agentId: agentId,
             } as AgentInfo

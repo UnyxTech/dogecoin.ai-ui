@@ -7,12 +7,17 @@ export enum AgentType {
 }
 
 export interface AgentInfo {
-  agentName: string;
+  name: string;
   symbol: string;
+  agentType: string;
+  description: string;
+  image: string;
+  twitter?: string;
+  telegram?: string;
+  youtube?: string;
+  website?: string;
+  discord?: string;
   agentId?: string;
-  agentType?: AgentType;
-  logo?: string;
-  description?: string;
 }
 export interface TokenInfo {
   ticker: string;

@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { formatAddressNew, formatTimestamp } from "@/utils";
 import { ChevronFirst } from "lucide-react";
-import React, { useState } from "react";
+import { useState } from "react";
 import { Address } from "viem";
 interface ChatItemProps {
   userAddress: Address;

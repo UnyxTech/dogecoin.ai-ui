@@ -19,7 +19,7 @@ const externalLinks: ExternalLink[] = [
     icon: "/images/gecko.svg",
   },
 ];
-const TokenInfoHeader = ({ tokenInfo }: { tokenInfo: any }) => {
+const TokenInfoHeader = ({ }: { tokenInfo: any }) => {
   return (
     <div className="flex gap-3">
       {/* Logo  */}

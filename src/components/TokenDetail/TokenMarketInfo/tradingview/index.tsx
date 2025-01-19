@@ -10,7 +10,6 @@ import {
 import * as React from "react";
 // import { getKLineHistory, getKLineLast } from "@/api/api";
 import { getIntervalByResolution } from "@/utils";
-import { Address } from "viem";
 
 export interface ChartContainerProps {
   symbol: ChartingLibraryWidgetOptions["symbol"];
@@ -51,7 +50,7 @@ const SUPPORTED_RESOLUTIONS = [
   "1D",
   "1W",
 ] as ResolutionString[];
-const TradingViewChart = ({ tokenInfo }: { tokenInfo: any }) => {
+const TradingViewChart = ({ }: { tokenInfo: any }) => {
   const chartContainerRef =
     useRef<HTMLDivElement>() as React.MutableRefObject<HTMLInputElement>;
 
@@ -71,7 +70,7 @@ const TradingViewChart = ({ tokenInfo }: { tokenInfo: any }) => {
         },
         searchSymbols: () => {},
         resolveSymbol: (
-          symbolName,
+          _symbolName,
           onSymbolResolvedCallback,
           onResolveErrorCallback
         ) => {
@@ -205,7 +204,7 @@ const TradingViewChart = ({ tokenInfo }: { tokenInfo: any }) => {
         },
         */
         getBars: async (
-          symbolInfo,
+          _symbolInfo,
           resolution,
           periodParams,
           onHistoryCallback
@@ -305,7 +304,7 @@ const TradingViewChart = ({ tokenInfo }: { tokenInfo: any }) => {
             onHistoryCallback([], { noData: true });
           }
         },
-        subscribeBars: async (symbolInfo, resolution, onRealtimeCallback) => {
+        subscribeBars: async (_symbolInfo, resolution, onRealtimeCallback) => {
           const interval = getIntervalByResolution(resolution);
           let lastPrice = 100;
           let currentBarStartTime =

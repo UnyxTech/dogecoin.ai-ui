@@ -1,6 +1,6 @@
 import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
-import React, { useState } from "react";
+import { useState } from "react";
 const Title = ({ text, className }: { text: string; className?: string }) => (
   <h1 className={cn("font-SwitzerBold text-xl", className)}>{text}</h1>
 );

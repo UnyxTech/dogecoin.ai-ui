@@ -2,7 +2,7 @@ import TokenInfoHeader from "./TokenInfoHeader";
 import TokenInfoTabs from "./tokenInfoTabs";
 import TradingViewChart from "./tradingview";
 
-const TokenMarketInfo = ({ tokenAddress }: { tokenAddress: string }) => {
+const TokenMarketInfo = ({ }: { tokenAddress: string }) => {
   const tokenInfo = {};
   return (
     <div className="w-full rounded-[6px] overflow-hidden flex flex-col gap-4">
