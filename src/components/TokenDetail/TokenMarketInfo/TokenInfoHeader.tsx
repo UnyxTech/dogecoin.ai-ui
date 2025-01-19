@@ -30,14 +30,7 @@ const TokenInfoHeader = () => {
     <div className="flex gap-3">
       {/* Logo  */}
       <div className="flex-shrink-0">
-        <img
-          src={
-            tokenInfo?.image ??
-            "https://i.seadn.io/s/raw/files/ea97bdb3186597f5685de8fd26b6d483.png?auto=format&dpr=1&w=1200"
-          }
-          alt="tokenLogo"
-          className="w-32 h-32"
-        />
+        <img src={tokenInfo?.image} alt="tokenLogo" className="w-32 h-32" />
       </div>
       {/* Info */}
       <div className="flex flex-col justify-between">
@@ -45,29 +38,21 @@ const TokenInfoHeader = () => {
           {/* name Info */}
           <div className="flex justify-start items-center">
             <span className="text-dayT1 font-Switzer text-[28px] font-semibold leading-[120%]">
-              {tokenInfo?.name ?? "G.A.M.E"}
+              {tokenInfo?.name ?? "--"}
             </span>
             <span className="ml-2 text-dayT3 font-Switzer text-16 font-normal ">
-              {tokenInfo?.symbol ?? "G.A.M.E"}
+              {tokenInfo?.symbol ?? "--"}
             </span>
           </div>
           {/* Address Info */}
           <div className="flex items-center gap-2 mt-3">
             <div className="flex items-center py-1 px-2 justify-center gap-2.5 bg-dayBg3 rounded-sm hover:text-yellow cursor-pointer">
               <span className="text-xs font-medium ">
-                {formatAddressNew(
-                  tokenInfo?.tokenAddress ??
-                    "J747f38AQL6dXxWtitRoRy8YGpCdDiEBLxmLpM2jDuJ7"
-                )}
+                {formatAddressNew(tokenInfo?.tokenAddress ?? "--")}
               </span>
               <Copy
                 size={14}
-                onClick={() =>
-                  copyToClipboard(
-                    tokenInfo?.tokenAddress ??
-                      "J747f38AQL6dXxWtitRoRy8YGpCdDiEBLxmLpM2jDuJ7"
-                  )
-                }
+                onClick={() => copyToClipboard(tokenInfo?.tokenAddress ?? "--")}
                 className=" text-sm"
               />
             </div>
@@ -102,18 +87,11 @@ const TokenInfoHeader = () => {
                 alt="wallet"
               />
               <span className=" text-dayT1">
-                {formatAddressNew(
-                  tokenInfo?.creator ??
-                    "J747f38AQL6dXxWtitRoRy8YGpCdDiEBLxmLpM2jDuJ7",
-                  5,
-                  6
-                )}
+                {formatAddressNew(tokenInfo?.creator ?? "--", 5, 6)}
               </span>
             </div>
             <span className="text-dayT3">
-              {getDetailedTimeDiff(
-                tokenInfo?.agentCreatedTime ?? "2025-01-19T05:32:22.923Z"
-              )}
+              {getDetailedTimeDiff(tokenInfo?.agentCreatedTime ?? "--")}
             </span>
           </div>
         </div>

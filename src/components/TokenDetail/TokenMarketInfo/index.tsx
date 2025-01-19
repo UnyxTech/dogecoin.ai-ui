@@ -2,13 +2,12 @@ import { useAgentInfo } from "@/hooks/tokenDetial/useAgentInfo";
 import TokenInfoHeader from "./TokenInfoHeader";
 import TokenInfoTabs from "./tokenInfoTabs";
 import TradingViewChart from "./tradingview";
-import { Address } from "viem";
 import { useAgentInfoStore } from "@/store/tokenDetail";
 import { useEffect } from "react";
 
-const TokenMarketInfo = ({ tokenAddress }: { tokenAddress: Address }) => {
+const TokenMarketInfo = ({ characterId }: { characterId: string }) => {
   const setAgent = useAgentInfoStore((state) => state.setAgent);
-  const { data: tokenInfo, isLoading } = useAgentInfo(tokenAddress);
+  const { data: tokenInfo } = useAgentInfo(characterId);
   useEffect(() => {
     if (tokenInfo) {
       setAgent(tokenInfo);

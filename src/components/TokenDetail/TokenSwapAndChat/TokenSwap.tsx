@@ -37,7 +37,6 @@ const TokenSwap = () => {
     amountIn: debouncedAmount,
     isBuy: tradeData.isBuy,
   });
-  console.log("amountOut", amountOut);
   // debounce
   const debouncedSetAmount = useMemo(
     () =>
@@ -259,14 +258,14 @@ const TokenSwap = () => {
             </div>
           ) : tradeData.isBuy ? (
             <>
-              <img src="/public/images/dage_trade_b_i.png" alt="" />
+              <img src="/images/dage_trade_b_i.png" alt="" />
               <span className="text-white [-webkit-text-stroke:1.5px_#12122A] [text-stroke:1.5px_#12122A] font-WendyOne text-xl leading-[140%] tracking-wide capitalize">
                 {isEfficientBalance ? "Trade" : "Insufficient balance"}
               </span>
             </>
           ) : (
             <>
-              <img src="/public/images/dage_trade_b_i.png" alt="" />
+              <img src="/images/dage_trade_b_i.png" alt="" />
               <span className="text-white [-webkit-text-stroke:1.5px_#12122A] [text-stroke:1.5px_#12122A] font-WendyOne text-xl leading-[140%] tracking-wide capitalize">
                 {isEfficientBalance ? "Trade" : "Insufficient balance"}
               </span>

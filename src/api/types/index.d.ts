@@ -26,7 +26,7 @@ export interface KLineParams {
   tokenAddress: Address;
   type: KlineTime;
   startTimestamp: number;
-  endTimestamp: number;
+  endTimestamp?: number;
 }
 export interface KLineItem {
   o: string;
@@ -51,30 +51,29 @@ export interface PostCommentParams {
   content: string;
 }
 export interface GetCommentsParams {
-  cursor: string;
+  cursor?: string;
   pageSize: number;
-  characterId: number;
+  characterId: string;
+}
+export interface CommentItem {
+  id: number;
+  characterId: string;
+  parentId: number;
+  userId: number;
+  username: string;
+  userAvatar: string;
+  rootId: number;
+  floor: string;
+  content: string;
+  commentCount: number;
+  likedCount: number;
+  liked: true;
+  createdTime: string;
 }
 export interface GetCommentsResponse {
   pageSize: number;
   cursor: string;
-  rows: [
-    {
-      id: number;
-      characterId: string;
-      parentId: number;
-      userId: number;
-      username: string;
-      userAvatar: string;
-      rootId: number;
-      floor: string;
-      content: string;
-      commentCount: number;
-      likedCount: number;
-      liked: true;
-      createdTime: string;
-    }
-  ];
+  rows: CommentItem[];
 }
 export interface GetCommentFloor {
   cursor: string;

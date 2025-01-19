@@ -1,8 +1,7 @@
 import { getAgentInfo } from "@/api/api";
 import { useQuery } from "@tanstack/react-query";
-import { Address } from "viem";
 
-export const useAgentInfo = (characterId: Address) => {
+export const useAgentInfo = (characterId: string) => {
   return useQuery({
     queryKey: ["getAgentInfo", characterId],
     queryFn: () => getAgentInfo({ characterId }),

@@ -1,4 +1,4 @@
-import { GetAgentInfoResponse } from "@/types";
+import { GetAgentInfoResponse } from "@/api/types";
 import { create } from "zustand";
 
 interface AgentInfoState {

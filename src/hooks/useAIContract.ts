@@ -136,7 +136,6 @@ export function useAIContract() {
         tokenAddress: token,
         contractAddress: CONTRACT_AI_ADDRESS,
       });
-      console.log("trade", token, amount, amountOutMinimum);
       const { request } = await publicClient.simulateContract({
         value: 0n,
         account: evmAddress! as Address,

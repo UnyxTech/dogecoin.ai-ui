@@ -1,5 +1,4 @@
 import axios, { AxiosResponse } from "axios";
-import { Address } from "viem";
 import {
   AllAgentListRes,
   ApiResponse,
@@ -98,9 +97,9 @@ export const createAgent = async (
   const { data } = await api.post(`v1/agents`, params);
   return data.data;
 };
-export const getAgentInfo = async (params: { characterId: Address }) => {
+export const getAgentInfo = async (params: { characterId: string }) => {
   const { data } = await api.get<ApiResponse<GetAgentInfoResponse>>(
-    `v1//agents/agent/${params.characterId}`
+    `v1/agents/agent/${params.characterId}`
   );
   return data.data;
 };
@@ -108,7 +107,7 @@ export const getKLineHistory = async (
   params: KLineParams
 ): Promise<KLineItem[]> => {
   const { data } = await api.get<ApiResponse<KLineResponse>>(
-    "/wallets/agent/kline/trading-view",
+    "v1/wallets/agent/kline/trading-view",
     {
       params,
     }
@@ -118,7 +117,7 @@ export const getKLineHistory = async (
 
 export const getKLineLast = async (params: KLineParams): Promise<KLineItem> => {
   const { data } = await api.get<ApiResponse<KLineResponse>>(
-    "/wallets/agent/kline/trading-view",
+    "v1/wallets/agent/kline/trading-view",
     {
       params,
     }
@@ -126,17 +125,19 @@ export const getKLineLast = async (params: KLineParams): Promise<KLineItem> => {
   return data.data.lastValidKLine;
 };
 export const getCommentsFloor = async (params: GetCommentFloor) => {
-  await api.post<ApiResponse<GetCommentsResponse>>("/agents/comments/floor", {
+  await api.post<ApiResponse<GetCommentsResponse>>("v1/agents/comments/floor", {
     params,
   });
 };
-export const getAgentsComment = async (params: GetCommentsParams) => {
-  await api.post<ApiResponse<GetCommentsResponse>>("/agents/comments", {
-    params,
-  });
+export const getAgentsComments = async (params: GetCommentsParams) => {
+  const { data } = await api.get<ApiResponse<GetCommentsResponse>>(
+    "v1/agents/comments",
+    {
+      params,
+    }
+  );
+  return data.data;
 };
 export const postAgentsComment = async (params: PostCommentParams) => {
-  await api.post<PostCommentParams>("/agents/comments", {
-    params,
-  });
+  await api.post<PostCommentParams>("v1/agents/comments", params);
 };
