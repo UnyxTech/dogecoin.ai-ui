@@ -21,7 +21,7 @@ import { CircleAlert } from "lucide-react";
 import { useState } from "react";
 import BigNumber from "bignumber.js";
 import { formatUnits, parseUnits } from "viem";
-import { BASE_TOKEN, createFee, TOTAL_AMOUNT } from "@/constant";
+import { BASE_TOKEN, createFee, minFee, TOTAL_AMOUNT } from "@/constant";
 import { debounce } from "lodash";
 
 interface CreateAgentModalProps {
@@ -156,6 +156,7 @@ export const CreateAgentModal = ({
         </div>
         <Button
           className="mx-[51px]"
+          disabled={new BigNumber(amount).lt(minFee)}
           onClick={() => {
             handleCreate();
           }}

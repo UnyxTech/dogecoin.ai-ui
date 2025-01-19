@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import { useAuth } from "./useAuth";
 import {
   Chain,
@@ -7,24 +6,20 @@ import {
   custom,
   http,
 } from "viem";
-import { defaultChain } from "@/constant";
+import { useConnect, useSwitchChain } from "wagmi";
 
 export default function useWalletService() {
-  const { currentEvmWallet, installWallets } = useAuth();
+  const { currentEvmWallet } = useAuth();
+  const { connectors } = useConnect();
+  const { switchChain } = useSwitchChain();
 
-  useEffect(() => {
-    if (currentEvmWallet) {
-      switchChain(defaultChain);
-    }
-  }, [currentEvmWallet]);
-  const getWalletClient = (chain: Chain) => {
-    if (!currentEvmWallet || !installWallets) return null;
-    const currentWallet = installWallets?.find(
-      (item: any) => item.info.rdns === currentEvmWallet
-    );
-    console.log(currentWallet?.provider);
+  const getWalletClient = async (chain: Chain) => {
+    if (!currentEvmWallet || !connectors) return null;
+    const currentProvider: any = await connectors
+      .find((item: any) => item.id === currentEvmWallet)
+      ?.getProvider();
     const client = createWalletClient({
-      transport: custom(currentWallet?.provider),
+      transport: custom(currentProvider),
       chain: chain,
     });
     if (!client) {
@@ -42,23 +37,12 @@ export default function useWalletService() {
     }
     return publicClient;
   };
-  const switchChain = async (chain: any) => {
-    const walletClient = getWalletClient(defaultChain);
-    const chainId = await walletClient?.getChainId();
-    if (chainId !== chain.id) {
-      try {
-        await walletClient?.switchChain({ id: chain.id });
-      } catch (e: any) {
-        if (e?.code === 4902) {
-          await walletClient?.addChain({ chain: chain });
-          await walletClient?.switchChain({ id: chain.id });
-        }
-      }
-    }
+  const switchChainFun = async (chain: any) => {
+    await switchChain({ chainId: chain.id });
   };
   return {
     getWalletClient,
     getPublicClient,
-    switchChain,
+    switchChainFun,
   };
 }

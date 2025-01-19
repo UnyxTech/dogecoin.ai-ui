@@ -2,12 +2,10 @@ import { Address, erc20Abi, getContract } from "viem";
 import useWalletService from "@/hooks/useWalletService";
 import { defaultChain } from "@/constant";
 import { useAuth } from "./useAuth";
-import { useWalletClient } from "wagmi";
 
 export function useErc20() {
   const walletService = useWalletService();
   const { evmAddress } = useAuth();
-  const { data: walletClient } = useWalletClient();
   return {
     approve: async ({
       tokenAddress,
@@ -17,7 +15,7 @@ export function useErc20() {
       contractAddress: Address;
     }) => {
       const publicClient = walletService.getPublicClient(defaultChain);
-      // const walletClient = walletService.getWalletClient(defaultChain);
+      const walletClient = await walletService.getWalletClient(defaultChain);
       if (!walletClient) throw new Error("walletClient not found");
       const contract = getContract({
         address: tokenAddress,

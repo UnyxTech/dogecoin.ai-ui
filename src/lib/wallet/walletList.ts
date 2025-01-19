@@ -2,7 +2,7 @@ import { WalletItem } from "@/types/wallet";
 
 export const evmWalletList: WalletItem[] = [
   {
-    id: "tomoWallet",
+    id: "inc.tomo",
     name: "Tomo Wallet",
     homepage: "https://tomo.inc/",
     order: 15,
@@ -22,7 +22,7 @@ export const evmWalletList: WalletItem[] = [
     wId: "tomoWallet",
   },
   {
-    id: "metaMask",
+    id: "io.metamask",
     name: "MetaMask",
     homepage: "https://metamask.io/",
     order: 10,
@@ -41,7 +41,7 @@ export const evmWalletList: WalletItem[] = [
     wId: "c57ca95b47569778a828d19178114f4db188b89b763c899ba0be274e97267d96",
   },
   {
-    id: "okxWallet",
+    id: "com.okex.wallet",
     name: "OKX Wallet",
     homepage: "https://www.okx.com/web3",
     order: 140,

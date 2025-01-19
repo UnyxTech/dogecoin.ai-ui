@@ -30,8 +30,8 @@ const Navbar = () => {
               alt="logo"
             />
           </div>
-          <div className="relative">
-            <Input className="w-[560px] pl-10" placeholder="Search Agent/CA" />
+          <div className="relative flex-1 max-w-[560px] mx-6">
+            <Input className="pl-10" placeholder="Search Agent/CA" />
             <Search className="absolute text-second left-3 top-1/2 transform -translate-y-1/2 w-5 h-5" />
           </div>
           <div className="flex gap-6">
