@@ -1,8 +1,7 @@
 import axios, { AxiosResponse } from "axios";
-
-export const BASE = "";
-export const BASE_URL = `${BASE}api/`;
-
+import { KLineItem, KLineParams, KLineResponse } from "./types";
+export const BASE = import.meta.env.VITE_BASE_API_URL;
+export const BASE_URL = `${BASE}/v1`;
 const api = axios.create({ baseURL: BASE_URL });
 
 api.interceptors.request.use((config: any) => {
@@ -51,4 +50,36 @@ class ApiError extends Error {
 export const getAgentList = async (): Promise<any> => {
   const { data } = await api.get(``);
   return data;
+};
+export const getKLineHistory = async (
+  params: KLineParams
+): Promise<KLineItem[]> => {
+  const { data } = await api.get<KLineResponse>(
+    "/wallets/agent/kline/trading-view",
+    {
+      params,
+    }
+  );
+  return data.data.klineList;
+};
+
+export const getKLineLast = async (params: KLineParams): Promise<KLineItem> => {
+  const { data } = await api.get<KLineResponse>(
+    "/wallets/agent/kline/trading-view",
+    {
+      params,
+    }
+  );
+  return data.data.lastValidKLine;
+};
+export const postAgentsComment = async (
+  params: KLineParams
+): Promise<KLineItem> => {
+  const { data } = await api.get<KLineResponse>(
+    "/wallets/agent/kline/trading-view",
+    {
+      params,
+    }
+  );
+  return data.data.lastValidKLine;
 };

@@ -1,3 +1,5 @@
+import { Address } from "viem";
+
 export enum AgentType {
   Productivity = "Productivity",
   Meme = "Meme",
@@ -5,10 +7,15 @@ export enum AgentType {
 }
 
 export interface AgentInfo {
-  agentName: string,
-  symbol: string,
-  agentId?: string,
-  agentType?: AgentType,
-  logo?: string,
-  description?: string
+  agentName: string;
+  symbol: string;
+  agentId?: string;
+  agentType?: AgentType;
+  logo?: string;
+  description?: string;
+}
+export interface TokenInfo {
+  ticker: string;
+  name: string;
+  address: Address;
 }

@@ -4,7 +4,6 @@ import cats from "./cats";
 import { Heart, X } from "lucide-react";
 import { createPortal } from "react-dom";
 
-// 模拟数据
 const generateItems = (count: number) => {
   return Array.from({ length: count }, (_, i) => ({
     id: i,

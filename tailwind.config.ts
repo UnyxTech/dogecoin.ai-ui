@@ -33,6 +33,7 @@ const config: Config = {
       dayT1: "var(--Day-T1)",
       dayT2: "var(--Day-T2)",
       dayT3: "var(--Day-T3)",
+      dayT4: "var(--Day-T4)",
       dayBg1: "var(--Day-BG1)",
       dayBg3: "var(--Day-BG3)",
       border: "#EBEBF4",

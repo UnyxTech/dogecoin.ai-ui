@@ -1,3 +1,4 @@
+import { KlineTime } from "@/api/types";
 import { formatUnits } from "viem";
 
 export const formatBalance = (rawBalance: string) => {
@@ -119,5 +120,105 @@ export const getColorByAgentName = (agentName: string) => {
       return "bg-green text-white";
     default:
       return "bg-gray text-first";
+  }
+};
+/**
+ * Convert TradingView resolution to API KlineTime type
+ * @param resolution - TradingView time interval string
+ * @returns KlineTime - API corresponding time interval type
+ *
+ * @example
+ * getKlineType("1")  // returns "one_minute"
+ * getKlineType("60") // returns "one_hour"
+ * getKlineType("D")  // returns "one_day"
+ * getKlineType("W")  // returns "one_week"
+ */
+export const getKlineType = (resolution: string): KlineTime => {
+  switch (resolution) {
+    // case "1S":
+    //   return "one_second";
+    // case "5S":
+    //   return "five_second";
+    // case "10S":
+    //   return "ten_second";
+    // case "15S":
+    //   return "fifteen_second";
+    // case "30S":
+    //   return "thirty_second";
+    case "1":
+      return "one_minute";
+    case "5":
+      return "five_minute";
+    case "15":
+      return "fifteen_minute";
+    case "30":
+      return "thirty_minute";
+    case "60":
+      return "one_hour";
+    case "120":
+      return "two_hour";
+    case "240":
+      return "four_hour";
+    case "480":
+      return "eight_hour";
+    case "720":
+      return "twelve_hour";
+    case "D":
+      return "one_day";
+    case "3D":
+      return "three_day";
+    case "W":
+      return "one_week";
+    case "M":
+      return "one_month";
+    default:
+      return "one_minute";
+  }
+};
+/**
+ * Get interval milliseconds based on TradingView resolution
+ * @param resolution - TradingView time interval string
+ * @returns number - Interval in milliseconds
+ */
+export const getIntervalByResolution = (resolution: string): number => {
+  switch (resolution) {
+    case "1S":
+      return 1000; // 1 second
+    case "5S":
+      return 5 * 1000; // 5 seconds
+    case "10S":
+      return 10 * 1000; // 10 seconds
+    case "15S":
+      return 15 * 1000; // 15 seconds
+    case "30S":
+      return 30 * 1000; // 30 seconds
+    case "1":
+      return 60 * 1000; // 1 minute
+    case "5":
+      return 5 * 60 * 1000; // 5 minutes
+    case "15":
+      return 15 * 60 * 1000; // 15 minutes
+    case "30":
+      return 30 * 60 * 1000; // 30 minutes
+    case "60":
+      return 60 * 60 * 1000; // 1 hour
+    case "120":
+      return 120 * 60 * 1000; // 2 hours
+    case "240":
+      return 240 * 60 * 1000; // 4 hours
+    case "480":
+      return 480 * 60 * 1000; // 8 hours
+    case "720":
+      return 720 * 60 * 1000; // 12 hours
+    case "D":
+      return 24 * 60 * 60 * 1000; // 1 day
+    case "3D":
+      return 3 * 24 * 60 * 60 * 1000; // 3 days
+    case "W":
+      return 7 * 24 * 60 * 60 * 1000; // 1 week
+    case "M":
+      return 30 * 24 * 60 * 60 * 1000; // 1 month 
+    default:
+      return 60 * 1000; // default to 1 minute
   }
 };
