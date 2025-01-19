@@ -23,6 +23,7 @@ import {
 import { AgentInfo, AgentType } from "@/types";
 import { createAgent, uploadImg } from "@/api/api";
 import { useMutation } from "@tanstack/react-query";
+import { CreateAgentRes } from "@/api/types";
 
 const formSchema = z.object({
   file: z
@@ -92,16 +93,15 @@ const CreatePage = () => {
 
   const uploadMutation = useMutation({
     mutationFn: uploadImg,
-    onSuccess(data) {
-      form.setValue("file", data.data.file);
+    onSuccess(data: string) {
+      form.setValue("file", data);
     },
   });
 
   const createAgentMutation = useMutation({
     mutationFn: createAgent,
-    onSuccess(data) {
-      console.log(data);
-      setAgentId("agent_114");
+    onSuccess(data: CreateAgentRes) {
+      setAgentId(data.characterId);
       setShowCreateAgentModal(true);
     },
   });
@@ -110,9 +110,9 @@ const CreatePage = () => {
     const params: AgentInfo = {
       name: values.agentName,
       symbol: values.ticker,
-      agentType: values.agentType,
+      agentType: values.agentType.replace(/-/g, "").toLowerCase(),
       description: values.description,
-      image: values.file??'',
+      image: values.file ?? "",
       twitter: values.twitterLink,
       telegram: values.tgLink,
       youtube: values.youTubeLink,

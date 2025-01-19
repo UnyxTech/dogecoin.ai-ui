@@ -5,6 +5,11 @@ import { useEffect } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "./ui/dialog";
 import useWalletService from "@/hooks/useWalletService";
 import { defaultChain } from "@/constant";
+import { login } from "@/api/api";
+import { useMutation } from "@tanstack/react-query";
+import { LoginReq, LoginRes } from "@/api/types";
+import { useLoginStore } from "@/store/login";
+import { Address, createWalletClient, custom } from "viem";
 
 interface ConnectWalletModalProps {
   open: boolean;
@@ -25,10 +30,12 @@ export const ConnectWalletModal = ({
     updateCurrentEvmWallet,
     currentEvmWallet,
   } = useAuth();
-  const { switchChain } = useWalletService();
+  const { switchChainFun } = useWalletService();
   useEffect(() => {
     getInstalledWallet();
   }, []);
+  const setToken = useLoginStore((state) => state.setToken);
+
   const connectWallet = async (wallet: WalletItem) => {
     try {
       const walletInstalled = installWallets.find(
@@ -44,20 +51,39 @@ export const ConnectWalletModal = ({
       const accounts = await provider.request({
         method: "eth_requestAccounts",
       });
-      switchChain(defaultChain);
       if (!!accounts) {
         updateEvmAddress(accounts[0]);
-        updateCurrentEvmWallet(wallet.rdns);
+        updateCurrentEvmWallet(wallet.id);
       }
-      // const evmWallet = createWalletClient({
-      //   transport: custom(provider),
-      // });
+      const walletClient = createWalletClient({
+        transport: custom(provider),
+        chain: defaultChain,
+      });
+      const timestamp = Date.now();
+      const signature = await walletClient?.signMessage({
+        account: accounts[0],
+        message: `Dogecoin.AI\nPlease sign this message to log in.\nTimestamp: ${timestamp}`,
+      });
+      const params: LoginReq = {
+        walletAddress: accounts[0],
+        timestamp: timestamp,
+        signature: signature as Address,
+      };
+      loginMutation.mutate(params);
       nestStep && nestStep();
       onClose();
     } catch (error) {
       console.error("Error connecting to wallet:", error);
     }
   };
+
+  const loginMutation = useMutation({
+    mutationFn: login,
+    onSuccess(data: LoginRes) {
+      setToken(data.token);
+      switchChainFun(defaultChain);
+    },
+  });
 
   useEffect(() => {
     if (!currentEvmWallet || !installWallets) {

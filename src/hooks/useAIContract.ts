@@ -22,7 +22,7 @@ export type amountOutType = {
 export function useAIContract() {
   const walletService = useWalletService();
   const { evmAddress } = useAuth();
-  const { data: walletClient } = useWalletClient();
+  const { data: walletClient } = useWalletClient({ chainId: defaultChain.id });
   const erc20Service = useErc20();
   const getViemContract = () => {
     const publicClient = walletService.getPublicClient(defaultChain);
@@ -39,11 +39,10 @@ export function useAIContract() {
       buyAmount,
       agentId,
     }: CreateAgentParams) => {
-      await walletService.switchChain(defaultChain);
-      const walletClient = walletService.getWalletClient(defaultChain);
+      await walletService.switchChainFun(defaultChain);
+      const curWalletClient = await walletService.getWalletClient(defaultChain);
       const publicClient = walletService.getPublicClient(defaultChain);
-      if (!walletClient) throw new Error("walletClient not found");
-
+      if (!curWalletClient) throw new Error("walletClient not found");
       // await erc20Service.approve({
       //   tokenAddress: BASE_TOKEN.address,
       //   contractAddress: CONTRACT_AI_ADDRESS,
@@ -57,7 +56,7 @@ export function useAIContract() {
         args: [name, symbol, agentId, buyAmount],
       });
 
-      const hash = await walletClient.writeContract(request);
+      const hash = await curWalletClient.writeContract(request);
       const transaction = await publicClient.waitForTransactionReceipt({
         hash: hash,
       });
@@ -101,7 +100,7 @@ export function useAIContract() {
       amount: bigint;
       amountOutMinimum: bigint;
     }) => {
-      await walletService.switchChain(defaultChain);
+      await walletService.switchChainFun(defaultChain);
       const publicClient = walletService.getPublicClient(defaultChain);
       if (!walletClient) throw new Error("walletClient not found");
       const { request } = await publicClient.simulateContract({
@@ -130,7 +129,7 @@ export function useAIContract() {
       amount: bigint;
       amountOutMinimum: bigint;
     }) => {
-      await walletService.switchChain(defaultChain);
+      await walletService.switchChainFun(defaultChain);
       const publicClient = walletService.getPublicClient(defaultChain);
       if (!walletClient) throw new Error("walletClient not found");
       await erc20Service.approve({

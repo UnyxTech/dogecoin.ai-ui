@@ -1,14 +1,21 @@
 import { AgentInfo } from "@/types";
 import axios, { AxiosResponse } from "axios";
-import { KLineItem, KLineParams, KLineResponse } from "./types";
+import { AllAgentListRes, CreateAgentRes, KLineItem, KLineParams, KLineResponse, LoginReq, LoginRes } from "./types";
 export const BASE = import.meta.env.VITE_BASE_API_URL;
 
 export const BASE_URL = "https://api-dev.dogeos.ai/";
 
+export const DEFAULT_PAGE_SIZE = 10;
+
 const api = axios.create({ baseURL: BASE_URL });
 
 api.interceptors.request.use((config: any) => {
+  const token = localStorage.getItem("login-token");
+  if (token) {
+    config.headers.Authorization = `Bearer ${JSON.parse(token).state.token}`;
+  }
   config.headers["debug-mode"] = "true";
+  config.headers.platform = 0;
   return config;
 });
 
@@ -51,16 +58,28 @@ class ApiError extends Error {
   }
 }
 
-export const uploadImg = async (file: FormData) => {
+export const login = async (params: LoginReq): Promise<LoginRes> => {
+  const { data } = await api.post("/v1/login/wallet/evm", params);
+  return data.data;
+};
+
+export const getAllAgentList = async (currentPage: number): Promise<AllAgentListRes> => {
+  const { data } = await api.get(`/v1/agents/all`, {
+    params: { pageSize: DEFAULT_PAGE_SIZE, currentPage },
+  });
+  return data.data;
+};
+
+export const uploadImg = async (file: FormData): Promise<string> => {
   const { data } = await api.post(`v1/upload/agent/image`, file, {
     headers: { "Content-Type": "multipart/form-data" },
   });
-  return data;
+  return data.data;
 };
 
-export const createAgent = async (params: AgentInfo) => {
+export const createAgent = async (params: AgentInfo): Promise<CreateAgentRes> => {
   const { data } = await api.post(`v1/agents`, params);
-  return data;
+  return data.data;
 };
 
 export const getKLineHistory = async (

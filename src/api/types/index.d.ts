@@ -106,3 +106,74 @@ export interface GetPostDataDetailResponse {
 //////////////////////////////////
 ////////////......////////////////
 //////////////////////////////////
+
+export interface LoginReq {
+  referralCode?: string;
+  walletAddress: string;
+  timestamp: number;
+  signature: string;
+}
+
+export interface LoginRes {
+  id: number;
+  avatar: string;
+  platform: number;
+  token: string;
+  refreshToken: string;
+  tokenExpireTimeAt: number;
+  refreshTokenExpireTimeAt: number;
+  status: string;
+  actualBalance: string;
+}
+
+export interface CreateAgentRes {
+  id: number;
+  createdTime: string;
+  updatedTime: string;
+  characterId: string;
+  creator: string;
+  txHash: string;
+  graduated: boolean;
+  agentCreatedTime: string;
+  agentGraduatedTime: string;
+  tokenAddress: string;
+  pairAddress: string;
+  name: string;
+  price: number;
+  priceUsd: string;
+  price24Change: number;
+  price24ChangeUsd: number;
+  marketCap: number;
+  holder: number;
+  symbol: string;
+  description: string;
+  image: string;
+  twitter: string;
+  telegram: string;
+  youtube: string;
+  website: string;
+  discord: string;
+  agentType: string;
+}
+
+export interface AgentItem {
+  id: number;
+  characterId: string;
+  name: string;
+  symbol: string;
+  marketCap: string;
+  changed24h: string;
+  totalLocked: string;
+  holderCount: string;
+  vol24h: string;
+  contractAddress: string;
+  createdTime: string;
+  graduatedPercent: number;
+}
+
+export interface AllAgentListRes {
+  current: number;
+  pageSize: number;
+  currentRowSize: number;
+  rows: AgentItem[];
+}
