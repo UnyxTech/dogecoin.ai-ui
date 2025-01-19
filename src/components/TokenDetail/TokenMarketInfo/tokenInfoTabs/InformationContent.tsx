@@ -1,5 +1,8 @@
 import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
+import { useAgentInfoStore } from "@/store/tokenDetail";
+import { formatCompactNumber } from "@/utils";
+import dayjs from "dayjs";
 import { useState } from "react";
 const Title = ({ text, className }: { text: string; className?: string }) => (
   <h1 className={cn("font-SwitzerBold text-xl", className)}>{text}</h1>
@@ -36,6 +39,7 @@ const Description = ({
   );
 };
 const InformationContent = () => {
+  const tokenInfo = useAgentInfoStore((state) => state.agent);
   return (
     <div className="flex flex-col gap-14 pb-10">
       <div>
@@ -44,40 +48,58 @@ const InformationContent = () => {
           <div className="flex-1 py-1 px-4 bg-[#FAFAFD]">
             <div className="flex justify-between items-center py-4">
               <span className="text-dayT3">Market cap(FDV)</span>
-              <span className="text-dayT1">$291.9m</span>
+              <span className="text-dayT1">
+                ${formatCompactNumber(tokenInfo?.marketCap ?? 1321854318)}
+              </span>
             </div>
             <Separator />
             <div className="flex justify-between items-center py-4">
               <span className="text-dayT3">24 hours change</span>
-              <span className="text-dayT1">+14.35%</span>
+              <span className="text-dayT1">
+                {tokenInfo?.marketCap ?? -1321854318}%
+              </span>
             </div>
             <Separator />
             <div className="flex justify-between items-center py-4">
               <span className="text-dayT3">Total value locked</span>
-              <span className="text-dayT1">$31.6m</span>
+              <span className="text-dayT1">
+                ${formatCompactNumber(tokenInfo?.totalLocked ?? 1871371)}
+              </span>
             </div>
           </div>
           <div className="flex-1 py-1 px-4 bg-[#FAFAFD]">
             <div className="flex justify-between items-center py-4">
               <span className="text-dayT3">Holders count</span>
-              <span className="text-dayT1">154,696</span>
+              <span className="text-dayT1">
+                {tokenInfo?.holder?.toLocaleString("en-US") ??
+                  Number(1231815354).toLocaleString("en-US")}
+              </span>
             </div>
             <Separator />
             <div className="flex justify-between items-center py-4">
               <span className="text-dayT3">24 hours volume</span>
-              <span className="text-dayT1">$6.5m</span>
+              <span className="text-dayT1">
+                ${formatCompactNumber(tokenInfo?.volume24h ?? 1871371)}
+              </span>
             </div>
             <Separator />
             <div className="flex justify-between items-center py-4">
               <span className="text-dayT3">Created at</span>
-              <span className="text-dayT1">2025-01-04 12:26</span>
+              <span className="text-dayT1">
+                {dayjs(
+                  tokenInfo?.agentCreatedTime ?? "2025-01-19T06:49:07.990Z"
+                ).format("YYYY-MM-DD HH:mm")}
+              </span>
             </div>
           </div>
         </div>
       </div>
       {/* Description */}
       <Description
-        text="Lorem ipsum dolor sit amet consectetur adipisicing elit. Magnam ut optio similique hic dignissimos sit sunt est, eaque iste voluptatum quidem voluptates iusto vel voluptatibus modi cum iure commodi repellendus?"
+        text={
+          tokenInfo?.description ??
+          "Lorem ipsum dolor sit amet consectetur adipisicing elit. Magnam ut optio similique hic dignissimos sit sunt est, eaque iste voluptatum quidem voluptates iusto vel voluptatibus modi cum iure commodi repellendus?"
+        }
         slice={200}
       />
       {/* Social links */}

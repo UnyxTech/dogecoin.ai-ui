@@ -10,6 +10,7 @@ import {
 import * as React from "react";
 // import { getKLineHistory, getKLineLast } from "@/api/api";
 import { getIntervalByResolution } from "@/utils";
+import { useAgentInfoStore } from "@/store/tokenDetail";
 
 export interface ChartContainerProps {
   symbol: ChartingLibraryWidgetOptions["symbol"];
@@ -50,13 +51,14 @@ const SUPPORTED_RESOLUTIONS = [
   "1D",
   "1W",
 ] as ResolutionString[];
-const TradingViewChart = ({ }: { tokenInfo: any }) => {
+const TradingViewChart = () => {
+  const tokenInfo = useAgentInfoStore((state) => state.agent);
   const chartContainerRef =
     useRef<HTMLDivElement>() as React.MutableRefObject<HTMLInputElement>;
 
   useEffect(() => {
     const widgetOptions: ChartingLibraryWidgetOptions = {
-      symbol: "Doge" as string,
+      symbol: tokenInfo?.symbol ?? ("MemeSymbol" as string),
       // BEWARE: no trailing slash is expected in feed URL
       // tslint:disable-next-line:no-any
       datafeed: {
@@ -76,9 +78,9 @@ const TradingViewChart = ({ }: { tokenInfo: any }) => {
         ) => {
           setTimeout(() => {
             const symbolInfo: LibrarySymbolInfo = {
-              ticker: "MemeTicker",
-              name: "MemeToken",
-              description: "MemeName/Doge",
+              ticker: tokenInfo?.symbol ?? "MemeSymbol",
+              name: tokenInfo?.name ?? "MemeName",
+              description: `${tokenInfo?.symbol ?? "MemeSymbol"}/Doge`,
               type: "crypto",
               session: "24x7",
               timezone: "Etc/UTC",
@@ -359,7 +361,7 @@ const TradingViewChart = ({ }: { tokenInfo: any }) => {
           }
         },
       },
-      interval: "5S" as ChartingLibraryWidgetOptions["interval"],
+      interval: "1" as ChartingLibraryWidgetOptions["interval"],
       container: chartContainerRef.current,
       library_path: "/charting_library/" as string,
       locale: getLanguageFromURL() || "en",

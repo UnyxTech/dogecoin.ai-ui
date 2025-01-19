@@ -11,7 +11,7 @@ import TradeTypeButton from "./TradeTypeButton";
 import { useAccount, useBalance, useReadContract } from "wagmi";
 import { erc20Abi, formatUnits, parseUnits } from "viem";
 import {
-  useAIContract,
+  // useAIContract,
   useGetAmountOutQuery,
   useTrade,
 } from "@/hooks/useAIContract";
@@ -31,19 +31,20 @@ const TokenSwap = () => {
     amount: "",
   });
   // amountOut
-  const { getBuyAmountOut, getSellAmountOut } = useAIContract();
+  // const { getBuyAmountOut, getSellAmountOut } = useAIContract();
   const { data: amountOut } = useGetAmountOutQuery({
     token: "0x650b89f5e67927fc9081F211B2a2fAd9487D1A69",
     amountIn: debouncedAmount,
     isBuy: tradeData.isBuy,
   });
+  console.log("amountOut", amountOut);
   // debounce
   const debouncedSetAmount = useMemo(
     () =>
       debounce((value: string) => {
         const amount = value ? parseUnits(value, 18) : 0n;
         setDebouncedAmount(amount);
-      }, 500),
+      }, 200),
     []
   );
   useEffect(() => {
@@ -114,26 +115,29 @@ const TokenSwap = () => {
   });
 
   const handleTrade = async () => {
-    let amountOut;
-    if (tradeData.isBuy) {
-      const buyAmountOut = await getBuyAmountOut({
-        token: "0x650b89f5e67927fc9081F211B2a2fAd9487D1A69",
-        amountIn: parseUnits(tradeData.amount, 18),
-      });
-      amountOut = buyAmountOut[0];
-    }
-    if (!tradeData.isBuy) {
-      const sellAmountOut = await getSellAmountOut({
-        token: "0x650b89f5e67927fc9081F211B2a2fAd9487D1A69",
-        amountIn: parseUnits(tradeData.amount, 18),
-      });
-      amountOut = sellAmountOut[0];
+    // let amountOut;
+    // if (tradeData.isBuy) {
+    //   const buyAmountOut = await getBuyAmountOut({
+    //     token: "0x650b89f5e67927fc9081F211B2a2fAd9487D1A69",
+    //     amountIn: parseUnits(tradeData.amount, 18),
+    //   });
+    //   amountOut = buyAmountOut[0];
+    // }
+    // if (!tradeData.isBuy) {
+    //   const sellAmountOut = await getSellAmountOut({
+    //     token: "0x650b89f5e67927fc9081F211B2a2fAd9487D1A69",
+    //     amountIn: parseUnits(tradeData.amount, 18),
+    //   });
+    //   amountOut = sellAmountOut[0];
+    // }
+    if (amountOut?.length === 0) {
+      console.log();
     }
     await treadeAsync({
       token: "0x650b89f5e67927fc9081F211B2a2fAd9487D1A69",
       amount: parseUnits(tradeData.amount, 18),
       isBuy: tradeData.isBuy,
-      amountOutMinimum: (amountOut! * (100n - defaultSlippage)) / 100n,
+      amountOutMinimum: (amountOut![0] * (100n - defaultSlippage)) / 100n,
     });
   };
   return (
@@ -237,17 +241,19 @@ const TokenSwap = () => {
         <Button
           onClick={() => handleTrade()}
           disabled={!isEfficientBalance}
-          className={`trade-button border-0
-          ${
-            tradeData.isBuy
-              ? "bg-gradient-to-b from-buy-from to-buy-to"
-              : "bg-gradient-to-b from-sell-from to-sell-to"
-          } transition-all duration-700`}
+          variant={
+            !isEfficientBalance
+              ? "tradeDisabled"
+              : tradeData.isBuy
+              ? "buy"
+              : "sell"
+          }
+          className="trade-button hover:border-none border-[2px] border-b-4 border-[#12122A]"
         >
           {isTradePending ? (
             <div className="flex items-center gap-2">
               <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
-              <span className="text-white [-webkit-text-stroke:1.5px_#12122A] [text-stroke:1.5px_#12122A] font-WendyOne text-xl leading-[140%] tracking-wide capitalize">
+              <span className="text-white [-webkit-text-stroke:1.5px_#12122A] [text-stroke:1.5px_#12122A]  font-WendyOne text-xl leading-[140%] tracking-wide capitalize">
                 Trading...
               </span>
             </div>
@@ -272,7 +278,7 @@ const TokenSwap = () => {
           onClick={() => setShowModal(true)}
           className={`w-full rounded-sm py-6 bg-[linear-gradient(to_bottom,#626286_-9.05%,#34344B_51.88%)]`}
         >
-          <img src="/public/images/wallet.svg" alt="" />
+          <img src="/images/wallet.svg" alt="" />
           <span className="text-white [-webkit-text-stroke:1.5px_#12122A] [text-stroke:1.5px_#12122A] font-WendyOne text-xl leading-[140%] tracking-wide capitalize">
             Connect Wallet
           </span>

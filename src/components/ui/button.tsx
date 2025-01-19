@@ -25,6 +25,10 @@ const buttonVariants = cva(
           "bg-secondary text-secondary-foreground hover:bg-secondary/80",
         ghost: "hover:bg-accent hover:text-accent-foreground",
         link: "text-primary underline-offset-4 hover:underline",
+        tradeDisabled:
+          "bg-gradient-to-b from-[rgba(151,151,151,0.26)] to-[#979797] cursor-not-allowed",
+        buy: "bg-gradient-to-b from-buy-from to-buy-to",
+        sell: "bg-gradient-to-b from-sell-from to-sell-to",
       },
       size: {
         default: "h-10 px-4 py-2",

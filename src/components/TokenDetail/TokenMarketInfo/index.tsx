@@ -1,15 +1,25 @@
+import { useAgentInfo } from "@/hooks/tokenDetial/useAgentInfo";
 import TokenInfoHeader from "./TokenInfoHeader";
 import TokenInfoTabs from "./tokenInfoTabs";
 import TradingViewChart from "./tradingview";
+import { Address } from "viem";
+import { useAgentInfoStore } from "@/store/tokenDetail";
+import { useEffect } from "react";
 
-const TokenMarketInfo = ({ }: { tokenAddress: string }) => {
-  const tokenInfo = {};
+const TokenMarketInfo = ({ tokenAddress }: { tokenAddress: Address }) => {
+  const setAgent = useAgentInfoStore((state) => state.setAgent);
+  const { data: tokenInfo, isLoading } = useAgentInfo(tokenAddress);
+  useEffect(() => {
+    if (tokenInfo) {
+      setAgent(tokenInfo);
+    }
+  }, [tokenInfo, setAgent]);
   return (
     <div className="w-full rounded-[6px] overflow-hidden flex flex-col gap-4">
       <div className="w-full bg-dayBg1 p-6">
-        <TokenInfoHeader tokenInfo={tokenInfo} />
+        <TokenInfoHeader />
         <div className="h-96 mt-4">
-          <TradingViewChart tokenInfo={tokenInfo} />
+          <TradingViewChart />
         </div>
       </div>
       <div className="w-full bg-dayBg1 px-6 py-2">

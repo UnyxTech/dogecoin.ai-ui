@@ -1,4 +1,9 @@
-import { copyToClipboard, formatAddressNew } from "@/utils";
+import { useAgentInfoStore } from "@/store/tokenDetail";
+import {
+  copyToClipboard,
+  formatAddressNew,
+  getDetailedTimeDiff,
+} from "@/utils";
 import { Copy, User } from "lucide-react";
 
 interface ExternalLink {
@@ -7,25 +12,29 @@ interface ExternalLink {
   icon: string;
 }
 
-const externalLinks: ExternalLink[] = [
-  {
-    name: "DexScreener",
-    url: "https://dexscreener.com/",
-    icon: "/images/dexscreener.svg",
-  },
-  {
-    name: "GeckoTerminal",
-    url: "https://www.geckoterminal.com/",
-    icon: "/images/gecko.svg",
-  },
-];
-const TokenInfoHeader = ({ }: { tokenInfo: any }) => {
+const TokenInfoHeader = () => {
+  const tokenInfo = useAgentInfoStore((state) => state.agent);
+  const externalLinks: ExternalLink[] = [
+    {
+      name: "DexScreener",
+      url: `https://dexscreener.com/base/${tokenInfo?.pairAddress}`,
+      icon: "/images/dexscreener.svg",
+    },
+    {
+      name: "GeckoTerminal",
+      url: `https://www.geckoterminal.com/base/pools/${tokenInfo?.pairAddress}`,
+      icon: "/images/gecko.svg",
+    },
+  ];
   return (
     <div className="flex gap-3">
       {/* Logo  */}
       <div className="flex-shrink-0">
         <img
-          src="https://i.seadn.io/s/raw/files/ea97bdb3186597f5685de8fd26b6d483.png?auto=format&dpr=1&w=1200"
+          src={
+            tokenInfo?.image ??
+            "https://i.seadn.io/s/raw/files/ea97bdb3186597f5685de8fd26b6d483.png?auto=format&dpr=1&w=1200"
+          }
           alt="tokenLogo"
           className="w-32 h-32"
         />
@@ -36,10 +45,10 @@ const TokenInfoHeader = ({ }: { tokenInfo: any }) => {
           {/* name Info */}
           <div className="flex justify-start items-center">
             <span className="text-dayT1 font-Switzer text-[28px] font-semibold leading-[120%]">
-              G.A.M.E
+              {tokenInfo?.name ?? "G.A.M.E"}
             </span>
             <span className="ml-2 text-dayT3 font-Switzer text-16 font-normal ">
-              G.A.M.E
+              {tokenInfo?.symbol ?? "G.A.M.E"}
             </span>
           </div>
           {/* Address Info */}
@@ -47,14 +56,16 @@ const TokenInfoHeader = ({ }: { tokenInfo: any }) => {
             <div className="flex items-center py-1 px-2 justify-center gap-2.5 bg-dayBg3 rounded-sm hover:text-yellow cursor-pointer">
               <span className="text-xs font-medium ">
                 {formatAddressNew(
-                  "J747f38AQL6dXxWtitRoRy8YGpCdDiEBLxmLpM2jDuJ7"
+                  tokenInfo?.tokenAddress ??
+                    "J747f38AQL6dXxWtitRoRy8YGpCdDiEBLxmLpM2jDuJ7"
                 )}
               </span>
               <Copy
                 size={14}
                 onClick={() =>
                   copyToClipboard(
-                    "J747f38AQL6dXxWtitRoRy8YGpCdDiEBLxmLpM2jDuJ7"
+                    tokenInfo?.tokenAddress ??
+                      "J747f38AQL6dXxWtitRoRy8YGpCdDiEBLxmLpM2jDuJ7"
                   )
                 }
                 className=" text-sm"
@@ -92,13 +103,18 @@ const TokenInfoHeader = ({ }: { tokenInfo: any }) => {
               />
               <span className=" text-dayT1">
                 {formatAddressNew(
-                  "J747f38AQL6dXxWtitRoRy8YGpCdDiEBLxmLpM2jDuJ7",
+                  tokenInfo?.creator ??
+                    "J747f38AQL6dXxWtitRoRy8YGpCdDiEBLxmLpM2jDuJ7",
                   5,
                   6
                 )}
               </span>
             </div>
-            <span className="text-dayT3">3 months ago</span>
+            <span className="text-dayT3">
+              {getDetailedTimeDiff(
+                tokenInfo?.agentCreatedTime ?? "2025-01-19T05:32:22.923Z"
+              )}
+            </span>
           </div>
         </div>
       </div>

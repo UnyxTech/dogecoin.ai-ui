@@ -1,6 +1,10 @@
-import { KlineTime } from "@/api/types";
+import { KlineTime } from "@/types";
 import { formatUnits } from "viem";
+import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
 
+// Initialize dayjs relative time plugin
+dayjs.extend(relativeTime);
 export const formatBalance = (rawBalance: string) => {
   const balance = (parseInt(rawBalance) / 1000000000000000000).toFixed(2);
   return balance;
@@ -217,8 +221,85 @@ export const getIntervalByResolution = (resolution: string): number => {
     case "W":
       return 7 * 24 * 60 * 60 * 1000; // 1 week
     case "M":
-      return 30 * 24 * 60 * 60 * 1000; // 1 month 
+      return 30 * 24 * 60 * 60 * 1000; // 1 month
     default:
       return 60 * 1000; // default to 1 minute
   }
+};
+/**
+ * Get a detailed time difference breakdown
+ * @param date - ISO date string or Date object
+ * @returns A formatted string describing the time difference in the most appropriate unit
+ * @example
+ * getDetailedTimeDiff("2025-01-19T05:32:22.923Z")
+ * // Returns the most appropriate unit:
+ * // - "30 seconds ago" if less than a minute
+ * // - "5 minutes ago" if less than an hour
+ * // - "2 hours ago" if less than a day
+ * // - "3 days ago" if less than a month
+ * // - "2 months ago" if less than a year
+ * // - "1 year ago" if more than a year
+ */
+export const getDetailedTimeDiff = (date: string | Date) => {
+  const now = dayjs();
+  const past = dayjs(date);
+  const diff = now.diff(past, "second");
+
+  // Less than a minute
+  if (diff < 60) {
+    return `${diff} seconds ago`;
+  }
+
+  // Less than an hour
+  const minutes = Math.floor(diff / 60);
+  if (minutes < 60) {
+    return `${minutes} minutes ago`;
+  }
+
+  // Less than a day
+  const hours = Math.floor(minutes / 60);
+  if (hours < 24) {
+    return `${hours} hours ago`;
+  }
+
+  // Less than a month
+  const days = Math.floor(hours / 24);
+  if (days < 30) {
+    return `${days} days ago`;
+  }
+
+  // Less than a year
+  const months = Math.floor(days / 30);
+  if (months < 12) {
+    return `${months} months ago`;
+  }
+
+  // More than a year
+  const years = Math.floor(months / 12);
+  return `${years} years ago`;
+};
+/**
+ * Format number to compact representation with k/m/b suffix
+ * @param value - Number to format
+ * @param decimals - Number of decimal places (default: 2)
+ * @returns Formatted string
+ * @example
+ * formatCompactNumber(1234) // "1.2k"
+ * formatCompactNumber(1234567) // "1.2m"
+ * formatCompactNumber(1234567890) // "1.2b"
+ */
+export const formatCompactNumber = (value: number, decimals = 2): string => {
+  const absValue = Math.abs(value);
+  const sign = value < 0 ? "-" : "";
+
+  if (absValue >= 1_000_000_000) {
+    return sign + (absValue / 1_000_000_000).toFixed(decimals) + "b";
+  }
+  if (absValue >= 1_000_000) {
+    return sign + (absValue / 1_000_000).toFixed(decimals) + "m";
+  }
+  if (absValue >= 1_000) {
+    return sign + (absValue / 1_000).toFixed(decimals) + "k";
+  }
+  return sign + absValue.toFixed(decimals);
 };

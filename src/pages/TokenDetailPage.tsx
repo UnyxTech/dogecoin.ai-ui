@@ -1,9 +1,19 @@
 import { useParams } from "react-router-dom";
 import Container from "@/components/container";
 import { TokenMarketInfo, TokenSwapAndChat } from "@/components/TokenDetail";
+import { isAddress } from "viem";
 
 const TokenDetailPage = () => {
   const { address } = useParams();
+  if (!address || !isAddress(address)) {
+    return (
+      <Container>
+        <div className="flex items-center justify-center min-h-[400px]">
+          <p className="text-red-500">Invalid token address</p>
+        </div>
+      </Container>
+    );
+  }
   return (
     <main className="min-h-screen bg-dayBg3 font-Switzer leading-[140%]">
       <Container>
