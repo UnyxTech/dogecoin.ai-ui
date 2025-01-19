@@ -59,9 +59,6 @@ class ApiError extends Error {
     this.httpCode = httpCode;
   }
 }
-//////////////////////////////////
-////////////agent/////////////////
-//////////////////////////////////
 export const uploadImg = async (file: FormData) => {
   const { data } = await api.post(`v1/upload/agent/image`, file, {
     headers: { "Content-Type": "multipart/form-data" },
@@ -79,9 +76,6 @@ export const getAgentInfo = async (params: { characterId: Address }) => {
   );
   return data.data;
 };
-//////////////////////////////////
-////////////Kline/////////////////
-//////////////////////////////////
 export const getKLineHistory = async (
   params: KLineParams
 ): Promise<KLineItem[]> => {
@@ -103,9 +97,6 @@ export const getKLineLast = async (params: KLineParams): Promise<KLineItem> => {
   );
   return data.data.lastValidKLine;
 };
-//////////////////////////////////
-////////////comments//////////////
-//////////////////////////////////
 export const getCommentsFloor = async (params: GetCommentFloor) => {
   await api.post<ApiResponse<GetCommentsResponse>>("/agents/comments/floor", {
     params,
