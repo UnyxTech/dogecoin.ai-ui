@@ -1,27 +1,12 @@
 import { postAgentsComment } from "@/api/api";
 import { PostCommentParams } from "@/api/types";
 import { useMutation } from "@tanstack/react-query";
+import { toast } from "../use-toast";
 
-export function usePostAgentsComments(
-  params: PostCommentParams,
-  onSuccess?:
-    | ((
-        data: void,
-        variables: void,
-        context: unknown
-      ) => Promise<unknown> | unknown)
-    | undefined,
-  onError?:
-    | ((
-        error: Error,
-        variables: void,
-        context: unknown
-      ) => Promise<unknown> | unknown)
-    | undefined
-) {
+export function usePostAgentsComments(params: PostCommentParams) {
   return useMutation({
     mutationFn: () => postAgentsComment(params),
-    onSuccess,
-    onError,
+    onSuccess: () => toast({ title: "Post Succeed", variant: "default" }),
+    onError: () => toast({ title: "Post Error", variant: "destructive" }),
   });
 }

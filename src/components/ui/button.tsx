@@ -6,7 +6,7 @@ import { LoaderCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const buttonVariants = cva(
-  "w-full inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-14 font-SwitzerMedium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:bg-linear-gray disabled:text-second disabled:border-[1.5px] disabled:border-first disabled:border-b-[3.5px] [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
+  "w-full inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-14 font-SwitzerMedium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2  disabled:bg-linear-gray disabled:text-second disabled:border-[1.5px] disabled:border-first disabled:border-b-[3.5px] [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
   {
     variants: {
       variant: {
@@ -27,7 +27,7 @@ const buttonVariants = cva(
         ghost: "hover:bg-accent hover:text-accent-foreground",
         link: "text-primary underline-offset-4 hover:underline",
         tradeDisabled:
-          "bg-gradient-to-b from-[rgba(151,151,151,0.26)] to-[#979797] cursor-not-allowed",
+          "disabled:!bg-gradient-to-b disabled:!from-[rgba(151,151,151,0.26)] disabled:!to-[#979797] disabled:!cursor-not-allowed ",
         buy: "bg-gradient-to-b from-buy-from to-buy-to",
         sell: "bg-gradient-to-b from-sell-from to-sell-to",
       },

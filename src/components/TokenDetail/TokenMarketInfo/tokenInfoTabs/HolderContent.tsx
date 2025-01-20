@@ -21,6 +21,7 @@ import { useCallback, useEffect, useMemo, useRef } from "react";
 import { getAgentsHolder } from "@/api/api";
 import { useParams } from "react-router-dom";
 import AdaptiveBalance from "@/components/adaptiveBalance";
+import { LoadingComp } from "@/components/loading";
 
 type Holder = {
   rank: string;
@@ -82,7 +83,7 @@ const HolderContent = () => {
     ],
     []
   );
-  const { data, isFetching, isLoading, fetchNextPage } = useInfiniteQuery({
+  const { data, isFetching, fetchNextPage, status } = useInfiniteQuery({
     queryKey: ["queryHolders"],
     queryFn: async ({ pageParam = 1 }) => {
       console.log("pageParam", pageParam);
@@ -150,11 +151,14 @@ const HolderContent = () => {
   useEffect(() => {
     fetchMoreOnBottomReached(tableContainerRef.current);
   }, [fetchMoreOnBottomReached]);
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
+  if (status === "pending")
+    return (
+      <div className="w-full h-[660px] flex justify-center items-center">
+        <LoadingComp className="" size={20} loading text="Loading..." />
+      </div>
+    );
   return (
-    <div className="w-full h-full">
+    <div>
       <div className="rounded-md">
         <div
           onScroll={(e) => fetchMoreOnBottomReached(e.currentTarget)}

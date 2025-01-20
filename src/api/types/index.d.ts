@@ -156,7 +156,7 @@ export interface GetAgentInfoResponse {
   agentType: string;
   volume24h: string;
   totalLocked: string;
-  graduatedPercent: string;
+  graduatedPercent: number;
   graduatedNeedAmount: string;
 }
 export interface GetAgentHoldersParams {

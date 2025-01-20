@@ -127,6 +127,7 @@ const TokenSwap = () => {
       setTradeData((state) => ({ ...state, amount: "0" }));
       toast({
         title: "Transaction Successful",
+        variant: "default",
         description: (
           <div>
             <p className="mb-2">Your transaction has been confirmed.</p>
@@ -136,7 +137,7 @@ const TokenSwap = () => {
               rel="noopener noreferrer"
               className="text-blue-500 hover:text-blue-600 underline"
             >
-              View on Basescan
+              View
             </a>
           </div>
         ),
@@ -172,7 +173,6 @@ const TokenSwap = () => {
       amountOutMinimum: (amountOut![0] * (100n - defaultSlippage)) / 100n,
     });
   };
-  console.log(memeTokenBalance);
   return (
     <div className="p-6 pb-8 bg-white">
       <h1 className="text-2xl text-dayT1 font-SwitzerBold">Swap</h1>
@@ -274,31 +274,25 @@ const TokenSwap = () => {
       {/*Trade button  */}
       {account.address ? (
         <Button
+          key="trade"
           onClick={() => handleTrade()}
-          disabled={!isEfficientBalance}
+          disabled={!isEfficientBalance || +tradeData.amount <= 0}
           variant={
-            !isEfficientBalance
+            !isEfficientBalance || +tradeData.amount <= 0
               ? "tradeDisabled"
               : tradeData.isBuy
               ? "buy"
               : "sell"
           }
-          className="trade-button hover:border-[#12122A] active:border-none border-[2px] border-b-4 border-[#12122A]"
+          className="trade-button py-5"
         >
           {isTradePending ? (
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 ">
               <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
               <span className="text-white [-webkit-text-stroke:1.5px_#12122A] [text-stroke:1.5px_#12122A]  font-WendyOne text-xl leading-[140%] tracking-wide capitalize">
                 Trading...
               </span>
             </div>
-          ) : tradeData.isBuy ? (
-            <>
-              <img src="/images/dage_trade_b_i.png" alt="" />
-              <span className="text-white [-webkit-text-stroke:1.5px_#12122A] [text-stroke:1.5px_#12122A] font-WendyOne text-xl leading-[140%] tracking-wide capitalize">
-                {isEfficientBalance ? "Trade" : "Insufficient balance"}
-              </span>
-            </>
           ) : (
             <>
               <img src="/images/dage_trade_b_i.png" alt="" />
@@ -311,7 +305,8 @@ const TokenSwap = () => {
       ) : (
         <Button
           onClick={() => setShowModal(true)}
-          className={`w-full rounded-sm py-6 bg-[linear-gradient(to_bottom,#626286_-9.05%,#34344B_51.88%)]`}
+          key="connectWallet"
+          className={`w-full rounded-sm py-5 bg-[linear-gradient(to_bottom,#626286_-9.05%,#34344B_51.88%)]`}
         >
           <img src="/images/wallet.svg" alt="" />
           <span className="text-white [-webkit-text-stroke:1.5px_#12122A] [text-stroke:1.5px_#12122A] font-WendyOne text-xl leading-[140%] tracking-wide capitalize">

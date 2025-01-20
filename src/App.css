@@ -156,6 +156,6 @@
 }
 @layer components {
   .trade-button {
-    @apply w-full !rounded-[2px] border-2 border-dayT1 font-WendyOne hover:opacity-50 text-white text-center;
+    @apply w-full !rounded-[2px] border-[2px] border-b-4 border-dayT1 font-WendyOne text-white text-center hover:border-[#12122A] active:border-none active:outline-none border-[#12122A];
   }
 }

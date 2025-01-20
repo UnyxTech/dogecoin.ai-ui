@@ -106,7 +106,6 @@ const config: Config = {
           "4": "hsl(var(--chart-4))",
           "5": "hsl(var(--chart-5))",
         },
-
         buy: {
           from: "#35DA7F",
           to: "#1BC065",
