@@ -115,16 +115,31 @@ export const formatTokenAmount = (
   const formatted = formatUnits(amount, decimals);
   return Number(formatted).toFixed(displayDecimals);
 };
-export const getColorByAgentName = (agentName: string) => {
-  switch (agentName) {
-    case "Productivity":
+export const getColorByAgentType = (agentType: string) => {
+  switch (agentType?.toLowerCase()) {
+    case "productivity":
       return "bg-first text-white";
-    case "Entertainment":
+    case "meme":
       return "bg-yellow text-first";
-    case "Information":
-      return "bg-green text-white";
+    case "onchain":
+      return "bg-green text-first";
     default:
       return "bg-gray text-first";
+  }
+};
+
+export const getTextByAgentType = (agentType: string) => {
+  switch (agentType?.toLowerCase()) {
+    case "productivity":
+      return "Productivity";
+    case "meme":
+      return "Meme";
+    case "onchain":
+      return "On-chain";
+    case "all":
+      return "All agent";
+    default:
+      return "None";
   }
 };
 /**
@@ -307,46 +322,46 @@ export const formatCompactNumber = (value: number, decimals = 2): string => {
 
 export function effectiveBalance(balance: any) {
   if (isNaN(parseFloat(balance))) {
-    return '0.00'
+    return "0.00";
   }
-  if (!balance || balance === '0') {
-    return 0
+  if (!balance || balance === "0") {
+    return 0;
   }
   if (balance < 1 / Math.pow(10, 6)) {
-    return '0.00'
+    return "0.00";
   }
-  balance = new BigNumber(balance.toString()).toFixed()
-  if (balance.split('.').length === 1) {
+  balance = new BigNumber(balance.toString()).toFixed();
+  if (balance.split(".").length === 1) {
     return balance > 1000
       ? `${Number(balance).toLocaleString()}.00`
-      : `${balance}.00`
+      : `${balance}.00`;
   }
-  const integer = balance.split('.')[0]
-  const decimal = balance.split('.')[1]
+  const integer = balance.split(".")[0];
+  const decimal = balance.split(".")[1];
   if (integer > 0) {
-    const str = decimal.length === 1 ? `${decimal}0` : decimal.substr(0, 2)
-    const res = `${integer}.${str}`
+    const str = decimal.length === 1 ? `${decimal}0` : decimal.substr(0, 2);
+    const res = `${integer}.${str}`;
     return Number(res) > 1000
       ? `${Number(integer).toLocaleString()}.${str}`
-      : res
+      : res;
   }
 
-  const temp: any = []
-  let tempNum = 0
-  let isNotZero = false
+  const temp: any = [];
+  let tempNum = 0;
+  let isNotZero = false;
   for (let i = 0; i < decimal.length; i++) {
-    if (decimal[i] != '0' && !isNotZero) {
-      isNotZero = true
+    if (decimal[i] != "0" && !isNotZero) {
+      isNotZero = true;
     }
     if (isNotZero) {
-      tempNum++
+      tempNum++;
     }
     if (tempNum <= 4) {
-      temp.push(decimal[i])
+      temp.push(decimal[i]);
     }
   }
-  const res = parseFloat(`${integer}.${temp.join('')}`)
+  const res = parseFloat(`${integer}.${temp.join("")}`);
   return res > 1000
-    ? `${Number(integer).toLocaleString()}.${temp.join('')}`
-    : res
+    ? `${Number(integer).toLocaleString()}.${temp.join("")}`
+    : res;
 }

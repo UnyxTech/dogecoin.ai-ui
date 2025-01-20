@@ -9,28 +9,49 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { cn } from "@/lib/utils";
-import { getColorByAgentName } from "@/utils";
+import { getColorByAgentType, getTextByAgentType } from "@/utils";
 import { useAuth } from "@/hooks/useAuth";
 import { useEffect, useState } from "react";
 import { ConnectWalletModal } from "@/components/connectWalletModal";
 import { useNavigate } from "react-router-dom";
-import { ChevronDown, Users } from "lucide-react";
+import { Users } from "lucide-react";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { DEFAULT_PAGE_SIZE, getAllAgentList } from "@/api/api";
 import { PaginationView } from "./pagination";
-import { LoadingComp } from "@/components/loading";
+// import { LoadingComp } from "@/components/loading";
 import BigNumber from "bignumber.js";
 import AdaptiveBalance from "@/components/adaptiveBalance";
+import { AgentTypeSelect } from "@/components/agentTypeSelect";
+import { AgentType } from "@/types";
+
+interface SortType {
+  sortBy: string;
+  value: string;
+}
 
 const HomePage = () => {
   const { evmAddress } = useAuth();
   const navigate = useNavigate();
   const [showConnectWallet, setShowConnectWallet] = useState<boolean>(false);
   const [currentPage, setCurrentPage] = useState<number>(1);
+  const [currentAgentType, setCurrentAgentType] = useState<string>("all");
+  const [sortType, setSortType] = useState<SortType>({
+    sortBy: "createdTime",
+    value: "desc",
+  });
+  const [sortMarketValue, setSortMarketValue] = useState<string>("asc");
+  const [sortTotalLockedValue, setSortTotalLockedValue] =
+    useState<string>("asc");
 
-  const { data, fetchNextPage, hasNextPage, status } = useInfiniteQuery({
-    queryKey: ["agents"],
-    queryFn: ({ pageParam = currentPage }) => getAllAgentList(pageParam),
+  const { data, fetchNextPage, hasNextPage } = useInfiniteQuery({
+    queryKey: ["agents", currentAgentType, sortType.sortBy, sortType.value],
+    queryFn: ({ pageParam = currentPage }) =>
+      getAllAgentList(
+        pageParam,
+        currentAgentType === "all" ? undefined : currentAgentType,
+        sortType.sortBy,
+        sortType.value
+      ),
     initialPageParam: 1,
     getNextPageParam: (lastPage) =>
       lastPage.rows.length === DEFAULT_PAGE_SIZE
@@ -40,7 +61,10 @@ const HomePage = () => {
     //   return 100000;
     // },
   });
-  console.log(status, hasNextPage);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [currentAgentType]);
 
   useEffect(() => {
     if (currentPage > 1 && currentPage > (data?.pages.length || 0)) {
@@ -52,25 +76,26 @@ const HomePage = () => {
     setCurrentPage(page);
   };
 
-  if (status === "pending")
-    return (
-      <LoadingComp
-        className="h-[calc(100vh-64px)]"
-        size={50}
-        loading
-        text="Loading..."
-      />
-    );
+  // if (status === "pending")
+  //   return (
+  //     <LoadingComp
+  //       className="h-[calc(100vh-64px)]"
+  //       size={50}
+  //       loading
+  //       text="Loading..."
+  //     />
+  //   );
   // if (status === "error") return <LoadingComp loading />;
 
   return (
     <Container>
       <div className="flex items-center justify-between pt-4">
-        <div className="flex items-center gap-3 py-[10px] px-[14px] rounded-[4px] bg-white">
-          <Users size={16} />
-          <span className="text-14 font-SwitzerMedium">All sentient</span>
-          <ChevronDown size={16} />
-        </div>
+        <AgentTypeSelect
+          className="w-[170px]"
+          showAll
+          onChange={(val: string) => setCurrentAgentType(val)}
+          selectType={currentAgentType}
+        />
         <Button
           variant="yellow"
           onClick={() => {
@@ -90,9 +115,54 @@ const HomePage = () => {
           <TableHeader>
             <TableRow>
               <TableHead className="w-[30%]">AI agents</TableHead>
-              <TableHead className="w-[14%]">Market cap</TableHead>
+              <TableHead
+                onClick={() => {
+                  const value = sortMarketValue === "desc" ? "asc" : "desc";
+                  setSortType({
+                    sortBy: "price",
+                    value: value,
+                  });
+                  setSortMarketValue(value);
+                }}
+                className="w-[14%] cursor-pointer"
+              >
+                <div className=" flex items-center gap-1">
+                  Market cap
+                  <img
+                    src={
+                      sortMarketValue === "asc"
+                        ? "/images/sort_up.svg"
+                        : "/images/sort_down.svg"
+                    }
+                    alt=""
+                  />
+                </div>
+              </TableHead>
               <TableHead className="w-[14%]">24h</TableHead>
-              <TableHead className="w-[14%]">Total value locked</TableHead>
+              <TableHead
+                onClick={() => {
+                  const value =
+                    sortTotalLockedValue === "desc" ? "asc" : "desc";
+                  setSortType({
+                    sortBy: "totalValueLocked",
+                    value: value,
+                  });
+                  setSortTotalLockedValue(value);
+                }}
+                className="w-[14%] cursor-pointer"
+              >
+                <div className="flex items-center gap-1">
+                  Total value locked
+                  <img
+                    src={
+                      sortTotalLockedValue === "asc"
+                        ? "/images/sort_up.svg"
+                        : "/images/sort_down.svg"
+                    }
+                    alt=""
+                  />
+                </div>
+              </TableHead>
               <TableHead className="w-[14%]">Holder count</TableHead>
               <TableHead className="w-[14%]">24h Vol</TableHead>
             </TableRow>
@@ -110,7 +180,7 @@ const HomePage = () => {
                         `/token/${agent.characterId}/${agent.tokenAddress}`
                       )
                     }
-                    className="bg-white cursor-pointer hover:bg-white/60 rounded-[4px] flex items-center gap-4"
+                    className="bg-white cursor-pointer border border-border hover:bg-hover rounded-[4px] flex items-center gap-4"
                   >
                     <div className="flex items-center gap-3 w-[30%] p-3">
                       <img
@@ -125,21 +195,30 @@ const HomePage = () => {
                         <div
                           className={cn(
                             "flex items-center gap-[2px] px-[6px] rounded-full",
-                            getColorByAgentName(agent.agentType)
+                            getColorByAgentType(agent.agentType)
                           )}
                         >
-                          <span className="text-10">{agent.agentType}</span>
-                          <Users size={10} color="white" />
+                          <span className="text-10">
+                            {getTextByAgentType(agent.agentType)}
+                          </span>
+                          <Users
+                            size={10}
+                            color={
+                              agent.agentType === AgentType.Productivity
+                                ? "white"
+                                : "black"
+                            }
+                          />
                         </div>
-                        <span>$GAME</span>
+                        <span>${agent.symbol}</span>
                       </div>
                     </div>
-                    <div className="w-[14%] px-4">
+                    <div className="w-[14%]">
                       $<AdaptiveBalance balance={agent.marketCap.toString()} />
                     </div>
                     <div
                       className={cn(
-                        "w-[14%] px-4",
+                        "w-[14%]",
                         new BigNumber(agent.price24Change).gt(0)
                           ? "text-green"
                           : "text-red"
@@ -147,11 +226,11 @@ const HomePage = () => {
                     >
                       {agent.price24Change}%
                     </div>
-                    <div className="w-[14%] px-4">
+                    <div className="w-[14%]">
                       $<AdaptiveBalance balance={agent.totalLocked} />
                     </div>
-                    <div className="w-[14%] px-4">{agent.holder}</div>
-                    <div className="w-[14%] px-4">
+                    <div className="w-[14%]">{agent.holder}</div>
+                    <div className="w-[14%]">
                       $<AdaptiveBalance balance={agent.volume24h} />
                     </div>
                   </div>

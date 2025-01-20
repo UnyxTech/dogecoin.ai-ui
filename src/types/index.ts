@@ -1,9 +1,9 @@
 import { Address } from "viem";
 
 export enum AgentType {
-  Productivity = "Productivity",
-  Meme = "Meme",
-  OnChain = "On-chain",
+  Productivity = "productivity",
+  Meme = "meme",
+  OnChain = "onchain",
 }
 
 export interface AgentInfo {

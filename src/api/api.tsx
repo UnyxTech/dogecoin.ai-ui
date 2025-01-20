@@ -1,5 +1,6 @@
 import axios, { AxiosResponse } from "axios";
 import {
+  AgentItem,
   AllAgentListRes,
   ApiResponse,
   CreateAgentRes,
@@ -76,11 +77,33 @@ export const login = async (params: LoginReq): Promise<LoginRes> => {
 };
 
 export const getAllAgentList = async (
-  currentPage: number
+  currentPage: number,
+  agentType?: string,
+  sortBy?: string,
+  sort?: string
 ): Promise<AllAgentListRes> => {
-  const { data } = await api.get(`/v1/agents/all`, {
+  let str = "";
+  if (agentType) {
+    str += `?agentType=${agentType}`;
+  }
+  if (sortBy) {
+    str += `${str.length ? "&" : "?"}&sortBy=${sortBy}`;
+  }
+  if (sort) {
+    str += `${str.length ? "&" : "?"}&sort=${sort}`;
+  }
+  const { data } = await api.get(`/v1/agents/all${str}`, {
     params: { pageSize: DEFAULT_PAGE_SIZE, currentPage },
   });
+  return data.data;
+};
+
+export const searchAgentList = async (
+  searchStr: string
+): Promise<AgentItem[]> => {
+  const { data } = await api.get(
+    `/v1/agents/agent/search?content=${searchStr}`
+  );
   return data.data;
 };
 
