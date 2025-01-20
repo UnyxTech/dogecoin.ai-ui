@@ -39,7 +39,7 @@ const ChatCard = ({
           Reply
         </span>
         &nbsp;
-        <span className="text-xs text-dayT3">#{item?.parentId}</span>
+        <span className="text-xs text-dayT3">#{item?.userId}</span>
       </div>
       <p className="text-dayT1">
         {item?.parentId !== 0 ? (

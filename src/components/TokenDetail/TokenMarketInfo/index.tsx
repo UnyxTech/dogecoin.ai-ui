@@ -18,7 +18,7 @@ const TokenMarketInfo = ({ characterId }: { characterId: string }) => {
       <div className="w-full bg-dayBg1 p-6">
         <TokenInfoHeader />
         <div className="h-96 mt-4">
-          <TradingViewChart />
+          <TradingViewChart key="tradingview" />
         </div>
       </div>
       <div className="w-full bg-dayBg1 px-6 py-2">

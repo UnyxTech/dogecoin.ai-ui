@@ -9,7 +9,9 @@ export interface Route {
 
 const HomePage = lazy(() => import("@/pages/home"));
 const CreatePage = lazy(() => import("@/pages/create"));
-const TokenDetailPage = lazy(() => import("@/pages/TokenDetailPage"));
+const TokenDetailPage = lazy(
+  () => import("@/pages/tokenDetail/TokenDetailPage")
+);
 
 export const routes: Route[] = [
   {

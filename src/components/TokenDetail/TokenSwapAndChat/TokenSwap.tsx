@@ -9,7 +9,7 @@ import { Separator } from "@/components/ui/separator";
 import { ProgressCard } from "./ProgressCard";
 import TradeTypeButton from "./TradeTypeButton";
 import { useAccount, useBalance, useReadContract } from "wagmi";
-import { erc20Abi, formatUnits, parseUnits } from "viem";
+import { Address, erc20Abi, formatUnits, parseUnits } from "viem";
 import {
   // useAIContract,
   useGetAmountOutQuery,
@@ -18,11 +18,41 @@ import {
 import { BASE_TOKEN } from "@/constant";
 import { useToast } from "@/hooks/use-toast";
 import { debounce } from "lodash";
+import { useAgentInfoStore } from "@/store/tokenDetail";
+const TokenLogoSwitch = ({
+  isBuy,
+  dogeImage,
+  tokenImage,
+  symbol,
+}: {
+  isBuy: boolean;
+  dogeImage: string;
+  tokenImage: string;
+  symbol: string;
+}) => {
+  const imageSrc = isBuy ? dogeImage : tokenImage;
+
+  return (
+    <div className="flex items-center gap-2">
+      <div className="w-7 h-7 relative flex items-center justify-center">
+        <img
+          key={imageSrc}
+          src={imageSrc}
+          alt=""
+          className="w-full h-full object-contain"
+          loading="eager"
+        />
+      </div>
+      <span>{isBuy ? "Doge" : symbol}</span>
+    </div>
+  );
+};
 
 const defaultSlippage = 10n;
 const TokenSwap = () => {
   const { toast } = useToast();
   const account = useAccount();
+  const tokenInfo = useAgentInfoStore((state) => state.agent);
   // state
   const [showModal, setShowModal] = useState(false);
   const [debouncedAmount, setDebouncedAmount] = useState<bigint>(0n);
@@ -33,7 +63,7 @@ const TokenSwap = () => {
   // amountOut
   // const { getBuyAmountOut, getSellAmountOut } = useAIContract();
   const { data: amountOut } = useGetAmountOutQuery({
-    token: "0x650b89f5e67927fc9081F211B2a2fAd9487D1A69",
+    token: tokenInfo?.tokenAddress as Address,
     amountIn: debouncedAmount,
     isBuy: tradeData.isBuy,
   });
@@ -59,7 +89,7 @@ const TokenSwap = () => {
   const { data: memeTokenBalance, refetch: refetchMemeTokenBalance } =
     useReadContract({
       abi: erc20Abi,
-      address: "0x650b89f5e67927fc9081F211B2a2fAd9487D1A69",
+      address: tokenInfo?.tokenAddress as Address,
       functionName: "balanceOf",
       args: [account.address!],
     });
@@ -92,6 +122,7 @@ const TokenSwap = () => {
   // Swap
   const { mutateAsync: treadeAsync, isPending: isTradePending } = useTrade({
     onSuccess: (data) => {
+      setTradeData((state) => ({ ...state, amount: "0" }));
       toast({
         title: "Transaction Successful",
         description: (
@@ -133,12 +164,13 @@ const TokenSwap = () => {
       console.log();
     }
     await treadeAsync({
-      token: "0x650b89f5e67927fc9081F211B2a2fAd9487D1A69",
+      token: tokenInfo?.tokenAddress as Address,
       amount: parseUnits(tradeData.amount, 18),
       isBuy: tradeData.isBuy,
       amountOutMinimum: (amountOut![0] * (100n - defaultSlippage)) / 100n,
     });
   };
+  console.log(memeTokenBalance);
   return (
     <div className="p-6 pb-8 bg-white">
       <h1 className="text-2xl text-dayT1 font-SwitzerBold">Swap</h1>
@@ -153,11 +185,12 @@ const TokenSwap = () => {
           value={tradeData.amount}
           onChange={(e) => handleAmountChange(e.target.value)}
         />
-
-        <div className="flex items-center gap-2">
-          <img src="/images/icon_doge.svg" alt="logo" className="w-7 h-7" />
-          <span>{tradeData.isBuy ? "Doge" : "TargetToken"}</span>
-        </div>
+        <TokenLogoSwitch
+          isBuy={tradeData.isBuy}
+          dogeImage="/images/icon_doge.svg"
+          tokenImage={tokenInfo?.image ?? ""}
+          symbol={tokenInfo?.symbol ?? ""}
+        />
       </div>
       {tradeData.isBuy ? (
         <div className="flex items-center gap-3 my-4">
@@ -206,7 +239,8 @@ const TokenSwap = () => {
       {buyAmountOutUI && amountOut && (
         <div className="text-dayT1">
           <p className="font-semibold text-20 ">
-            {Number(formatUnits(amountOut[0], 18)).toFixed(6)} GAME
+            {Number(formatUnits(amountOut[0], 18)).toFixed(6)}{" "}
+            {tokenInfo?.symbol}
           </p>
           <p className="text-xs">$11.12</p>
         </div>
@@ -214,7 +248,7 @@ const TokenSwap = () => {
       {sellAmountOutUI && amountOut && (
         <div className="text-dayT1">
           <p className="font-semibold text-20 ">
-            {Number(formatUnits(amountOut[0], 18)).toFixed(6)} Eth
+            {Number(formatUnits(amountOut[0], 18)).toFixed(6)} Doge
           </p>
           <p className="text-xs">$1</p>
         </div>

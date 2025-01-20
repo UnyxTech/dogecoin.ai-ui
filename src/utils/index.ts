@@ -1,7 +1,7 @@
-import { KlineTime } from "@/types";
 import { formatUnits } from "viem";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
+import { KlineTime } from "@/api/types";
 
 // Initialize dayjs relative time plugin
 dayjs.extend(relativeTime);

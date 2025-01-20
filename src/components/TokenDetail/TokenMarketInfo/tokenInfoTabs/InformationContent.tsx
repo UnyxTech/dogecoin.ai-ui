@@ -49,21 +49,19 @@ const InformationContent = () => {
             <div className="flex justify-between items-center py-4">
               <span className="text-dayT3">Market cap(FDV)</span>
               <span className="text-dayT1">
-                ${formatCompactNumber(tokenInfo?.marketCap ?? 1321854318)}
+                ${formatCompactNumber(tokenInfo?.marketCap ?? 0)}
               </span>
             </div>
             <Separator />
             <div className="flex justify-between items-center py-4">
               <span className="text-dayT3">24 hours change</span>
-              <span className="text-dayT1">
-                {tokenInfo?.marketCap ?? -1321854318}%
-              </span>
+              <span className="text-dayT1">{tokenInfo?.marketCap ?? 0}%</span>
             </div>
             <Separator />
             <div className="flex justify-between items-center py-4">
               <span className="text-dayT3">Total value locked</span>
               <span className="text-dayT1">
-                ${formatCompactNumber(tokenInfo?.totalLocked ?? 1871371)}
+                ${formatCompactNumber(tokenInfo?.totalLocked ?? 0)}
               </span>
             </div>
           </div>
@@ -79,29 +77,21 @@ const InformationContent = () => {
             <div className="flex justify-between items-center py-4">
               <span className="text-dayT3">24 hours volume</span>
               <span className="text-dayT1">
-                ${formatCompactNumber(tokenInfo?.volume24h ?? 1871371)}
+                ${formatCompactNumber(tokenInfo?.volume24h ?? 0)}
               </span>
             </div>
             <Separator />
             <div className="flex justify-between items-center py-4">
               <span className="text-dayT3">Created at</span>
               <span className="text-dayT1">
-                {dayjs(
-                  tokenInfo?.agentCreatedTime ?? "2025-01-19T06:49:07.990Z"
-                ).format("YYYY-MM-DD HH:mm")}
+                {dayjs(tokenInfo?.agentCreatedTime).format("YYYY-MM-DD HH:mm")}
               </span>
             </div>
           </div>
         </div>
       </div>
       {/* Description */}
-      <Description
-        text={
-          tokenInfo?.description ??
-          "Lorem ipsum dolor sit amet consectetur adipisicing elit. Magnam ut optio similique hic dignissimos sit sunt est, eaque iste voluptatum quidem voluptates iusto vel voluptatibus modi cum iure commodi repellendus?"
-        }
-        slice={200}
-      />
+      <Description text={tokenInfo?.description ?? "--"} slice={200} />
       {/* Social links */}
       <div>
         <Title text="Social links" className="mb-5" />
