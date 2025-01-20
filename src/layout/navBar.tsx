@@ -10,15 +10,14 @@ const Navbar = () => {
   const { evmAddress } = useAuth();
   const navigate = useNavigate();
   const [showModal, setShowModal] = useState(false);
-
   return (
     <>
       <header className="bg-yellow w-full h-16 flex justify-between items-center">
-        <div
-          onClick={() => navigate("/home")}
-          className="w-full h-full flex justify-between items-center py-4 px-6 cursor-pointer"
-        >
-          <div className="flex items-center gap-3">
+        <div className="w-full h-full flex justify-between items-center py-4 px-6 cursor-pointer">
+          <div
+            className="flex items-center gap-3"
+            onClick={() => navigate("/home")}
+          >
             <img
               src="/images/logo.svg"
               className="w-[32px] h-[32px]"

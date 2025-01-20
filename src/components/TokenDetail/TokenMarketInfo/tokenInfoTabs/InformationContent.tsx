@@ -1,9 +1,10 @@
 import { Separator } from "@/components/ui/separator";
+import { useAgentInfo } from "@/hooks/tokenDetial/useAgentInfo";
 import { cn } from "@/lib/utils";
-import { useAgentInfoStore } from "@/store/tokenDetail";
 import { formatCompactNumber } from "@/utils";
 import dayjs from "dayjs";
 import { useState } from "react";
+import { useParams } from "react-router-dom";
 const Title = ({ text, className }: { text: string; className?: string }) => (
   <h1 className={cn("font-SwitzerBold text-xl", className)}>{text}</h1>
 );
@@ -16,9 +17,7 @@ const Description = ({
 }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const shouldTruncate = text.length > slice;
-
   const truncatedText = shouldTruncate ? text.slice(0, slice) + "..." : text;
-
   return (
     <div>
       <Title text="Description" className="mb-3" />
@@ -39,11 +38,12 @@ const Description = ({
   );
 };
 const InformationContent = () => {
-  const tokenInfo = useAgentInfoStore((state) => state.agent);
+  const { characterId } = useParams();
+  const { data: tokenInfo } = useAgentInfo(characterId!);
   return (
     <div className="flex flex-col gap-14 pb-10">
       <div>
-        <Title text="GAME market info" className="mb-5" />
+        <Title text={`${tokenInfo?.symbol} market info`} className="mb-5" />
         <div className="flex gap-2 ">
           <div className="flex-1 py-1 px-4 bg-[#FAFAFD]">
             <div className="flex justify-between items-center py-4">
@@ -69,8 +69,7 @@ const InformationContent = () => {
             <div className="flex justify-between items-center py-4">
               <span className="text-dayT3">Holders count</span>
               <span className="text-dayT1">
-                {tokenInfo?.holder?.toLocaleString("en-US") ??
-                  Number(1231815354).toLocaleString("en-US")}
+                {formatCompactNumber(tokenInfo?.holder ?? 0, 0)}
               </span>
             </div>
             <Separator />

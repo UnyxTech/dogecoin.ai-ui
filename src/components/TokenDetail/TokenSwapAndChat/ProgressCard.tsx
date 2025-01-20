@@ -1,8 +1,10 @@
 import { CustomProgress } from "@/components/ui/custom/CustomProgress";
-import { useAgentInfoStore } from "@/store/tokenDetail";
+import { useAgentInfo } from "@/hooks/tokenDetial/useAgentInfo";
+import { useParams } from "react-router-dom";
 
 export function ProgressCard() {
-  const tokenInfo = useAgentInfoStore((state) => state.agent);
+  const { characterId } = useParams();
+  const { data: tokenInfo } = useAgentInfo(characterId!);
 
   return (
     <div className="w-full">

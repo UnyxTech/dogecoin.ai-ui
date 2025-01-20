@@ -8,8 +8,9 @@ import {
   IChartingLibraryWidget,
 } from "../../../../../public/charting_library";
 import * as React from "react";
-import { useAgentInfoStore } from "@/store/tokenDetail";
 import { datafeed } from "./datafeed";
+import { useParams } from "react-router-dom";
+import { useAgentInfo } from "@/hooks/tokenDetial/useAgentInfo";
 
 export interface ChartContainerProps {
   symbol: ChartingLibraryWidgetOptions["symbol"];
@@ -51,7 +52,8 @@ export const SUPPORTED_RESOLUTIONS = [
   "1W",
 ] as ResolutionString[];
 const TradingViewChart = () => {
-  const tokenInfo = useAgentInfoStore((state) => state.agent);
+  const { characterId } = useParams();
+  const { data: tokenInfo } = useAgentInfo(characterId!);
   const chartContainerRef =
     useRef<HTMLDivElement>() as React.MutableRefObject<HTMLInputElement>;
   useEffect(() => {

@@ -105,11 +105,7 @@ const HomePage = () => {
               >
                 <TableCell colSpan={6} className="px-0 pt-3 pb-0">
                   <div
-                    onClick={() =>
-                      navigate(
-                        `/token/${agent.characterId}/${agent.tokenAddress}`
-                      )
-                    }
+                    onClick={() => navigate(`/token/${agent.characterId}`)}
                     className="bg-white cursor-pointer hover:bg-white/60 rounded-[4px] flex items-center gap-4"
                   >
                     <div className="flex items-center gap-3 w-[30%] p-3">
