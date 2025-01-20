@@ -40,6 +40,7 @@ export const CreateAgentModal = ({
   const { createAgent, getBuyAmountOut, getCreateFee } = useAIContract();
   const [createFee, setCreateFee] = useState<string>("0");
   const [amount, setAmount] = useState<string>("0");
+  const [loading, setLoading] = useState<boolean>(false);
   const [receiveAmount, setReceiveAmount] = useState<string>("0");
 
   useEffect(() => {
@@ -50,6 +51,7 @@ export const CreateAgentModal = ({
   }, []);
   const handleCreate = async () => {
     try {
+      setLoading(true);
       const buyAmount = parseUnits(
         new BigNumber(amount).plus(new BigNumber(createFee)).toString(),
         BASE_TOKEN.decimals
@@ -73,6 +75,8 @@ export const CreateAgentModal = ({
         title: "created Failed!",
         variant: "destructive",
       });
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -169,6 +173,7 @@ export const CreateAgentModal = ({
         </div>
         <Button
           className="mx-[51px]"
+          loading={loading}
           onClick={() => {
             handleCreate();
           }}

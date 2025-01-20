@@ -402,8 +402,8 @@ const CreatePage = () => {
                 variant="yellow"
                 className="w-full gap-2"
                 size="lg"
+                loading={createAgentMutation.status === 'pending'}
                 disabled={!form.formState.isValid}
-                // onClick={() => setShowCreateAgentModal(true)}
               >
                 <span>🚀</span> Continue
               </Button>

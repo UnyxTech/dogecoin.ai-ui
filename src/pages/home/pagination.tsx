@@ -13,6 +13,7 @@ interface IProps {
   totalPages?: number;
   currentPage: number;
   hasNextPage: boolean;
+  showCurrentPage?: boolean;
   handlePageChange: (page: number) => void;
 }
 
@@ -20,6 +21,7 @@ export const PaginationView: React.FC<IProps> = ({
   totalPages,
   currentPage,
   hasNextPage,
+  showCurrentPage,
   handlePageChange,
 }) => {
   const pageNumbers = useMemo(() => {
@@ -58,6 +60,11 @@ export const PaginationView: React.FC<IProps> = ({
       <PaginationContent>
         <PaginationItem>
           <PaginationPrevious
+            className={
+              currentPage === 1
+                ? "cursor-not-allowed text-second hover:text-second"
+                : ""
+            }
             href="#"
             onClick={(e) => {
               e.preventDefault();
@@ -65,6 +72,11 @@ export const PaginationView: React.FC<IProps> = ({
             }}
           />
         </PaginationItem>
+        {showCurrentPage && !totalPages && (
+          <PaginationItem>
+            <PaginationLink href="#">{currentPage}</PaginationLink>
+          </PaginationItem>
+        )}
         {totalPages &&
           pageNumbers.map((pageNumber, index) =>
             pageNumber === null ? (

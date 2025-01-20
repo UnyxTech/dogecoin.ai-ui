@@ -1,7 +1,8 @@
-import { KlineTime } from "@/types";
 import { formatUnits } from "viem";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
+import BigNumber from "bignumber.js";
+import { KlineTime } from "@/api/types";
 
 // Initialize dayjs relative time plugin
 dayjs.extend(relativeTime);
@@ -303,3 +304,49 @@ export const formatCompactNumber = (value: number, decimals = 2): string => {
   }
   return sign + absValue.toFixed(decimals);
 };
+
+export function effectiveBalance(balance: any) {
+  if (isNaN(parseFloat(balance))) {
+    return '0.00'
+  }
+  if (!balance || balance === '0') {
+    return 0
+  }
+  if (balance < 1 / Math.pow(10, 6)) {
+    return '0.00'
+  }
+  balance = new BigNumber(balance.toString()).toFixed()
+  if (balance.split('.').length === 1) {
+    return balance > 1000
+      ? `${Number(balance).toLocaleString()}.00`
+      : `${balance}.00`
+  }
+  const integer = balance.split('.')[0]
+  const decimal = balance.split('.')[1]
+  if (integer > 0) {
+    const str = decimal.length === 1 ? `${decimal}0` : decimal.substr(0, 2)
+    const res = `${integer}.${str}`
+    return Number(res) > 1000
+      ? `${Number(integer).toLocaleString()}.${str}`
+      : res
+  }
+
+  const temp: any = []
+  let tempNum = 0
+  let isNotZero = false
+  for (let i = 0; i < decimal.length; i++) {
+    if (decimal[i] != '0' && !isNotZero) {
+      isNotZero = true
+    }
+    if (isNotZero) {
+      tempNum++
+    }
+    if (tempNum <= 4) {
+      temp.push(decimal[i])
+    }
+  }
+  const res = parseFloat(`${integer}.${temp.join('')}`)
+  return res > 1000
+    ? `${Number(integer).toLocaleString()}.${temp.join('')}`
+    : res
+}

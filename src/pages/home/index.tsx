@@ -18,33 +18,29 @@ import { ChevronDown, Users } from "lucide-react";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { DEFAULT_PAGE_SIZE, getAllAgentList } from "@/api/api";
 import { PaginationView } from "./pagination";
-// import { LoadingComp } from "@/components/loading";
-import { useLoginStore } from "@/store/login";
+import { LoadingComp } from "@/components/loading";
 import BigNumber from "bignumber.js";
+import AdaptiveBalance from "@/components/adaptiveBalance";
 
 const HomePage = () => {
   const { evmAddress } = useAuth();
   const navigate = useNavigate();
-  const token = useLoginStore((state) => state.token);
-  const [showConnectWallet, setShowConnectWallet] = useState(false);
-  const [currentPage, setCurrentPage] = useState(1);
+  const [showConnectWallet, setShowConnectWallet] = useState<boolean>(false);
+  const [currentPage, setCurrentPage] = useState<number>(1);
 
   const { data, fetchNextPage, hasNextPage, status } = useInfiniteQuery({
     queryKey: ["agents"],
-    // enabled: !!token,
-    // enabled: false,
     queryFn: ({ pageParam = currentPage }) => getAllAgentList(pageParam),
     initialPageParam: 1,
     getNextPageParam: (lastPage) =>
       lastPage.rows.length === DEFAULT_PAGE_SIZE
         ? lastPage.current + 1
         : undefined,
+    // refetchInterval(query) {
+    //   return 100000;
+    // },
   });
   console.log(status, hasNextPage);
-
-  // const totalPages = data?.pages[0]?.totalPages || 1;
-  // if (status === "pending") return <LoadingComp loading />;
-  // if (status === "error") return <LoadingComp loading />;
 
   useEffect(() => {
     if (currentPage > 1 && currentPage > (data?.pages.length || 0)) {
@@ -55,6 +51,17 @@ const HomePage = () => {
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
   };
+
+  if (status === "pending")
+    return (
+      <LoadingComp
+        className="h-[calc(100vh-64px)]"
+        size={50}
+        loading
+        text="Loading..."
+      />
+    );
+  // if (status === "error") return <LoadingComp loading />;
 
   return (
     <Container>
@@ -97,7 +104,14 @@ const HomePage = () => {
                 className="last:mb-0 border-none"
               >
                 <TableCell colSpan={6} className="px-0 pt-3 pb-0">
-                  <div className="bg-white rounded-[4px] flex items-center gap-4">
+                  <div
+                    onClick={() =>
+                      navigate(
+                        `/token/${agent.characterId}/${agent.tokenAddress}`
+                      )
+                    }
+                    className="bg-white cursor-pointer hover:bg-white/60 rounded-[4px] flex items-center gap-4"
+                  >
                     <div className="flex items-center gap-3 w-[30%] p-3">
                       <img
                         src={agent.image}
@@ -120,7 +134,9 @@ const HomePage = () => {
                         <span>$GAME</span>
                       </div>
                     </div>
-                    <div className="w-[14%] px-4">{agent.marketCap}</div>
+                    <div className="w-[14%] px-4">
+                      $<AdaptiveBalance balance={agent.marketCap.toString()} />
+                    </div>
                     <div
                       className={cn(
                         "w-[14%] px-4",
@@ -129,11 +145,15 @@ const HomePage = () => {
                           : "text-red"
                       )}
                     >
-                      {agent.price24Change}
+                      {agent.price24Change}%
                     </div>
-                    <div className="w-[14%] px-4">{agent.totalLocked}</div>
+                    <div className="w-[14%] px-4">
+                      $<AdaptiveBalance balance={agent.totalLocked} />
+                    </div>
                     <div className="w-[14%] px-4">{agent.holder}</div>
-                    <div className="w-[14%] px-4">{agent.volume24h}</div>
+                    <div className="w-[14%] px-4">
+                      $<AdaptiveBalance balance={agent.volume24h} />
+                    </div>
                   </div>
                 </TableCell>
               </TableRow>
@@ -142,6 +162,7 @@ const HomePage = () => {
         </Table>
         <PaginationView
           // totalPages={totalPages}
+          showCurrentPage
           currentPage={currentPage}
           hasNextPage={hasNextPage}
           handlePageChange={handlePageChange}

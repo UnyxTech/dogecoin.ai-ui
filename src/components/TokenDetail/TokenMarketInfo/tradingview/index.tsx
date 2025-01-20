@@ -141,7 +141,7 @@ const TradingViewChart = () => {
             }, 50);
           },
           getBars: async (
-            symbolInfo,
+            _symbolInfo,
             resolution,
             periodParams,
             onHistoryCallback
