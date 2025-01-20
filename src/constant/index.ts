@@ -11,9 +11,6 @@ export const BASE_TOKEN = {
   logo: "",
 };
 
-export const createFee = 3;
-export const minFee = 0.001;
-
 export const TOTAL_AMOUNT = 1000000000
 
 export const defaultChain: Chain = {

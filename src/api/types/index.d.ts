@@ -214,18 +214,34 @@ export interface CreateAgentRes {
 }
 
 export interface AgentItem {
-  id: number;
   characterId: string;
+  creator: string;
+  txHash: string;
+  graduated: boolean;
+  agentCreatedTime: string;
+  agentGraduatedTime: string;
+  tokenAddress: string;
+  pairAddress: string;
   name: string;
+  price: number;
+  priceUsd: string;
+  price24Change: number;
+  price24ChangeUsd: number;
+  marketCap: number;
+  holder: number;
   symbol: string;
-  marketCap: string;
-  changed24h: string;
+  description: string;
+  image: string;
+  twitter: string;
+  telegram: string;
+  youtube: string;
+  website: string;
+  discord: string;
+  agentType: string;
+  volume24h: string;
   totalLocked: string;
-  holderCount: string;
-  vol24h: string;
-  contractAddress: string;
-  createdTime: string;
-  graduatedPercent: number;
+  graduatedPercent: string;
+  graduatedNeedAmount: string;
 }
 
 export interface AllAgentListRes {

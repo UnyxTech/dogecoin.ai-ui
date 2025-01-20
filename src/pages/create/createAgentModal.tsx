@@ -18,11 +18,12 @@ import { CreateAgentParams, useAIContract } from "@/hooks/useAIContract";
 import { cn } from "@/lib/utils";
 import { AgentInfo } from "@/types";
 import { CircleAlert } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import BigNumber from "bignumber.js";
 import { formatUnits, parseUnits } from "viem";
-import { BASE_TOKEN, createFee, minFee, TOTAL_AMOUNT } from "@/constant";
+import { BASE_TOKEN, TOTAL_AMOUNT } from "@/constant";
 import { debounce } from "lodash";
+import { useNavigate } from "react-router-dom";
 
 interface CreateAgentModalProps {
   open: boolean;
@@ -35,20 +36,32 @@ export const CreateAgentModal = ({
   onClose,
   agentInfo,
 }: CreateAgentModalProps) => {
-  const { createAgent, getBuyAmountOut } = useAIContract();
+  const navigate = useNavigate();
+  const { createAgent, getBuyAmountOut, getCreateFee } = useAIContract();
+  const [createFee, setCreateFee] = useState<string>("0");
   const [amount, setAmount] = useState<string>("0");
   const [receiveAmount, setReceiveAmount] = useState<string>("0");
+
+  useEffect(() => {
+    getCreateFee().then((res) => {
+      const fee = new BigNumber(formatUnits(res, BASE_TOKEN.decimals));
+      setCreateFee(fee.toString());
+    });
+  }, []);
   const handleCreate = async () => {
     try {
-      const buyAmount = parseUnits(amount, BASE_TOKEN.decimals);
+      const buyAmount = parseUnits(
+        new BigNumber(amount).plus(new BigNumber(createFee)).toString(),
+        BASE_TOKEN.decimals
+      );
       const obj: CreateAgentParams = {
         agentId: agentInfo.agentId ?? "",
         symbol: agentInfo.symbol,
         name: agentInfo.name,
         buyAmount,
       };
-      const hash = await createAgent(obj);
-      console.log(hash);
+      const txInfo = await createAgent(obj);
+      navigate(`/token/${agentInfo.agentId}/${txInfo.tokenAddress}`);
       toast({
         title: "Agent successfully created !",
         variant: "default",
@@ -156,7 +169,6 @@ export const CreateAgentModal = ({
         </div>
         <Button
           className="mx-[51px]"
-          disabled={new BigNumber(amount).lt(minFee)}
           onClick={() => {
             handleCreate();
           }}

@@ -8,35 +8,39 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-// import { cn } from "@/lib/utils";
-// import { getColorByAgentName } from "@/utils";
+import { cn } from "@/lib/utils";
+import { getColorByAgentName } from "@/utils";
 import { useAuth } from "@/hooks/useAuth";
 import { useEffect, useState } from "react";
 import { ConnectWalletModal } from "@/components/connectWalletModal";
 import { useNavigate } from "react-router-dom";
 import { ChevronDown, Users } from "lucide-react";
 import { useInfiniteQuery } from "@tanstack/react-query";
-import { getAllAgentList } from "@/api/api";
+import { DEFAULT_PAGE_SIZE, getAllAgentList } from "@/api/api";
 import { PaginationView } from "./pagination";
 // import { LoadingComp } from "@/components/loading";
 import { useLoginStore } from "@/store/login";
+import BigNumber from "bignumber.js";
 
 const HomePage = () => {
   const { evmAddress } = useAuth();
   const navigate = useNavigate();
   const token = useLoginStore((state) => state.token);
   const [showConnectWallet, setShowConnectWallet] = useState(false);
-  const [currentPage, setCurrentPage] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1);
 
   const { data, fetchNextPage, hasNextPage, status } = useInfiniteQuery({
     queryKey: ["agents"],
-    enabled: !!token,
+    // enabled: !!token,
     // enabled: false,
-    queryFn: ({ pageParam = 1 }) => getAllAgentList(pageParam),
+    queryFn: ({ pageParam = currentPage }) => getAllAgentList(pageParam),
     initialPageParam: 1,
-    getNextPageParam: (lastPage) => lastPage.current + 1,
+    getNextPageParam: (lastPage) =>
+      lastPage.rows.length === DEFAULT_PAGE_SIZE
+        ? lastPage.current + 1
+        : undefined,
   });
-  console.log(status);
+  console.log(status, hasNextPage);
 
   // const totalPages = data?.pages[0]?.totalPages || 1;
   // if (status === "pending") return <LoadingComp loading />;
@@ -87,7 +91,7 @@ const HomePage = () => {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {data?.pages[currentPage]?.rows?.map((agent, index) => (
+            {data?.pages[currentPage - 1]?.rows?.map((agent, index) => (
               <TableRow
                 key={`agent_${index}`}
                 className="last:mb-0 border-none"
@@ -95,34 +99,41 @@ const HomePage = () => {
                 <TableCell colSpan={6} className="px-0 pt-3 pb-0">
                   <div className="bg-white rounded-[4px] flex items-center gap-4">
                     <div className="flex items-center gap-3 w-[30%] p-3">
-                      {/* <img
-                        src={agent.icon}
+                      <img
+                        src={agent.image}
                         alt="icon"
                         className="w-[132px] h-[132px]"
-                      /> */}
+                      />
                       <div className="flex flex-col gap-3">
                         <div className="text-14 font-SwitzerMedium">
                           {agent.name}
                         </div>
-                        {/* <div
+                        <div
                           className={cn(
                             "flex items-center gap-[2px] px-[6px] rounded-full",
-                            getColorByAgentName(agent.type)
+                            getColorByAgentName(agent.agentType)
                           )}
                         >
-                          <span className="text-10">{agent.type}</span>
+                          <span className="text-10">{agent.agentType}</span>
                           <Users size={10} color="white" />
-                        </div> */}
+                        </div>
                         <span>$GAME</span>
                       </div>
                     </div>
                     <div className="w-[14%] px-4">{agent.marketCap}</div>
-                    <div className="w-[14%] px-4 text-green">
-                      {agent.marketCap}
+                    <div
+                      className={cn(
+                        "w-[14%] px-4",
+                        new BigNumber(agent.price24Change).gt(0)
+                          ? "text-green"
+                          : "text-red"
+                      )}
+                    >
+                      {agent.price24Change}
                     </div>
                     <div className="w-[14%] px-4">{agent.totalLocked}</div>
-                    <div className="w-[14%] px-4">{agent.holderCount}</div>
-                    <div className="w-[14%] px-4">{agent.vol24h}</div>
+                    <div className="w-[14%] px-4">{agent.holder}</div>
+                    <div className="w-[14%] px-4">{agent.volume24h}</div>
                   </div>
                 </TableCell>
               </TableRow>
