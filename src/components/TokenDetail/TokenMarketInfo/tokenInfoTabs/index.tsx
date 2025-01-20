@@ -33,8 +33,8 @@ export function DialogDemo() {
       <DialogTrigger asChild>
         <Button
           type="submit"
-          variant="outline"
-          className="rounded-sm py-2 px-4 hover:border-[#12122A] focus:outline-none active:border-none active:outline-none border-[1.5px] border-b-4 border-[#12122A] bg-gradient-to-tr from-[#FCD436] to-[#FFE478]"
+          variant="yellow"
+          className="rounded-sm py-2 px-4 hover:border-[#12122A] focus:outline-none  border-[1.5px] border-b-4 border-[#12122A] bg-gradient-to-tr from-[#FCD436] to-[#FFE478]"
         >
           Add Post
         </Button>

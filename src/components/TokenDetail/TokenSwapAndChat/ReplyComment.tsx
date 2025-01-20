@@ -34,8 +34,8 @@ export function ReplyComment({
   const handleSubmit = async () => {
     await postCommentAsync();
     queryClient.invalidateQueries({ queryKey: ["agentsComments"] });
-    setIsReply(false);
     setComment("");
+    setIsReply(false);
   };
   return (
     <Dialog open={isReply} onOpenChange={setIsReply}>
@@ -90,8 +90,8 @@ export function ReplyComment({
             onClick={handleSubmit}
             disabled={!comment}
             type="submit"
-            variant="outline"
-            className="px-8 py-5 rounded-sm active:border-none active:outline-none hover:border-[#12122A] border-[1.5px] border-b-4 border-[#12122A] bg-gradient-to-tr from-[#FCD436] to-[#FFE478]"
+            variant="yellow"
+            className="px-8 py-5 rounded-sm hover:border-[#12122A] border-[1.5px] border-b-4 border-[#12122A] bg-gradient-to-tr from-[#FCD436] to-[#FFE478]"
           >
             Post
           </Button>

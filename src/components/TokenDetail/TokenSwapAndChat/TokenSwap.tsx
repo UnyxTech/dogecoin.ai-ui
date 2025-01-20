@@ -276,15 +276,17 @@ const TokenSwap = () => {
         <Button
           key="trade"
           onClick={() => handleTrade()}
-          disabled={!isEfficientBalance || +tradeData.amount <= 0}
+          disabled={!isEfficientBalance}
           variant={
-            !isEfficientBalance || +tradeData.amount <= 0
+            !isEfficientBalance
               ? "tradeDisabled"
               : tradeData.isBuy
-              ? "buy"
-              : "sell"
+              ? "green"
+              : "red"
           }
-          className="trade-button py-5"
+          className={`trade-button py-5 ${
+            isTradePending ? "opacity-50 pointer-events-none" : ""
+          }`}
         >
           {isTradePending ? (
             <div className="flex items-center gap-2 ">

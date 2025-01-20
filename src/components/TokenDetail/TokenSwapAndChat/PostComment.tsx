@@ -21,7 +21,7 @@ const PostComment = () => {
   };
   return (
     <div>
-      <div className="bottom-0 flex w-full max-w-sm items-center space-x-2">
+      <div className="bottom-0 flex w-full max-w-sm items-center space-x-2 disabled:pointer-events-none">
         <Input
           type="text"
           placeholder="Type your comment"
@@ -33,7 +33,7 @@ const PostComment = () => {
           onClick={handleSubmit}
           disabled={!comment || isPending}
           type="submit"
-          variant="outline"
+          variant="yellow"
           className="rounded-sm active:border-none active:outline-none hover:border-[#12122A] border-[1.5px] border-b-4 border-[#12122A] bg-gradient-to-tr from-[#FCD436] to-[#FFE478]"
         >
           Post

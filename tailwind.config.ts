@@ -120,6 +120,8 @@ const config: Config = {
           "linear-gradient(7deg, #FCD436 22.18%, #FFE478 70.41%)",
         "linear-green":
           "linear-gradient(194deg, #68F5A7 -9.05%, #04C159 51.88%)",
+        "linear-red":
+          "linear-gradient(194deg, #FF8FA6 -9.05%, #EB4B6D 51.88%);",
         "linear-pink":
           "linear-gradient(194deg, #FF8FA6 -9.05%, #EB4B6D 51.88%)",
         "linear-white": "linear-gradient(180deg, #F4F4F4 0%, #FEFEFE 100%)",
@@ -128,6 +130,8 @@ const config: Config = {
           "linear-gradient(7deg, rgba(252, 212, 54, 0.50) 22.18%, rgba(255, 228, 120, 0.50) 70.41%)",
         "hover-green":
           "linear-gradient(194deg, rgba(104, 245, 167, 0.50) -9.05%, rgba(4, 193, 89, 0.50) 51.88%)",
+        "hover-red":
+          "linear-gradient(194deg, rgba(255, 143, 166, 0.50) -9.05%, rgba(235, 75, 109, 0.50) 51.88%)",
         "hover-pink":
           "linear-gradient(194deg, rgba(255, 143, 166, 0.50) -9.05%, rgba(235, 75, 109, 0.50) 51.88%)",
       },
