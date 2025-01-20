@@ -96,18 +96,40 @@ const InformationContent = () => {
       <div>
         <Title text="Social links" className="mb-5" />
         <div className="flex items-center gap-4">
-          <div className="flex items-center gap-2 bg-dayBg3 rounded-lg pr-2 overflow-hidden">
-            <div className="w-12 h-12 bg-black flex justify-center items-center">
-              <img src="/public/images/x.svg" alt="" width={24} height={24} />
+          {tokenInfo?.twitter && (
+            <div className="flex items-center gap-2 bg-dayBg3 rounded-lg pr-2 overflow-hidden">
+              <div className="w-12 h-12 bg-black flex justify-center items-center">
+                <img src="/public/images/x.svg" alt="" width={24} height={24} />
+              </div>
+              <span className="text-dayT1">Twitter</span>
             </div>
-            <span className="text-dayT1">Twitter</span>
-          </div>
-          <div className="flex items-center gap-2 bg-dayBg3 rounded-lg pr-2 overflow-hidden">
-            <div className="w-12 h-12 bg-black  flex justify-center items-center">
-              <img src="/public/images/x.svg" alt="" width={24} height={24} />
+          )}
+          {tokenInfo?.telegram && (
+            <div className="flex items-center gap-2 bg-dayBg3 rounded-lg pr-2 overflow-hidden">
+              <div className="w-12 h-12 bg-black flex justify-center items-center">
+                <img
+                  src="/public/images/tg.svg"
+                  alt=""
+                  width={24}
+                  height={24}
+                />
+              </div>
+              <span className="text-dayT1">Telegram</span>
             </div>
-            <span className="text-dayT1">Twitter</span>
-          </div>
+          )}
+          {tokenInfo?.youtube && (
+            <div className="flex items-center gap-2 bg-dayBg3 rounded-lg pr-2 overflow-hidden">
+              <div className="w-12 h-12 bg-black flex justify-center items-center">
+                <img
+                  src="/public/images/youtube.svg"
+                  alt=""
+                  width={24}
+                  height={24}
+                />
+              </div>
+              <span className="text-dayT1">Youtube</span>
+            </div>
+          )}
         </div>
       </div>
     </div>
