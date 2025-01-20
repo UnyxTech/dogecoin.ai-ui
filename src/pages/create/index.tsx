@@ -24,6 +24,7 @@ import { AgentInfo, AgentType } from "@/types";
 import { createAgent, uploadImg } from "@/api/api";
 import { useMutation } from "@tanstack/react-query";
 import { CreateAgentRes } from "@/api/types";
+import { toast } from "@/hooks/use-toast";
 
 const formSchema = z.object({
   file: z
@@ -124,6 +125,16 @@ const CreatePage = () => {
 
   const handleFileChange = (e: any) => {
     const file = e.target.files?.[0];
+    if (
+      file &&
+      !["image/png", "image/svg+xml", "image/jpeg"].includes(file.type)
+    ) {
+      toast({
+        title: "Please upload a valid image file (png, svg, jpg).",
+        variant: "destructive",
+      });
+      return;
+    }
     if (file) {
       const imageUrl = URL.createObjectURL(file);
       setImage(imageUrl);
@@ -391,8 +402,8 @@ const CreatePage = () => {
                 variant="yellow"
                 className="w-full gap-2"
                 size="lg"
+                loading={createAgentMutation.status === 'pending'}
                 disabled={!form.formState.isValid}
-                // onClick={() => setShowCreateAgentModal(true)}
               >
                 <span>🚀</span> Continue
               </Button>
