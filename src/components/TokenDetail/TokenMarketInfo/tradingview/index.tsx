@@ -9,8 +9,7 @@ import {
 } from "../../../../../public/charting_library";
 import * as React from "react";
 import { datafeed } from "./datafeed";
-import { useParams } from "react-router-dom";
-import { useAgentInfo } from "@/hooks/tokenDetial/useAgentInfo";
+import { GetAgentInfoResponse } from "@/api/types";
 
 export interface ChartContainerProps {
   symbol: ChartingLibraryWidgetOptions["symbol"];
@@ -51,9 +50,11 @@ export const SUPPORTED_RESOLUTIONS = [
   "1D",
   "1W",
 ] as ResolutionString[];
-const TradingViewChart = () => {
-  const { characterId } = useParams();
-  const { data: tokenInfo } = useAgentInfo(characterId!);
+const TradingViewChart = ({
+  tokenInfo,
+}: {
+  tokenInfo: GetAgentInfoResponse;
+}) => {
   const chartContainerRef =
     useRef<HTMLDivElement>() as React.MutableRefObject<HTMLInputElement>;
   useEffect(() => {

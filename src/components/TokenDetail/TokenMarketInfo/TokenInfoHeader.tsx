@@ -1,11 +1,10 @@
-import { useAgentInfo } from "@/hooks/tokenDetial/useAgentInfo";
+import { GetAgentInfoResponse } from "@/api/types";
 import {
   copyToClipboard,
   formatAddressNew,
   getDetailedTimeDiff,
 } from "@/utils";
 import { Copy, User } from "lucide-react";
-import { useParams } from "react-router-dom";
 
 interface ExternalLink {
   name: string;
@@ -13,9 +12,11 @@ interface ExternalLink {
   icon: string;
 }
 
-const TokenInfoHeader = () => {
-  const { characterId } = useParams();
-  const { data: tokenInfo } = useAgentInfo(characterId!);
+const TokenInfoHeader = ({
+  tokenInfo,
+}: {
+  tokenInfo: GetAgentInfoResponse;
+}) => {
   const externalLinks: ExternalLink[] = [
     {
       name: "DexScreener",

@@ -6,6 +6,7 @@ import { ChevronFirst } from "lucide-react";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { ReplyComment } from "./ReplyComment";
 import PostComment from "./PostComment";
+import ChatSkeletons from "@/components/skeletons/tokenDetail/ChatSkeletons";
 
 const ChatCard = ({
   item,
@@ -58,14 +59,14 @@ const ChatCard = ({
   );
 };
 
-const TokenChat = () => {
+const TokenChat = ({ characterId }: { characterId: string }) => {
   const [showChat, setShowChat] = useState<boolean>(true);
   const [isReply, setIsReply] = useState<boolean>(false);
   const [selectedItem, setSelectedItem] = useState<CommentItem | null>(null);
   const [, setCursor] = useState("");
-  const { data: commentsData } = useAgentsComments({
+  const { data: commentsData, isLoading } = useAgentsComments({
     pageSize: 100,
-    characterId: "73455860437954560",
+    characterId: characterId,
     // ...(cursor ? { cursor } : {}),
   });
   useEffect(() => {
@@ -73,6 +74,9 @@ const TokenChat = () => {
       setCursor(commentsData.cursor);
     }
   }, [commentsData]);
+  if (isLoading) {
+    return <ChatSkeletons />;
+  }
   return (
     <div className="p-6 pb-8 bg-white rounded-[6px] overflow-hidden">
       <div className="flex items-center justify-between mb-5">

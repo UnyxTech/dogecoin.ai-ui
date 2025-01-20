@@ -18,8 +18,7 @@ import {
 import { BASE_TOKEN } from "@/constant";
 import { useToast } from "@/hooks/use-toast";
 import { debounce } from "lodash";
-import { useParams } from "react-router-dom";
-import { useAgentInfo } from "@/hooks/tokenDetial/useAgentInfo";
+import { GetAgentInfoResponse } from "@/api/types";
 const TokenLogoSwitch = ({
   isBuy,
   dogeImage,
@@ -50,9 +49,7 @@ const TokenLogoSwitch = ({
 };
 
 const defaultSlippage = 10n;
-const TokenSwap = () => {
-  const { characterId } = useParams();
-  const { data: tokenInfo } = useAgentInfo(characterId!);
+const TokenSwap = ({ tokenInfo }: { tokenInfo: GetAgentInfoResponse }) => {
   const { toast } = useToast();
   const account = useAccount();
   // state
