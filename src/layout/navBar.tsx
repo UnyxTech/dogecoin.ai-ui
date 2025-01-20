@@ -28,6 +28,7 @@ import { cn } from "@/lib/utils";
 import BigNumber from "bignumber.js";
 import { LoadingComp } from "@/components/loading";
 import { toast } from "@/hooks/use-toast";
+import { AgentType } from "@/types";
 
 const Navbar = () => {
   const { evmAddress } = useAuth();
@@ -88,7 +89,7 @@ const Navbar = () => {
               />
             )}
             {searchStr && (
-              <div className="absolute top-[calc(100%+10px)] p-6 min-w-[680px] left-0 w-full bg-white rounded-[4px] shadow-lg z-50">
+              <div className="absolute top-[calc(100%+10px)] h-[482px] overflow-y-auto p-6 min-w-[680px] left-0 w-full bg-white rounded-[4px] shadow-lg z-50">
                 {searchMutation.status === "pending" ? (
                   <LoadingComp loading size={32} className="py-6" />
                 ) : (
@@ -223,7 +224,14 @@ const SearchAgentList: React.FC<ISearchAgentList> = ({
                         <span className="text-10">
                           {getTextByAgentType(agent.agentType)}
                         </span>
-                        <Users size={10} color="white" />
+                        <Users
+                          size={10}
+                          color={
+                            agent.agentType === AgentType.Productivity
+                              ? "white"
+                              : "black"
+                          }
+                        />
                       </div>
                       {agent.twitter && (
                         <LinkItem
