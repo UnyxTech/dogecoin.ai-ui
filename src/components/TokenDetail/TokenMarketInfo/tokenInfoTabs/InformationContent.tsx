@@ -38,6 +38,29 @@ const Description = ({
     </div>
   );
 };
+
+interface SocialItemProps {
+  icon: string;
+  label: string;
+  link: string;
+}
+const SocialItem = ({ icon, label, link }: SocialItemProps) => {
+  return (
+    <a
+      href={link}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="flex items-center gap-2 bg-dayBg3 rounded-lg pr-2 overflow-hidden hover:opacity-80 transition-opacity"
+    >
+      <div className="flex items-center gap-2 bg-dayBg3 rounded-lg pr-2 overflow-hidden">
+        <div className="w-12 h-12 bg-black flex justify-center items-center">
+          <img src={icon} alt="" width={24} height={24} />
+        </div>
+        <span className="text-dayT1">{label}</span>
+      </div>
+    </a>
+  );
+};
 const InformationContent = () => {
   const { characterId } = useParams();
   const { data: tokenInfo } = useAgentInfo(characterId!);
@@ -104,38 +127,25 @@ const InformationContent = () => {
         <Title text="Social links" className="mb-5" />
         <div className="flex items-center gap-4">
           {tokenInfo?.twitter && (
-            <div className="flex items-center gap-2 bg-dayBg3 rounded-lg pr-2 overflow-hidden">
-              <div className="w-12 h-12 bg-black flex justify-center items-center">
-                <img src="/public/images/x.svg" alt="" width={24} height={24} />
-              </div>
-              <span className="text-dayT1">Twitter</span>
-            </div>
+            <SocialItem
+              icon="/public/images/x.svg"
+              label="Twitter"
+              link={tokenInfo?.twitter}
+            />
           )}
           {tokenInfo?.telegram && (
-            <div className="flex items-center gap-2 bg-dayBg3 rounded-lg pr-2 overflow-hidden">
-              <div className="w-12 h-12 bg-black flex justify-center items-center">
-                <img
-                  src="/public/images/tg.svg"
-                  alt=""
-                  width={24}
-                  height={24}
-                />
-              </div>
-              <span className="text-dayT1">Telegram</span>
-            </div>
+            <SocialItem
+              icon="/public/images/tg.svg"
+              label="Telegram"
+              link={tokenInfo?.telegram}
+            />
           )}
           {tokenInfo?.youtube && (
-            <div className="flex items-center gap-2 bg-dayBg3 rounded-lg pr-2 overflow-hidden">
-              <div className="w-12 h-12 bg-black flex justify-center items-center">
-                <img
-                  src="/public/images/youtube.svg"
-                  alt=""
-                  width={24}
-                  height={24}
-                />
-              </div>
-              <span className="text-dayT1">Youtube</span>
-            </div>
+            <SocialItem
+              icon="/public/images/youtube.svg"
+              label="Youtube"
+              link={tokenInfo?.youtube}
+            />
           )}
         </div>
       </div>
