@@ -1,3 +1,4 @@
+import AdaptiveBalance from "@/components/adaptiveBalance";
 import { Separator } from "@/components/ui/separator";
 import { useAgentInfo } from "@/hooks/tokenDetial/useAgentInfo";
 import { cn } from "@/lib/utils";
@@ -48,36 +49,43 @@ const InformationContent = () => {
           <div className="flex-1 py-1 px-4 bg-[#FAFAFD]">
             <div className="flex justify-between items-center py-4">
               <span className="text-dayT3">Market cap(FDV)</span>
-              <span className="text-dayT1">
-                ${formatCompactNumber(tokenInfo?.marketCap ?? 0)}
-              </span>
+              <AdaptiveBalance
+                balance={tokenInfo?.marketCap.toString() ?? ""}
+                prefix="$"
+              />
             </div>
             <Separator />
             <div className="flex justify-between items-center py-4">
               <span className="text-dayT3">24 hours change</span>
-              <span className="text-dayT1">{tokenInfo?.marketCap ?? 0}%</span>
+              <AdaptiveBalance
+                balance={tokenInfo?.price24Change ?? ""}
+                suffix=" %"
+              />
+              {/* <span className="text-dayT1">{tokenInfo?.marketCap ?? 0}%</span> */}
             </div>
             <Separator />
             <div className="flex justify-between items-center py-4">
               <span className="text-dayT3">Total value locked</span>
-              <span className="text-dayT1">
-                ${formatCompactNumber(tokenInfo?.totalLocked ?? 0)}
-              </span>
+              <AdaptiveBalance
+                balance={tokenInfo?.totalLocked ?? ""}
+                prefix="$"
+              />
             </div>
           </div>
           <div className="flex-1 py-1 px-4 bg-[#FAFAFD]">
             <div className="flex justify-between items-center py-4">
               <span className="text-dayT3">Holders count</span>
               <span className="text-dayT1">
-                {formatCompactNumber(tokenInfo?.holder ?? 0, 0)}
+                {formatCompactNumber(Number(tokenInfo?.holder ?? 0), 0)}
               </span>
             </div>
             <Separator />
             <div className="flex justify-between items-center py-4">
               <span className="text-dayT3">24 hours volume</span>
-              <span className="text-dayT1">
-                ${formatCompactNumber(tokenInfo?.volume24h ?? 0)}
-              </span>
+              <AdaptiveBalance
+                balance={tokenInfo?.volume24h ?? ""}
+                prefix="$"
+              />
             </div>
             <Separator />
             <div className="flex justify-between items-center py-4">
