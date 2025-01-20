@@ -135,7 +135,11 @@ const TokenChat = () => {
           />
         )}
       </div>
-      <div className={`${showChat ? "block" : "hidden"}`}>
+      <div
+        className={`${
+          showChat ? "block" : "hidden"
+        } h-[660px] overflow-y-scroll customScrollbar_two`}
+      >
         {commentsData?.rows?.map((item) => {
           return (
             <ChatCard

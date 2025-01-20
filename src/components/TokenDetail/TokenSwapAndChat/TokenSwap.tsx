@@ -283,7 +283,7 @@ const TokenSwap = () => {
               ? "buy"
               : "sell"
           }
-          className="trade-button hover:border-none border-[2px] border-b-4 border-[#12122A]"
+          className="trade-button hover:border-[#12122A] active:border-none border-[2px] border-b-4 border-[#12122A]"
         >
           {isTradePending ? (
             <div className="flex items-center gap-2">

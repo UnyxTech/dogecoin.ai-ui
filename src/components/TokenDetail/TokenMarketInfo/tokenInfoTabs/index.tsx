@@ -9,6 +9,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { CustomProgress } from "@/components/ui/custom/CustomProgress";
+import { LoadingComp } from "@/components/loading";
 const PostContent = lazy(() => import("./PostContent"));
 const InformationContent = lazy(() => import("./InformationContent"));
 const HolderContent = lazy(() => import("./HolderContent"));
@@ -111,7 +112,7 @@ const TokenInfoTabs = () => {
         {activeTab === TAB_TYPES.POST && <DialogDemo />}
       </div>
       <Separator className="mb-6" />
-      <Suspense fallback={<div>Loading...</div>}>
+      <Suspense fallback={<LoadingComp loading={true} size={16} />}>
         {getContent(activeTab)}
       </Suspense>
     </>

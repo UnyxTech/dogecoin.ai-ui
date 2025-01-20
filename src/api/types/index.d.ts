@@ -159,7 +159,23 @@ export interface GetAgentInfoResponse {
   graduatedPercent: string;
   graduatedNeedAmount: string;
 }
-
+export interface GetAgentHoldersParams {
+  characterId: string;
+  pageSize: number;
+  currentPage: number;
+}
+export interface GetAgentHoldersResponse {
+  current: number;
+  pageSize: number;
+  currentRowSize: number;
+  rows: [
+    {
+      holderAddress: string;
+      holdingAmount: string;
+      holdingPercent: string;
+    }
+  ];
+}
 //////////////////////////////////
 ////////////......////////////////
 //////////////////////////////////

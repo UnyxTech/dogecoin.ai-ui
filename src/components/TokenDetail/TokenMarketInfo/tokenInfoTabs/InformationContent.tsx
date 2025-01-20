@@ -1,4 +1,5 @@
 import AdaptiveBalance from "@/components/adaptiveBalance";
+import { LoadingComp } from "@/components/loading";
 import { Separator } from "@/components/ui/separator";
 import { useAgentInfo } from "@/hooks/tokenDetial/useAgentInfo";
 import { cn } from "@/lib/utils";
@@ -63,92 +64,99 @@ const SocialItem = ({ icon, label, link }: SocialItemProps) => {
 };
 const InformationContent = () => {
   const { characterId } = useParams();
-  const { data: tokenInfo } = useAgentInfo(characterId!);
+  const { data: tokenInfo, isLoading } = useAgentInfo(characterId!);
   return (
     <div className="flex flex-col gap-14 pb-10">
-      <div>
-        <Title text={`${tokenInfo?.symbol} market info`} className="mb-5" />
-        <div className="flex gap-2 ">
-          <div className="flex-1 py-1 px-4 bg-[#FAFAFD]">
-            <div className="flex justify-between items-center py-4">
-              <span className="text-dayT3">Market cap(FDV)</span>
-              <AdaptiveBalance
-                balance={tokenInfo?.marketCap.toString() ?? ""}
-                prefix="$"
-              />
-            </div>
-            <Separator />
-            <div className="flex justify-between items-center py-4">
-              <span className="text-dayT3">24 hours change</span>
-              <AdaptiveBalance
-                balance={tokenInfo?.price24Change ?? ""}
-                suffix=" %"
-              />
-              {/* <span className="text-dayT1">{tokenInfo?.marketCap ?? 0}%</span> */}
-            </div>
-            <Separator />
-            <div className="flex justify-between items-center py-4">
-              <span className="text-dayT3">Total value locked</span>
-              <AdaptiveBalance
-                balance={tokenInfo?.totalLocked ?? ""}
-                prefix="$"
-              />
+      {isLoading ? (
+        <LoadingComp loading={isLoading} />
+      ) : (
+        <>
+          <div>
+            <Title text={`${tokenInfo?.symbol} market info`} className="mb-5" />
+            <div className="flex gap-2 ">
+              <div className="flex-1 py-1 px-4 bg-[#FAFAFD]">
+                <div className="flex justify-between items-center py-4">
+                  <span className="text-dayT3">Market cap(FDV)</span>
+                  <AdaptiveBalance
+                    balance={tokenInfo?.marketCap.toString() ?? ""}
+                    prefix="$"
+                  />
+                </div>
+                <Separator />
+                <div className="flex justify-between items-center py-4">
+                  <span className="text-dayT3">24 hours change</span>
+                  <AdaptiveBalance
+                    balance={tokenInfo?.price24Change ?? ""}
+                    suffix=" %"
+                  />
+                </div>
+                <Separator />
+                <div className="flex justify-between items-center py-4">
+                  <span className="text-dayT3">Total value locked</span>
+                  <AdaptiveBalance
+                    balance={tokenInfo?.totalLocked ?? ""}
+                    prefix="$"
+                  />
+                </div>
+              </div>
+              <div className="flex-1 py-1 px-4 bg-[#FAFAFD]">
+                <div className="flex justify-between items-center py-4">
+                  <span className="text-dayT3">Holders count</span>
+                  <span className="text-dayT1">
+                    {formatCompactNumber(Number(tokenInfo?.holder ?? 0), 0)}
+                  </span>
+                </div>
+                <Separator />
+                <div className="flex justify-between items-center py-4">
+                  <span className="text-dayT3">24 hours volume</span>
+                  <AdaptiveBalance
+                    balance={tokenInfo?.volume24h ?? ""}
+                    prefix="$"
+                  />
+                </div>
+                <Separator />
+                <div className="flex justify-between items-center py-4">
+                  <span className="text-dayT3">Created at</span>
+                  <span className="text-dayT1">
+                    {dayjs(tokenInfo?.agentCreatedTime).format(
+                      "YYYY-MM-DD HH:mm"
+                    )}
+                  </span>
+                </div>
+              </div>
             </div>
           </div>
-          <div className="flex-1 py-1 px-4 bg-[#FAFAFD]">
-            <div className="flex justify-between items-center py-4">
-              <span className="text-dayT3">Holders count</span>
-              <span className="text-dayT1">
-                {formatCompactNumber(Number(tokenInfo?.holder ?? 0), 0)}
-              </span>
-            </div>
-            <Separator />
-            <div className="flex justify-between items-center py-4">
-              <span className="text-dayT3">24 hours volume</span>
-              <AdaptiveBalance
-                balance={tokenInfo?.volume24h ?? ""}
-                prefix="$"
-              />
-            </div>
-            <Separator />
-            <div className="flex justify-between items-center py-4">
-              <span className="text-dayT3">Created at</span>
-              <span className="text-dayT1">
-                {dayjs(tokenInfo?.agentCreatedTime).format("YYYY-MM-DD HH:mm")}
-              </span>
+
+          <Description text={tokenInfo?.description ?? "--"} slice={200} />
+
+          <div>
+            <Title text="Social links" className="mb-5" />
+            <div className="flex items-center gap-4">
+              {tokenInfo?.twitter && (
+                <SocialItem
+                  icon="/public/images/x.svg"
+                  label="Twitter"
+                  link={tokenInfo?.twitter}
+                />
+              )}
+              {tokenInfo?.telegram && (
+                <SocialItem
+                  icon="/public/images/tg.svg"
+                  label="Telegram"
+                  link={tokenInfo?.telegram}
+                />
+              )}
+              {tokenInfo?.youtube && (
+                <SocialItem
+                  icon="/public/images/youtube.svg"
+                  label="Youtube"
+                  link={tokenInfo?.youtube}
+                />
+              )}
             </div>
           </div>
-        </div>
-      </div>
-      {/* Description */}
-      <Description text={tokenInfo?.description ?? "--"} slice={200} />
-      {/* Social links */}
-      <div>
-        <Title text="Social links" className="mb-5" />
-        <div className="flex items-center gap-4">
-          {tokenInfo?.twitter && (
-            <SocialItem
-              icon="/public/images/x.svg"
-              label="Twitter"
-              link={tokenInfo?.twitter}
-            />
-          )}
-          {tokenInfo?.telegram && (
-            <SocialItem
-              icon="/public/images/tg.svg"
-              label="Telegram"
-              link={tokenInfo?.telegram}
-            />
-          )}
-          {tokenInfo?.youtube && (
-            <SocialItem
-              icon="/public/images/youtube.svg"
-              label="Youtube"
-              link={tokenInfo?.youtube}
-            />
-          )}
-        </div>
-      </div>
+        </>
+      )}
     </div>
   );
 };
