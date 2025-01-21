@@ -214,7 +214,10 @@ const HomePage = () => {
                       </div>
                     </div>
                     <div className="w-[14%]">
-                      $<AdaptiveBalance balance={agent.marketCap.toString()} />
+                      $
+                      <AdaptiveBalance
+                         balance={agent.marketCap.toString()}
+                      />
                     </div>
                     <div
                       className={cn(

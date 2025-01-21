@@ -9,6 +9,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { CustomProgress } from "@/components/ui/custom/CustomProgress";
+import { LoadingComp } from "@/components/loading";
 const PostContent = lazy(() => import("./PostContent"));
 const InformationContent = lazy(() => import("./InformationContent"));
 const HolderContent = lazy(() => import("./HolderContent"));
@@ -32,8 +33,8 @@ export function DialogDemo() {
       <DialogTrigger asChild>
         <Button
           type="submit"
-          variant="outline"
-          className="rounded-sm py-2 px-4 hover:border-none border-[1.5px] border-b-4 border-[#12122A] bg-gradient-to-tr from-[#FCD436] to-[#FFE478]"
+          variant="yellow"
+          className="rounded-sm py-2 px-4 hover:border-[#12122A] focus:outline-none  border-[1.5px] border-b-4 border-[#12122A] bg-gradient-to-tr from-[#FCD436] to-[#FFE478]"
         >
           Add Post
         </Button>
@@ -111,7 +112,7 @@ const TokenInfoTabs = () => {
         {activeTab === TAB_TYPES.POST && <DialogDemo />}
       </div>
       <Separator className="mb-6" />
-      <Suspense fallback={<div>Loading...</div>}>
+      <Suspense fallback={<LoadingComp loading={true} size={16} />}>
         {getContent(activeTab)}
       </Suspense>
     </>

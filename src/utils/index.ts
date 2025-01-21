@@ -307,7 +307,6 @@ export const getDetailedTimeDiff = (date: string | Date) => {
 export const formatCompactNumber = (value: number, decimals = 2): string => {
   const absValue = Math.abs(value);
   const sign = value < 0 ? "-" : "";
-
   if (absValue >= 1_000_000_000) {
     return sign + (absValue / 1_000_000_000).toFixed(decimals) + "b";
   }
@@ -330,27 +329,32 @@ export function effectiveBalance(balance: any) {
   if (balance < 1 / Math.pow(10, 6)) {
     return "0.00";
   }
-  balance = new BigNumber(balance.toString()).toFixed();
-  if (balance.split(".").length === 1) {
-    return balance > 1000
-      ? `${Number(balance).toLocaleString()}.00`
-      : `${balance}.00`;
-  }
-  const integer = balance.split(".")[0];
-  const decimal = balance.split(".")[1];
-  if (integer > 0) {
-    const str = decimal.length === 1 ? `${decimal}0` : decimal.substr(0, 2);
-    const res = `${integer}.${str}`;
-    return Number(res) > 1000
-      ? `${Number(integer).toLocaleString()}.${str}`
-      : res;
+
+  const numBalance = Number(balance);
+
+  if (numBalance >= 1000) {
+    return formatCompactNumber(numBalance);
   }
 
-  const temp: any = [];
+  balance = new BigNumber(balance.toString()).toFixed();
+
+  if (balance.split(".").length === 1) {
+    return `${balance}.00`;
+  }
+
+  const [integer, decimal] = balance.split(".");
+
+  if (integer > 0) {
+    const str = decimal.length === 1 ? `${decimal}0` : decimal.substr(0, 2);
+    return `${integer}.${str}`;
+  }
+
+  const temp: string[] = [];
   let tempNum = 0;
   let isNotZero = false;
+
   for (let i = 0; i < decimal.length; i++) {
-    if (decimal[i] != "0" && !isNotZero) {
+    if (decimal[i] !== "0" && !isNotZero) {
       isNotZero = true;
     }
     if (isNotZero) {
@@ -360,8 +364,6 @@ export function effectiveBalance(balance: any) {
       temp.push(decimal[i]);
     }
   }
-  const res = parseFloat(`${integer}.${temp.join("")}`);
-  return res > 1000
-    ? `${Number(integer).toLocaleString()}.${temp.join("")}`
-    : res;
+
+  return parseFloat(`${integer}.${temp.join("")}`);
 }

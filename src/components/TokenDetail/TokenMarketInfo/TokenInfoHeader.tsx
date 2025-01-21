@@ -1,4 +1,4 @@
-import { useAgentInfoStore } from "@/store/tokenDetail";
+import { GetAgentInfoResponse } from "@/api/types";
 import {
   copyToClipboard,
   formatAddressNew,
@@ -12,8 +12,11 @@ interface ExternalLink {
   icon: string;
 }
 
-const TokenInfoHeader = () => {
-  const tokenInfo = useAgentInfoStore((state) => state.agent);
+const TokenInfoHeader = ({
+  tokenInfo,
+}: {
+  tokenInfo: GetAgentInfoResponse;
+}) => {
   const externalLinks: ExternalLink[] = [
     {
       name: "DexScreener",

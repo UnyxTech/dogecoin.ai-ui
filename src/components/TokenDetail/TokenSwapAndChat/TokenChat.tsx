@@ -1,19 +1,21 @@
 import { CommentItem } from "@/api/types";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { useAgentsComments } from "@/hooks/tokenDetial/useAgentsComments";
-import { usePostAgentsComments } from "@/hooks/tokenDetial/usePostAgentsComments";
 import { formatAddressNew } from "@/utils";
 import dayjs from "dayjs";
 import { ChevronFirst } from "lucide-react";
-import { useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { ReplyComment } from "./ReplyComment";
+import PostComment from "./PostComment";
+import ChatSkeletons from "@/components/skeletons/tokenDetail/ChatSkeletons";
 
 const ChatCard = ({
   item,
-  onReply,
+  setIsReply,
+  setSelectedItem,
 }: {
   item: CommentItem;
-  onReply: () => void;
+  setIsReply: Dispatch<SetStateAction<boolean>>;
+  setSelectedItem: Dispatch<SetStateAction<CommentItem | null>>;
 }) => {
   return (
     <div className="mb-8 flex flex-col gap-2">
@@ -32,14 +34,17 @@ const ChatCard = ({
         </span>
       </div>
       <div>
-        <span
-          onClick={onReply}
-          className="text-xs text-dayT2 p-1 bg-dayBg3 cursor-pointer border  border-green border-opacity-0 hover:border-opacity-100"
+        <button
+          onClick={() => {
+            setSelectedItem(item);
+            setIsReply(true);
+          }}
+          className="text-xs rounded-none text-dayT2 p-1 bg-dayBg3 cursor-pointer border  border-green border-opacity-0 hover:border-opacity-100"
         >
           Reply
-        </span>
+        </button>
         &nbsp;
-        <span className="text-xs text-dayT3">#{item?.parentId}</span>
+        <span className="text-xs text-dayT3">#{item?.userId}</span>
       </div>
       <p className="text-dayT1">
         {item?.parentId !== 0 ? (
@@ -53,65 +58,15 @@ const ChatCard = ({
     </div>
   );
 };
-const PostComment = ({
-  refetchComments,
-  replyTo,
-  onCancelReply,
-}: {
-  refetchComments: any;
-  replyTo: CommentItem | null;
-  onCancelReply: () => void;
-}) => {
-  const [comment, setComment] = useState<string>("");
-  const { mutateAsync: postCommentAsync } = usePostAgentsComments(
-    {
-      characterId: "73455860437954560",
-      parentId: replyTo ? replyTo.parentId : 0,
-      rootId: 0,
-      floor: "1",
-      content: comment,
-    },
-    refetchComments
-  );
-  const handleSubmit = async () => {
-    await postCommentAsync();
-    setComment("");
-    onCancelReply();
-  };
-  return (
-    <div>
-      <div className="bottom-0 flex w-full max-w-sm items-center space-x-2">
-        <Input
-          type="text"
-          placeholder={replyTo ? "Type your reply..." : "Type your comment"}
-          className="bg-dayBg3"
-          value={comment}
-          onChange={(e) => setComment(e.target.value)}
-        />
-        <Button
-          onClick={handleSubmit}
-          disabled={!comment}
-          type="submit"
-          variant="outline"
-          className="rounded-sm active:border-none active:outline-none hover:border-[#12122A] border-[1.5px] border-b-4 border-[#12122A] bg-gradient-to-tr from-[#FCD436] to-[#FFE478]"
-        >
-          {replyTo ? "Reply" : "Post"}
-        </Button>
-      </div>
-    </div>
-  );
-};
-const TokenChat = () => {
+
+const TokenChat = ({ characterId }: { characterId: string }) => {
   const [showChat, setShowChat] = useState<boolean>(true);
-  const [replyTo, setReplyTo] = useState<CommentItem | null>(null);
-  console.log(replyTo);
+  const [isReply, setIsReply] = useState<boolean>(false);
+  const [selectedItem, setSelectedItem] = useState<CommentItem | null>(null);
   const [, setCursor] = useState("");
-  const handleCancelReply = () => {
-    setReplyTo(null);
-  };
-  const { data: commentsData, refetch: refetchComments } = useAgentsComments({
-    pageSize: 10,
-    characterId: "73455860437954560",
+  const { data: commentsData, isLoading } = useAgentsComments({
+    pageSize: 100,
+    characterId: characterId,
     // ...(cursor ? { cursor } : {}),
   });
   useEffect(() => {
@@ -119,6 +74,9 @@ const TokenChat = () => {
       setCursor(commentsData.cursor);
     }
   }, [commentsData]);
+  if (isLoading) {
+    return <ChatSkeletons />;
+  }
   return (
     <div className="p-6 pb-8 bg-white rounded-[6px] overflow-hidden">
       <div className="flex items-center justify-between mb-5">
@@ -135,21 +93,35 @@ const TokenChat = () => {
           />
         )}
       </div>
-      <div className={`${showChat ? "block" : "hidden"}`}>
+      <div
+        className={`${
+          showChat ? "block" : "hidden"
+        } h-[660px] overflow-y-scroll customScrollbar_two mb-4`}
+      >
         {commentsData?.rows?.map((item) => {
           return (
             <ChatCard
               item={item}
               key={item.id}
-              onReply={() => setReplyTo(item)}
+              setIsReply={setIsReply}
+              setSelectedItem={setSelectedItem}
             />
           );
         })}
       </div>
-      <PostComment
-        refetchComments={refetchComments}
-        replyTo={replyTo}
-        onCancelReply={handleCancelReply}
+      {isReply ? (
+        <div className="flex justify-center items-center">
+          <div className="py-2 text-center font-SwitzerMedium rounded-full px-4 bg-gradient-to-tr from-[#FCD436] to-[#FFE478]">
+            Post a Reply
+          </div>
+        </div>
+      ) : (
+        <PostComment />
+      )}
+      <ReplyComment
+        isReply={isReply}
+        setIsReply={setIsReply}
+        item={selectedItem!}
       />
     </div>
   );

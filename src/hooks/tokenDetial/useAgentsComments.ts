@@ -4,7 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 
 export const useAgentsComments = (params: GetCommentsParams) => {
   return useQuery({
-    queryKey: ["comments", params],
+    queryKey: ["agentsComments", params],
     queryFn: () => getAgentsComments(params),
     refetchOnWindowFocus: false,
   });

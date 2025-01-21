@@ -4,6 +4,8 @@ import {
   AllAgentListRes,
   ApiResponse,
   CreateAgentRes,
+  GetAgentHoldersParams,
+  GetAgentHoldersResponse,
   GetAgentInfoResponse,
   GetCommentFloor,
   GetCommentsParams,
@@ -163,4 +165,13 @@ export const getAgentsComments = async (params: GetCommentsParams) => {
 };
 export const postAgentsComment = async (params: PostCommentParams) => {
   await api.post<PostCommentParams>("v1/agents/comments", params);
+};
+export const getAgentsHolder = async (params: GetAgentHoldersParams) => {
+  const { data } = await api.get<ApiResponse<GetAgentHoldersResponse>>(
+    `v1/agents/agent/${params.characterId}/holders`,
+    {
+      params,
+    }
+  );
+  return data.data;
 };

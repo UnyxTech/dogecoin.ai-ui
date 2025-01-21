@@ -1,14 +1,17 @@
-import { lazy, Suspense } from "react";
 import TokenSwap from "./TokenSwap";
-const TokenChat = lazy(() => import("./TokenChat"));
+import { useParams } from "react-router-dom";
+import { useAgentInfo } from "@/hooks/tokenDetial/useAgentInfo";
+import TokenChat from "./TokenChat";
+import SwapSkeletons from "@/components/skeletons/tokenDetail/SwapSkeletons";
 
 const TokenSwapAndChat = () => {
+  const { characterId } = useParams();
+  const { data: tokenInfo, isLoading } = useAgentInfo(characterId!);
   return (
     <div className="w-full rounded-[6px] overflow-hidden flex flex-col gap-4">
-      <TokenSwap />
-      <Suspense fallback={<div>Loading chat...</div>}>
-        <TokenChat />
-      </Suspense>
+      {isLoading ? <SwapSkeletons /> : <TokenSwap tokenInfo={tokenInfo!} />}
+
+      <TokenChat characterId={characterId!} />
     </div>
   );
 };

@@ -99,7 +99,53 @@
     --chart-5: 340 75% 55%;
   }
 }
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
 
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+.customScrollbar::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.customScrollbar::-webkit-scrollbar-track {
+  background-color: transparent;
+}
+
+.customScrollbar::-webkit-scrollbar-thumb {
+  background: #7a89a2;
+  border-radius: 6px;
+}
+.customScrollbar_two::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.customScrollbar_two::-webkit-scrollbar-track {
+  background-color: transparent;
+}
+
+.customScrollbar_two::-webkit-scrollbar-thumb {
+  background: rgba(122, 137, 162, 0.3);
+  border-radius: 8px;
+}
+.guideModalCustomScrollbar::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.guideModalCustomScrollbar::-webkit-scrollbar-track {
+  background-color: transparent;
+}
+
+.guideModalCustomScrollbar::-webkit-scrollbar-thumb {
+  background: #7a89a2;
+  border-radius: 8px;
+}
 @layer base {
   * {
     @apply border-border;
@@ -110,6 +156,6 @@
 }
 @layer components {
   .trade-button {
-    @apply w-full !rounded-[2px] border-2 border-dayT1 font-WendyOne hover:opacity-50 text-white text-center;
+    @apply w-full !rounded-[2px] border-[2px] border-b-4 border-dayT1 font-WendyOne text-white text-center hover:border-[#12122A] border-[#12122A];
   }
 }

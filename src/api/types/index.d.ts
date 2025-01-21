@@ -139,12 +139,12 @@ export interface GetAgentInfoResponse {
   tokenAddress: string;
   pairAddress: string;
   name: string;
-  price: number;
+  price: string;
   priceUsd: string;
-  price24Change: number;
-  price24ChangeUsd: number;
-  marketCap: number;
-  holder: number;
+  price24Change: string;
+  price24ChangeUsd: string;
+  marketCap: string;
+  holder: string;
   symbol: string;
   description: string;
   image: string;
@@ -154,12 +154,28 @@ export interface GetAgentInfoResponse {
   website: string;
   discord: string;
   agentType: string;
-  volume24h: number;
-  totalLocked: number;
+  volume24h: string;
+  totalLocked: string;
   graduatedPercent: number;
-  graduatedNeedAmount: number;
+  graduatedNeedAmount: string;
 }
-
+export interface GetAgentHoldersParams {
+  characterId: string;
+  pageSize: number;
+  currentPage: number;
+}
+export interface GetAgentHoldersResponse {
+  current: number;
+  pageSize: number;
+  currentRowSize: number;
+  rows: [
+    {
+      holderAddress: string;
+      holdingAmount: string;
+      holdingPercent: string;
+    }
+  ];
+}
 //////////////////////////////////
 ////////////......////////////////
 //////////////////////////////////

@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 import { Masonry } from "masonic";
 import cats from "./cats";
-import { Heart, X } from "lucide-react";
+import { X } from "lucide-react";
 import { createPortal } from "react-dom";
+import PostCard from "./PostCard";
 
 const generateItems = (count: number) => {
   return Array.from({ length: count }, (_, i) => ({
@@ -57,7 +58,7 @@ const PostContent = () => {
           columnWidth={150}
           overscanBy={5}
           render={(props) => (
-            <FakeCard
+            <PostCard
               {...props}
               onImageClick={() => setSelectedImage(props.data.src)}
             />
@@ -73,35 +74,5 @@ const PostContent = () => {
     </main>
   );
 };
-
-interface CardProps {
-  data: {
-    id: number;
-    name: string;
-    src: string;
-  };
-  onImageClick?: () => void;
-}
-
-const FakeCard = ({ data: { src }, onImageClick }: CardProps) => (
-  <div className="group mb-2 bg-gray-800 w-full min-h-[100px] transition-transform duration-200 hover:shadow-lg">
-    <img
-      className="w-full block rounded-t-sm cursor-pointer"
-      alt="kitty"
-      src={src}
-      onClick={onImageClick}
-    />
-    <div className="flex items-center justify-between p-2">
-      <div className="flex items-center gap-2">
-        <img src="/images/icon_doge.svg" alt="" />
-        <span>xxxxx</span>
-      </div>
-      <div className="flex items-center">
-        <Heart size={16} />
-        <span>13</span>
-      </div>
-    </div>
-  </div>
-);
 
 export default PostContent;
