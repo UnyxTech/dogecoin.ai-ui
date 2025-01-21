@@ -7,14 +7,37 @@ import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { ReplyComment } from "./ReplyComment";
 import PostComment from "./PostComment";
 import ChatSkeletons from "@/components/skeletons/tokenDetail/ChatSkeletons";
+import RandomAvatar from "@/components/RandomAvatar";
+
 const COLOR = [
-  "#F21F7F",
-  "#FCD436",
-  "#26BBD9",
-  "#FF9142",
-  // "#A85CD7",
-  "#4CC372",
-  "#93A3A1",
+  {
+    avatar: "rgba(242, 31, 127, 0.8)",
+    text: "rgba(242, 31, 127, 0.2)",
+  },
+  {
+    avatar: "rgba(252, 212, 54, 0.8)",
+    text: "rgba(252, 212, 54, 0.2)",
+  },
+  {
+    avatar: "rgba(38, 187, 217, 0.8)",
+    text: "rgba(38, 187, 217,0.2)",
+  },
+  {
+    avatar: "rgba(255, 145, 66, 0.8)",
+    text: "rgba(255, 145, 66, 0.2)",
+  },
+  {
+    avatar: "rgba(168, 92, 215, 0.8)",
+    text: "rgba(168, 92, 215, 0.2)",
+  },
+  {
+    avatar: "rgba(76, 195, 114, 0.8)",
+    text: "rgba(76, 195, 114, 0.2)",
+  },
+  {
+    avatar: "rgba(147, 163, 161, 0.8)",
+    text: "rgba(147, 163, 161, 0.2)",
+  },
 ];
 const ChatCard = ({
   item,
@@ -26,7 +49,6 @@ const ChatCard = ({
   setSelectedItem: Dispatch<SetStateAction<CommentItem | null>>;
 }) => {
   const bgColor = COLOR[Math.floor(Math.random() * COLOR.length)];
-  console.log(bgColor);
   return (
     <div className="mb-8 flex flex-col gap-2">
       <div className="flex items-center gap-2">
@@ -36,17 +58,12 @@ const ChatCard = ({
           width={24}
           height={24}
         /> */}
-        <div
-          className="w-6 h-6 flex justify-center items-center rounded-full text-white"
-          style={{ backgroundColor: bgColor }}
-        >
-          0
-        </div>
+        <RandomAvatar address={item?.userAddress} bgColor={bgColor.avatar} />
         <span
           className="text-xs text-dayT2 p-1 rounded-sm bg-opacity-20"
-          style={{ backgroundColor: bgColor }}
+          style={{ backgroundColor: bgColor.text }}
         >
-          {formatAddressNew(item?.username ?? "0xaa")}
+          {formatAddressNew(item?.userAddress ?? "0xaa", 6, 6)}
         </span>
         <span className="text-xs text-dayT3">
           {dayjs(item?.createdTime).format("DD/MM/YYYY, hh:mm:ss a")}

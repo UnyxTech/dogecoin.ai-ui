@@ -89,6 +89,9 @@ importers:
       masonic:
         specifier: ^4.0.1
         version: 4.0.1(react@18.3.1)
+      minidenticons:
+        specifier: ^4.2.1
+        version: 4.2.1
       path:
         specifier: ^0.12.7
         version: 0.12.7
@@ -2712,6 +2715,10 @@ packages:
     resolution: {integrity: sha512-jSCU7/VB1loIWBZe14aEYHU/+1UMEHoaO7qxCOVJOw9GgH72VAWppxNcjU+x9a2k3GSIBXNKxXQFqRvvZ7vr3A==}
     engines: {node: '>=10.0.0'}
     hasBin: true
+
+  minidenticons@4.2.1:
+    resolution: {integrity: sha512-oWfFivA0lOx/V/bO/YIJbthB26lV8JXYvhnv9zM2hNd3fzsHTXQ6c6bWZPcvhD3nnOB+lQk/D9lF43BXixrN8g==}
+    engines: {node: '>=15.14.0'}
 
   minimalistic-assert@1.0.1:
     resolution: {integrity: sha512-UtJcAD4yEaGtjPezWuO9wC4nwUnVH/8/Im3yEHQP4b67cXlD/Qr9hdITCU1xDbSEXg2XKNaP8jsReV7vQd00/A==}
@@ -6868,6 +6875,8 @@ snapshots:
       mime-db: 1.52.0
 
   mime@3.0.0: {}
+
+  minidenticons@4.2.1: {}
 
   minimalistic-assert@1.0.1: {}
 
