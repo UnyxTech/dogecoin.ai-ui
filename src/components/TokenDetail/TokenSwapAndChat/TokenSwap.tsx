@@ -19,6 +19,7 @@ import { BASE_TOKEN } from "@/constant";
 import { useToast } from "@/hooks/use-toast";
 import { debounce } from "lodash";
 import { GetAgentInfoResponse } from "@/api/types";
+import AdaptiveBalance from "@/components/adaptiveBalance";
 const TokenLogoSwitch = ({
   isBuy,
   dogeImage,
@@ -242,15 +243,19 @@ const TokenSwap = ({ tokenInfo }: { tokenInfo: GetAgentInfoResponse }) => {
             {Number(formatUnits(amountOut[0], 18)).toFixed(6)}{" "}
             {tokenInfo?.symbol}
           </p>
-          <p className="text-xs">$11.12</p>
+          {/* <p className="text-xs">$11.12</p> */}
         </div>
       )}
       {sellAmountOutUI && amountOut && (
         <div className="text-dayT1">
-          <p className="font-semibold text-20 ">
+          <AdaptiveBalance
+            balance={formatUnits(amountOut[0], 18).toString()}
+            suffix=" Doge"
+          />
+          {/* <p className="font-semibold text-20 ">
             {Number(formatUnits(amountOut[0], 18)).toFixed(6)} Doge
-          </p>
-          <p className="text-xs">$1</p>
+          </p> */}
+          {/* <p className="text-xs">$1</p> */}
         </div>
       )}
       <HoverCard>
@@ -264,7 +269,7 @@ const TokenSwap = ({ tokenInfo }: { tokenInfo: GetAgentInfoResponse }) => {
           align="start"
           alignOffset={-20}
           sideOffset={12}
-          className="w-full bg-dayT2 opacity-100 text-white  text-xs leading-[130%] rounded-[8px] font-SwitzerLight"
+          className="w-full bg-dayT2 opacity-100 text-white  text-xs leading-[130%] rounded-[8px]"
         >
           1% trading fee applies to all buys and sells
         </WrapperHoverCardConnect>

@@ -29,7 +29,12 @@ type Holder = {
   holding: number;
   amount: number;
 };
-
+const EmptyState = () => (
+  <div className="flex flex-col items-center justify-center h-48 text-dayT3">
+    <img src="/images/noRrsult.svg" alt="" />
+    <div className="text-base mb-2 text-dayT3">No search result</div>
+  </div>
+);
 const fetchSize = 50;
 const HolderContent = () => {
   const { characterId } = useParams();
@@ -153,10 +158,14 @@ const HolderContent = () => {
   }, [fetchMoreOnBottomReached]);
   if (status === "pending")
     return (
-      <div className="w-full h-[660px] flex justify-center items-center">
+      <div className="flex justify-center items-center h-48 ">
         <LoadingComp className="" size={20} loading text="Loading..." />
       </div>
     );
+  if (status === "success" && !data?.pages[0]?.rows?.length) {
+    return <EmptyState />;
+  }
+
   return (
     <div>
       <div className="rounded-md">
