@@ -2,6 +2,9 @@ import { Address, erc20Abi, getContract } from "viem";
 import useWalletService from "@/hooks/useWalletService";
 import { defaultChain } from "@/constant";
 import { useAuth } from "./useAuth";
+import { getBalance } from "@wagmi/core";
+import { config } from "@/config/wagmiConfig";
+import { formatTokenAmount } from "@/utils";
 
 export function useErc20() {
   const walletService = useWalletService();
@@ -41,6 +44,30 @@ export function useErc20() {
         if (transaction.status !== "success") {
           throw new Error("transaction reverted");
         }
+      }
+    },
+    getBalance: async ({
+      tokenAddress,
+      address,
+    }: {
+      tokenAddress?: Address;
+      address: Address;
+    }) => {
+      try {
+        if (tokenAddress) {
+          const balance = await getBalance(config, {
+            address: address,
+            token: tokenAddress,
+          });
+          return formatTokenAmount(BigInt(balance.value), balance.decimals);
+        }
+        const balance = await getBalance(config, {
+          address: address,
+        });
+        return formatTokenAmount(BigInt(balance.value), 18);
+      } catch (error) {
+        console.error("Error:", error);
+        throw error;
       }
     },
   };

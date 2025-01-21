@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   copyToClipboard,
   formatAddress,
@@ -29,13 +29,26 @@ import BigNumber from "bignumber.js";
 import { LoadingComp } from "@/components/loading";
 import { toast } from "@/hooks/use-toast";
 import { AgentType } from "@/types";
+import { useErc20 } from "@/hooks/useErc20";
+import { Address } from "viem";
 
 const Navbar = () => {
   const { evmAddress } = useAuth();
+  const { getBalance } = useErc20();
   const navigate = useNavigate();
   const [showModal, setShowModal] = useState<boolean>(false);
   const [searchStr, setSearchStr] = useState<string>("");
   const [searchResult, setSearchResult] = useState<AgentItem[]>();
+  const [balance, setBalance] = useState<string>("");
+
+  const loadBalance = async () => {
+    const balance = await getBalance({ address: evmAddress! as Address });
+    setBalance(balance);
+  };
+
+  useEffect(() => {
+    loadBalance();
+  }, [evmAddress]);
 
   const searchMutation = useMutation({
     mutationFn: searchAgentList,
@@ -109,7 +122,8 @@ const Navbar = () => {
                   className="w-[24px] h-[24px]"
                   alt=""
                 />
-                <span>2,345,444.04 Doge</span>
+                <AdaptiveBalance balance={balance} />
+                Doge
               </div>
             )}
             <div

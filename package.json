@@ -26,6 +26,7 @@
     "@tanstack/react-table": "^8.20.6",
     "@tanstack/react-virtual": "^3.11.2",
     "@types/lodash": "^4.17.14",
+    "@wagmi/core": "^2.16.3",
     "axios": "^1.7.9",
     "bignumber.js": "^9.1.2",
     "class-variance-authority": "^0.7.1",

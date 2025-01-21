@@ -76,17 +76,6 @@ const HomePage = () => {
     setCurrentPage(page);
   };
 
-  // if (status === "pending")
-  //   return (
-  //     <LoadingComp
-  //       className="h-[calc(100vh-64px)]"
-  //       size={50}
-  //       loading
-  //       text="Loading..."
-  //     />
-  //   );
-  // if (status === "error") return <LoadingComp loading />;
-
   return (
     <Container>
       <div className="flex items-center justify-between pt-4">
@@ -167,14 +156,14 @@ const HomePage = () => {
               <TableHead className="w-[14%]">24h Vol</TableHead>
             </TableRow>
           </TableHeader>
-          {status === "pending" && (
+          {/* {status === "pending" && (
             <LoadingComp
               className="fixed w-full left-0 h-[50%]"
               size={50}
               loading
               text="Loading..."
             />
-          )}
+          )} */}
           <TableBody>
             {data?.pages[currentPage - 1]?.rows?.map((agent, index) => (
               <TableRow
@@ -183,11 +172,7 @@ const HomePage = () => {
               >
                 <TableCell colSpan={6} className="px-0 pt-3 pb-0">
                   <div
-                    onClick={() =>
-                      navigate(
-                        `/token/${agent.characterId}`
-                      )
-                    }
+                    onClick={() => navigate(`/token/${agent.characterId}`)}
                     className="bg-white cursor-pointer border border-border hover:bg-hover rounded-[4px] flex items-center gap-4"
                   >
                     <div className="flex items-center gap-3 w-[30%] p-3">
