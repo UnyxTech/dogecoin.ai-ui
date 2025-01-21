@@ -76,6 +76,17 @@ const HomePage = () => {
     setCurrentPage(page);
   };
 
+  // if (status === "pending")
+  //   return (
+  //     <LoadingComp
+  //       className="h-[calc(100vh-64px)]"
+  //       size={50}
+  //       loading
+  //       text="Loading..."
+  //     />
+  //   );
+  // if (status === "error") return <LoadingComp loading />;
+
   return (
     <Container>
       <div className="flex items-center justify-between pt-4">
@@ -99,8 +110,8 @@ const HomePage = () => {
           Create new AI agent
         </Button>
       </div>
-      <div className="mt-5 w-full h-[calc(100vh-260px)]">
-        <Table>
+      <div className="mt-5 w-full h-[calc(100vh-260px)] overflow-x-auto">
+        <Table className="min-w-[800px]">
           <TableHeader>
             <TableRow>
               <TableHead className="w-[30%]">AI agents</TableHead>
@@ -156,19 +167,15 @@ const HomePage = () => {
               <TableHead className="w-[14%]">24h Vol</TableHead>
             </TableRow>
           </TableHeader>
+          {status === "pending" && (
+            <LoadingComp
+              className="fixed w-full left-0 h-[50%]"
+              size={50}
+              loading
+              text="Loading..."
+            />
+          )}
           <TableBody>
-            {status === "pending" && (
-              <TableRow>
-                <TableCell colSpan={6}>
-                  <LoadingComp
-                    className="fixed w-full left-0 h-[50%]"
-                    size={50}
-                    loading
-                    text="Loading..."
-                  />
-                </TableCell>
-              </TableRow>
-            )}
             {data?.pages[currentPage - 1]?.rows?.map((agent, index) => (
               <TableRow
                 key={`agent_${index}`}
@@ -195,7 +202,7 @@ const HomePage = () => {
                             getColorByAgentType(agent.agentType)
                           )}
                         >
-                          <span className="text-10">
+                          <span className="text-10 text-nowrap">
                             {getTextByAgentType(agent.agentType)}
                           </span>
                           <Users
