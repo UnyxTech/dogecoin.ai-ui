@@ -63,7 +63,8 @@ export const CreateAgentModal = ({
         buyAmount,
       };
       const txInfo = await createAgent(obj);
-      navigate(`/token/${agentInfo.agentId}/${txInfo.tokenAddress}`);
+      console.log(txInfo.hash);
+      navigate(`/token/${agentInfo.agentId}`);
       toast({
         title: "Agent successfully created !",
         variant: "default",

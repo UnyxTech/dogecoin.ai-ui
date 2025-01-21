@@ -176,7 +176,7 @@ const SearchAgentList: React.FC<ISearchAgentList> = ({
               <div
                 onClick={(e) => {
                   e.stopPropagation();
-                  navigate(`/token/${agent.characterId}/${agent.tokenAddress}`);
+                  navigate(`/token/${agent.characterId}`);
                   onClose();
                 }}
                 className="bg-white cursor-pointer hover:bg-hover flex items-center gap-4"

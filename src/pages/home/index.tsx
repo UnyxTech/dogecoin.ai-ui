@@ -18,7 +18,7 @@ import { Users } from "lucide-react";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { DEFAULT_PAGE_SIZE, getAllAgentList } from "@/api/api";
 import { PaginationView } from "./pagination";
-// import { LoadingComp } from "@/components/loading";
+import { LoadingComp } from "@/components/loading";
 import BigNumber from "bignumber.js";
 import AdaptiveBalance from "@/components/adaptiveBalance";
 import { AgentTypeSelect } from "@/components/agentTypeSelect";
@@ -43,7 +43,7 @@ const HomePage = () => {
   const [sortTotalLockedValue, setSortTotalLockedValue] =
     useState<string>("asc");
 
-  const { data, fetchNextPage, hasNextPage } = useInfiniteQuery({
+  const { data, fetchNextPage, hasNextPage, status } = useInfiniteQuery({
     queryKey: ["agents", currentAgentType, sortType.sortBy, sortType.value],
     queryFn: ({ pageParam = currentPage }) =>
       getAllAgentList(
@@ -167,6 +167,14 @@ const HomePage = () => {
               <TableHead className="w-[14%]">24h Vol</TableHead>
             </TableRow>
           </TableHeader>
+          {status === "pending" && (
+            <LoadingComp
+              className="fixed w-full left-0 h-[50%]"
+              size={50}
+              loading
+              text="Loading..."
+            />
+          )}
           <TableBody>
             {data?.pages[currentPage - 1]?.rows?.map((agent, index) => (
               <TableRow
@@ -177,7 +185,7 @@ const HomePage = () => {
                   <div
                     onClick={() =>
                       navigate(
-                        `/token/${agent.characterId}/${agent.tokenAddress}`
+                        `/token/${agent.characterId}`
                       )
                     }
                     className="bg-white cursor-pointer border border-border hover:bg-hover rounded-[4px] flex items-center gap-4"
@@ -215,9 +223,7 @@ const HomePage = () => {
                     </div>
                     <div className="w-[14%]">
                       $
-                      <AdaptiveBalance
-                         balance={agent.marketCap.toString()}
-                      />
+                      <AdaptiveBalance balance={agent.marketCap.toString()} />
                     </div>
                     <div
                       className={cn(
