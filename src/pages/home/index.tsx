@@ -156,15 +156,19 @@ const HomePage = () => {
               <TableHead className="w-[14%]">24h Vol</TableHead>
             </TableRow>
           </TableHeader>
-          {/* {status === "pending" && (
-            <LoadingComp
-              className="fixed w-full left-0 h-[50%]"
-              size={50}
-              loading
-              text="Loading..."
-            />
-          )} */}
           <TableBody>
+            {status === "pending" && (
+              <TableRow>
+                <TableCell colSpan={6}>
+                  <LoadingComp
+                    className="fixed w-full left-0 h-[50%]"
+                    size={50}
+                    loading
+                    text="Loading..."
+                  />
+                </TableCell>
+              </TableRow>
+            )}
             {data?.pages[currentPage - 1]?.rows?.map((agent, index) => (
               <TableRow
                 key={`agent_${index}`}
