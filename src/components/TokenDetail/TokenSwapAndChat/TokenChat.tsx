@@ -96,7 +96,7 @@ const TokenChat = ({ characterId }: { characterId: string }) => {
       <div
         className={`${
           showChat ? "block" : "hidden"
-        } h-[660px] overflow-y-scroll customScrollbar_two mb-4`}
+        } max-h-[660px] overflow-y-scroll mb-4 scrollbar-hide`}
       >
         {commentsData?.rows?.map((item) => {
           return (

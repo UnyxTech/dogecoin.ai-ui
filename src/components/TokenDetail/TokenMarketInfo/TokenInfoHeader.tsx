@@ -63,19 +63,20 @@ const TokenInfoHeader = ({
               <span className="text-xs font-medium ">Productivity</span>
               <User size={14} />
             </div>
-            {externalLinks.map((link) => {
-              return (
-                <a
-                  key={link.name}
-                  href={link.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-6 h-6 rounded-full border border-dayL1 flex items-center justify-center hover:bg-gray-200 transition-colors"
-                >
-                  <img src={link.icon} alt={link.name} className="w-4 h-4" />
-                </a>
-              );
-            })}
+            {tokenInfo?.pairAddress &&
+              externalLinks.map((link) => {
+                return (
+                  <a
+                    key={link.name}
+                    href={link.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-6 h-6 rounded-full border border-dayL1 flex items-center justify-center hover:bg-gray-200 transition-colors"
+                  >
+                    <img src={link.icon} alt={link.name} className="w-4 h-4" />
+                  </a>
+                );
+              })}
           </div>
         </div>
         <div className="flex items-end ">

@@ -8,7 +8,19 @@ import {
 import { getKLineHistory, getKLineLast } from "@/api/api";
 import { Address } from "viem";
 import { GetAgentInfoResponse } from "@/api/types";
-
+const getResolutionInSeconds = (resolution: string): number => {
+  const resolutionMap: { [key: string]: number } = {
+    "1": 60,
+    "5": 300,
+    "15": 900,
+    "30": 1800,
+    "60": 3600,
+    "240": 14400,
+    D: 86400,
+    W: 604800,
+  };
+  return resolutionMap[resolution] || 60; // 默认1分钟
+};
 export const datafeed = (
   tokenInfo: GetAgentInfoResponse
 ): ChartingLibraryWidgetOptions["datafeed"] => {
@@ -93,11 +105,17 @@ export const datafeed = (
       onHistoryCallback
     ) => {
       try {
+        const resolutionInSeconds = getResolutionInSeconds(resolution);
+        const timeRange = resolutionInSeconds * 2000;
+        const endTime = periodParams.to * 1000;
+        const startTime = endTime - timeRange * 1000;
         const klineList = await getKLineHistory({
           tokenAddress: tokenInfo.tokenAddress as Address,
           type: getKlineType(resolution),
-          startTimestamp: periodParams.from * 1000,
-          endTimestamp: periodParams.to * 1000,
+          startTimestamp: startTime,
+          endTimestamp: endTime,
+          // startTimestamp: periodParams.from * 1000,
+          // endTimestamp: periodParams.to * 1000,
           // endTimestamp: Math.floor(periodParams.to),
         });
         if (klineList.length > 0) {

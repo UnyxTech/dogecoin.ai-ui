@@ -86,7 +86,7 @@ const InformationContent = () => {
                 <div className="flex justify-between items-center py-4">
                   <span className="text-dayT3">24 hours change</span>
                   <AdaptiveBalance
-                    balance={tokenInfo?.price24Change ?? ""}
+                    balance={tokenInfo?.price24Change.toString() ?? ""}
                     suffix=" %"
                   />
                 </div>

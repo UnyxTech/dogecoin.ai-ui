@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { lazy, Suspense, useState } from "react";
+import { useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -9,10 +9,12 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { CustomProgress } from "@/components/ui/custom/CustomProgress";
-import { LoadingComp } from "@/components/loading";
-const PostContent = lazy(() => import("./PostContent"));
-const InformationContent = lazy(() => import("./InformationContent"));
-const HolderContent = lazy(() => import("./HolderContent"));
+import PostContent from "./PostContent";
+import InformationContent from "./InformationContent";
+import HolderContent from "./HolderContent";
+// const PostContent = lazy(() => import("./PostContent"));
+// const InformationContent = lazy(() => import("./InformationContent"));
+// const HolderContent = lazy(() => import("./HolderContent"));
 const TAB_TYPES = {
   POST: "Post",
   INFORMATION: "Information",
@@ -112,9 +114,9 @@ const TokenInfoTabs = () => {
         {activeTab === TAB_TYPES.POST && <DialogDemo />}
       </div>
       <Separator className="mb-6" />
-      <Suspense fallback={<LoadingComp loading={true} size={16} />}>
-        {getContent(activeTab)}
-      </Suspense>
+      {/* <Suspense fallback={<LoadingComp loading={true} size={16} />}> */}
+      {getContent(activeTab)}
+      {/* </Suspense> */}
     </>
   );
 };
