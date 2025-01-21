@@ -23,7 +23,7 @@ import BigNumber from "bignumber.js";
 import AdaptiveBalance from "@/components/adaptiveBalance";
 import { AgentTypeSelect } from "@/components/agentTypeSelect";
 import { AgentType } from "@/types";
-import { AgentItem, AllAgentListRes } from "@/api/types";
+import { AgentItem } from "@/api/types";
 
 interface SortType {
   sortBy: string;
