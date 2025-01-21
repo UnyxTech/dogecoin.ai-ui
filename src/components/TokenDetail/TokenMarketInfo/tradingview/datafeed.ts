@@ -167,7 +167,7 @@ export const datafeed = (
         }
       };
       await fetchData();
-      const intervalId = setInterval(fetchData, 10 * 1000);
+      const intervalId = setInterval(fetchData, 5 * 1000);
       subscriptions.set(listenerGuid, intervalId);
       return listenerGuid;
     },

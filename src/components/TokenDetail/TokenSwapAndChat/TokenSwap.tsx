@@ -61,7 +61,7 @@ const TokenSwap = ({ tokenInfo }: { tokenInfo: GetAgentInfoResponse }) => {
   });
   // amountOut
   // const { getBuyAmountOut, getSellAmountOut } = useAIContract();
-  const { data: amountOut } = useGetAmountOutQuery({
+  const { data: amountOut, refetch: refetchAmount } = useGetAmountOutQuery({
     token: tokenInfo?.tokenAddress as Address,
     amountIn: debouncedAmount,
     isBuy: tradeData.isBuy,
@@ -72,7 +72,7 @@ const TokenSwap = ({ tokenInfo }: { tokenInfo: GetAgentInfoResponse }) => {
       debounce((value: string) => {
         const amount = value ? parseUnits(value, 18) : 0n;
         setDebouncedAmount(amount);
-      }, 200),
+      }, 500),
     []
   );
   useEffect(() => {
@@ -141,6 +141,7 @@ const TokenSwap = ({ tokenInfo }: { tokenInfo: GetAgentInfoResponse }) => {
       });
       refetchDogeBalance();
       refetchMemeTokenBalance();
+      refetchAmount();
     },
   });
 

@@ -7,7 +7,15 @@ import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { ReplyComment } from "./ReplyComment";
 import PostComment from "./PostComment";
 import ChatSkeletons from "@/components/skeletons/tokenDetail/ChatSkeletons";
-
+const COLOR = [
+  "#F21F7F",
+  "#FCD436",
+  "#26BBD9",
+  "#FF9142",
+  // "#A85CD7",
+  "#4CC372",
+  "#93A3A1",
+];
 const ChatCard = ({
   item,
   setIsReply,
@@ -17,16 +25,27 @@ const ChatCard = ({
   setIsReply: Dispatch<SetStateAction<boolean>>;
   setSelectedItem: Dispatch<SetStateAction<CommentItem | null>>;
 }) => {
+  const bgColor = COLOR[Math.floor(Math.random() * COLOR.length)];
+  console.log(bgColor);
   return (
     <div className="mb-8 flex flex-col gap-2">
       <div className="flex items-center gap-2">
-        <img
+        {/* <img
           src={item?.userAvatar ?? "/images/icon_doge.svg"}
           alt=""
           width={24}
           height={24}
-        />
-        <span className="text-xs text-dayT2 p-1 bg-[#FFF7D8] rounded-sm">
+        /> */}
+        <div
+          className="w-6 h-6 flex justify-center items-center rounded-full text-white"
+          style={{ backgroundColor: bgColor }}
+        >
+          0
+        </div>
+        <span
+          className="text-xs text-dayT2 p-1 rounded-sm bg-opacity-20"
+          style={{ backgroundColor: bgColor }}
+        >
           {formatAddressNew(item?.username ?? "0xaa")}
         </span>
         <span className="text-xs text-dayT3">
@@ -96,7 +115,7 @@ const TokenChat = ({ characterId }: { characterId: string }) => {
       <div
         className={`${
           showChat ? "block" : "hidden"
-        } max-h-[660px] overflow-y-scroll mb-4 scrollbar-hide`}
+        } max-h-[660px] overflow-y-scroll scrollbar-hide`}
       >
         {commentsData?.rows?.map((item) => {
           return (
