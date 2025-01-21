@@ -38,6 +38,7 @@ const config: Config = {
       dayBg3: "var(--Day-BG3)",
       border: "#EBEBF4",
       red: "#EB4B6D",
+      hover: "#F5F5FA",
     },
     container: {
       center: true,

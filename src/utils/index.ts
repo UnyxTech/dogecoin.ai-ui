@@ -115,16 +115,31 @@ export const formatTokenAmount = (
   const formatted = formatUnits(amount, decimals);
   return Number(formatted).toFixed(displayDecimals);
 };
-export const getColorByAgentName = (agentName: string) => {
-  switch (agentName) {
-    case "Productivity":
+export const getColorByAgentType = (agentType: string) => {
+  switch (agentType?.toLowerCase()) {
+    case "productivity":
       return "bg-first text-white";
-    case "Entertainment":
+    case "meme":
       return "bg-yellow text-first";
-    case "Information":
-      return "bg-green text-white";
+    case "onchain":
+      return "bg-green text-first";
     default:
       return "bg-gray text-first";
+  }
+};
+
+export const getTextByAgentType = (agentType: string) => {
+  switch (agentType?.toLowerCase()) {
+    case "productivity":
+      return "Productivity";
+    case "meme":
+      return "Meme";
+    case "onchain":
+      return "On-chain";
+    case "all":
+      return "All agent";
+    default:
+      return "None";
   }
 };
 /**

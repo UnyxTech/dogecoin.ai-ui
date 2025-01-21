@@ -14,17 +14,12 @@ import { z } from "zod";
 import { useEffect, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { CreateAgentModal } from "./createAgentModal";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-} from "@/components/ui/select";
-import { AgentInfo, AgentType } from "@/types";
+import { AgentInfo } from "@/types";
 import { createAgent, uploadImg } from "@/api/api";
 import { useMutation } from "@tanstack/react-query";
 import { CreateAgentRes } from "@/api/types";
 import { toast } from "@/hooks/use-toast";
+import { AgentTypeSelect } from "@/components/agentTypeSelect";
 
 const formSchema = z.object({
   file: z
@@ -56,20 +51,6 @@ const formSchema = z.object({
   youTubeLink: z.string().optional(),
   websiteLink: z.string().optional(),
 });
-const agentTypes = [
-  {
-    value: AgentType.Productivity,
-    icon: "/images/icon_productity.svg",
-  },
-  {
-    value: AgentType.Meme,
-    icon: "/images/icon_meme.svg",
-  },
-  {
-    value: AgentType.OnChain,
-    icon: "/images/icon_onchain.svg",
-  },
-];
 const CreatePage = () => {
   const [image, setImage] = useState<string>("");
   const [agentId, setAgentId] = useState<string>("");
@@ -111,7 +92,7 @@ const CreatePage = () => {
     const params: AgentInfo = {
       name: values.agentName,
       symbol: values.ticker,
-      agentType: values.agentType.replace(/-/g, "").toLowerCase(),
+      agentType: values.agentType.toLowerCase(),
       description: values.description,
       image: values.file ?? "",
       twitter: values.twitterLink,
@@ -212,32 +193,13 @@ const CreatePage = () => {
                       Agent type<span className="text-red">*</span>
                     </FormLabel>
                     <FormControl>
-                      <Select
-                        onValueChange={(val) => form.setValue("agentType", val)}
-                      >
-                        <SelectTrigger>
-                          {form.getValues().agentType ? (
-                            <div>{form.getValues().agentType}</div>
-                          ) : (
-                            <span className="text-second">Click to select</span>
-                          )}
-                        </SelectTrigger>
-                        <SelectContent
-                          className="w-[170px]"
-                          alignOffset={0}
-                          side="right"
-                          sideOffset={4}
-                        >
-                          {agentTypes.map((type) => (
-                            <SelectItem key={type.value} value={type.value}>
-                              <div className="flex items-center gap-3">
-                                <img src={type.icon} alt="" />
-                                <div>{type.value}</div>
-                              </div>
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
+                      <AgentTypeSelect
+                        side="right"
+                        onChange={(val: string) =>
+                          form.setValue("agentType", val)
+                        }
+                        selectType={form.getValues().agentType}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -402,7 +364,7 @@ const CreatePage = () => {
                 variant="yellow"
                 className="w-full gap-2"
                 size="lg"
-                loading={createAgentMutation.status === 'pending'}
+                loading={createAgentMutation.status === "pending"}
                 disabled={!form.formState.isValid}
               >
                 <span>🚀</span> Continue
