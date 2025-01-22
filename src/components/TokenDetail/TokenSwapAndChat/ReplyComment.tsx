@@ -84,7 +84,7 @@ export function ReplyComment({
             value={comment}
             onChange={(e) => setComment(e.target.value)}
             placeholder={`Reply to @ ${item?.userId}`}
-            className="bg-dayBg3 w-full h-20  px-3 py-2 border resize-none border-gray-300 rounded-md text-dayT3"
+            className="bg-dayBg3 w-full h-20  px-3 py-2 border resize-none border-gray-300 rounded-md placeholder:text-dayT3 text-black"
           />
         </div>
         <DialogFooter className="mt-8">

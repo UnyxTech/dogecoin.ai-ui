@@ -321,10 +321,10 @@ const TokenSwap = ({ tokenInfo }: { tokenInfo: GetAgentInfoResponse }) => {
       )}
       <Separator className="my-10" />
       <ProgressCard />
-      <Separator className="my-10" />
+      {/* <Separator className="my-10" />
       <h1 className="font-SwitzerMedium text-xl">
         Holder Distribution (7 holders)
-      </h1>
+      </h1> */}
       {showModal && (
         <ConnectWalletModal
           open={showModal}
