@@ -19,7 +19,7 @@ const getResolutionInSeconds = (resolution: string): number => {
     D: 86400,
     W: 604800,
   };
-  return resolutionMap[resolution] || 60; // 默认1分钟
+  return resolutionMap[resolution] || 60;
 };
 export const datafeed = (
   tokenInfo: GetAgentInfoResponse
@@ -51,8 +51,8 @@ export const datafeed = (
           format: "price",
           exchange: "DogeCoin.Ai",
           listed_exchange: "DogeCoin.Ai",
-          minmov: 1,
-          pricescale: 10 ** 18,
+          minmov: 1000,
+          pricescale: 10 ** 14,
           visible_plots_set: "ohlcv",
           has_daily: true,
           has_weekly_and_monthly: true,
@@ -60,11 +60,11 @@ export const datafeed = (
           has_seconds: true,
           has_ticks: true,
           supported_resolutions: [
-            "1S",
-            "5S",
-            "10S",
-            "15S",
-            "30S",
+            // "1S",
+            // "5S",
+            // "10S",
+            // "15S",
+            // "30S",
             "1",
             "5",
             "15",
@@ -75,11 +75,11 @@ export const datafeed = (
             "1W",
           ] as ResolutionString[],
           intraday_multipliers: [
-            "1S",
-            "5S",
-            "10S",
-            "15S",
-            "30S",
+            // "1S",
+            // "5S",
+            // "10S",
+            // "15S",
+            // "30S",
             "1",
             "5",
             "15",

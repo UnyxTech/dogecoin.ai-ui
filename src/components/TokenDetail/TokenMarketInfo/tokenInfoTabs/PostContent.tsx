@@ -56,7 +56,7 @@ const PostContent = () => {
           items={items}
           columnGutter={8}
           columnWidth={150}
-          overscanBy={5}
+          overscanBy={3}
           render={(props) => (
             <PostCard
               {...props}
