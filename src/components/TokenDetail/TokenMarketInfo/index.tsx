@@ -15,7 +15,7 @@ const TokenMarketInfo = () => {
       ) : (
         <div className="w-full bg-dayBg1 p-6">
           <TokenInfoHeader tokenInfo={tokenInfo!} />
-          <div className="h-96 mt-4">
+          <div className="h-96 mt-4 w-full">
             <TradingViewChart key="tradingview" tokenInfo={tokenInfo!} />
           </div>
         </div>
