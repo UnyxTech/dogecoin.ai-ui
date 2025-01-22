@@ -159,7 +159,7 @@ const TokenInfoTabs = () => {
                 activeTab === tab
                   ? "text-dayT1 border-b-[3px] border-black"
                   : "text-dayT3"
-              } text-base font-SwitzerMedium py-2 `}
+              } text-base font-SwitzerMedium py-2 hover:cursor-pointer`}
             >
               {tab}
             </div>

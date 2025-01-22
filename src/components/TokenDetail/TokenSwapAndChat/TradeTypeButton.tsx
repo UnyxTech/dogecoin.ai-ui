@@ -26,7 +26,7 @@ const TradeTypeButton = ({ tradeData, setTradeData }: Props) => {
         ></div>
         <div className="absolute bottom-0 left-0 right-0 top-0 flex h-full w-full bg-transparent">
           <div
-            className={`z-20 flex h-full flex-1 items-center justify-center bg-transparent  ${
+            className={`z-20 flex h-full flex-1 hover:cursor-pointer items-center justify-center bg-transparent  ${
               tradeData.isBuy ? "text-dayBg1" : "text-dayT3 font-medium"
             } transition-all duration-500`}
             onClick={() => {
@@ -36,7 +36,7 @@ const TradeTypeButton = ({ tradeData, setTradeData }: Props) => {
             Buy
           </div>
           <div
-            className={`z-20 flex h-full flex-1 items-center justify-center bg-transparent ${
+            className={`z-20 flex h-full flex-1 hover:cursor-pointer items-center justify-center bg-transparent ${
               !tradeData.isBuy ? "text-dayBg1" : "text-dayT3 font-medium"
             } transition-all duration-500`}
             onClick={() => {
