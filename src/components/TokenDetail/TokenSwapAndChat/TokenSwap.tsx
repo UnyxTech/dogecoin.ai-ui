@@ -1,8 +1,8 @@
-import { CircleAlert } from "lucide-react";
+// import { CircleAlert } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { Input } from "@/components/ui/input";
-import { HoverCard, HoverCardTrigger } from "@/components/ui/hover-card";
-import { WrapperHoverCardConnect } from "@/components/ui/custom/WrapperHoverCardConnect";
+// import { HoverCard, HoverCardTrigger } from "@/components/ui/hover-card";
+// import { WrapperHoverCardConnect } from "@/components/ui/custom/WrapperHoverCardConnect";
 import { ConnectWalletModal } from "@/components/connectWalletModal";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
@@ -258,7 +258,7 @@ const TokenSwap = ({ tokenInfo }: { tokenInfo: GetAgentInfoResponse }) => {
           {/* <p className="text-xs">$1</p> */}
         </div>
       )}
-      <HoverCard>
+      {/* <HoverCard>
         <div className="flex items-center mt-4 mb-5 text-dayT3 gap-1.5">
           <span className="text-sm">Trading Fee</span>
           <HoverCardTrigger>
@@ -273,7 +273,7 @@ const TokenSwap = ({ tokenInfo }: { tokenInfo: GetAgentInfoResponse }) => {
         >
           1% trading fee applies to all buys and sells
         </WrapperHoverCardConnect>
-      </HoverCard>
+      </HoverCard> */}
       {/*Trade button  */}
       {account.address ? (
         <Button
@@ -287,7 +287,7 @@ const TokenSwap = ({ tokenInfo }: { tokenInfo: GetAgentInfoResponse }) => {
               ? "green"
               : "red"
           }
-          className={`trade-button py-5 ${
+          className={`trade-button py-5 mt-4 ${
             isTradePending ? "opacity-50 pointer-events-none" : ""
           }`}
         >
