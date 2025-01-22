@@ -60,7 +60,7 @@ export interface CommentItem {
   characterId: string;
   parentId: number;
   userId: number;
-  username: string;
+  userAddress: string;
   userAvatar: string;
   rootId: number;
   floor: string;

@@ -7,7 +7,38 @@ import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { ReplyComment } from "./ReplyComment";
 import PostComment from "./PostComment";
 import ChatSkeletons from "@/components/skeletons/tokenDetail/ChatSkeletons";
+import RandomAvatar from "@/components/RandomAvatar";
 
+const COLOR = [
+  {
+    avatar: "rgba(242, 31, 127, 0.8)",
+    text: "rgba(242, 31, 127, 0.2)",
+  },
+  {
+    avatar: "rgba(252, 212, 54, 0.8)",
+    text: "rgba(252, 212, 54, 0.2)",
+  },
+  {
+    avatar: "rgba(38, 187, 217, 0.8)",
+    text: "rgba(38, 187, 217,0.2)",
+  },
+  {
+    avatar: "rgba(255, 145, 66, 0.8)",
+    text: "rgba(255, 145, 66, 0.2)",
+  },
+  {
+    avatar: "rgba(168, 92, 215, 0.8)",
+    text: "rgba(168, 92, 215, 0.2)",
+  },
+  {
+    avatar: "rgba(76, 195, 114, 0.8)",
+    text: "rgba(76, 195, 114, 0.2)",
+  },
+  {
+    avatar: "rgba(147, 163, 161, 0.8)",
+    text: "rgba(147, 163, 161, 0.2)",
+  },
+];
 const ChatCard = ({
   item,
   setIsReply,
@@ -17,17 +48,22 @@ const ChatCard = ({
   setIsReply: Dispatch<SetStateAction<boolean>>;
   setSelectedItem: Dispatch<SetStateAction<CommentItem | null>>;
 }) => {
+  const bgColor = COLOR[Math.floor(Math.random() * COLOR.length)];
   return (
     <div className="mb-8 flex flex-col gap-2">
       <div className="flex items-center gap-2">
-        <img
+        {/* <img
           src={item?.userAvatar ?? "/images/icon_doge.svg"}
           alt=""
           width={24}
           height={24}
-        />
-        <span className="text-xs text-dayT2 p-1 bg-[#FFF7D8] rounded-sm">
-          {formatAddressNew(item?.username ?? "0xaa")}
+        /> */}
+        <RandomAvatar address={item?.userAddress} bgColor={bgColor.avatar} />
+        <span
+          className="text-xs text-dayT2 p-1 rounded-sm bg-opacity-20"
+          style={{ backgroundColor: bgColor.text }}
+        >
+          {formatAddressNew(item?.userAddress ?? "0xaa", 6, 6)}
         </span>
         <span className="text-xs text-dayT3">
           {dayjs(item?.createdTime).format("DD/MM/YYYY, hh:mm:ss a")}
@@ -96,7 +132,7 @@ const TokenChat = ({ characterId }: { characterId: string }) => {
       <div
         className={`${
           showChat ? "block" : "hidden"
-        } h-[660px] overflow-y-scroll customScrollbar_two mb-4`}
+        } max-h-[660px] overflow-y-scroll scrollbar-hide`}
       >
         {commentsData?.rows?.map((item) => {
           return (

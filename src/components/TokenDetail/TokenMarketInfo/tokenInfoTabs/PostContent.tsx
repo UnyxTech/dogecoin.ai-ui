@@ -50,7 +50,7 @@ const PostContent = () => {
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
   return (
-    <main className="w-full h-[700px]">
+    <main className="w-full h-[600px]">
       <div className="w-full h-full overflow-y-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
         <Masonry
           items={items}

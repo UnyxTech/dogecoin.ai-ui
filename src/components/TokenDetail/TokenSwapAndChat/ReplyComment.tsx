@@ -59,7 +59,7 @@ export function ReplyComment({
           <div className="flex-1">
             <div className="flex items-center gap-2 mb-1">
               <span className="text-xs text-dayT2 p-1 bg-[#FFF7D8] rounded-sm">
-                {formatAddressNew(item?.username ?? "0xaa")}
+                {formatAddressNew(item?.userAddress ?? "0xaa")}
               </span>
               <span className="text-xs text-dayT3">
                 {dayjs(item?.createdTime).format("DD/MM/YYYY, hh:mm:ss a")}

@@ -32,7 +32,7 @@ const Description = ({
             onClick={() => setIsExpanded(!isExpanded)}
             className="text-dayT1 font-medium"
           >
-            {isExpanded ? "Read less" : "Read more"}
+            {isExpanded ? "Show less" : "Show more"}
           </span>
         )}
       </div>
@@ -51,7 +51,7 @@ const SocialItem = ({ icon, label, link }: SocialItemProps) => {
       href={link}
       target="_blank"
       rel="noopener noreferrer"
-      className="flex items-center gap-2 bg-dayBg3 rounded-lg pr-2 overflow-hidden hover:opacity-80 transition-opacity"
+      className="flex items-center gap-2 bg-dayBg3 rounded-lg pr-2 overflow-hidden "
     >
       <div className="flex items-center gap-2 bg-dayBg3 rounded-lg pr-2 overflow-hidden">
         <div className="w-12 h-12 bg-black flex justify-center items-center">
@@ -86,7 +86,7 @@ const InformationContent = () => {
                 <div className="flex justify-between items-center py-4">
                   <span className="text-dayT3">24 hours change</span>
                   <AdaptiveBalance
-                    balance={tokenInfo?.price24Change ?? ""}
+                    balance={tokenInfo?.price24Change.toString() ?? ""}
                     suffix=" %"
                   />
                 </div>
@@ -130,27 +130,41 @@ const InformationContent = () => {
           <Description text={tokenInfo?.description ?? "--"} slice={200} />
 
           <div>
-            <Title text="Social links" className="mb-5" />
-            <div className="flex items-center gap-4">
+            <Title text="Social links " className="mb-5" />
+            <div className="flex items-center gap-4 flex-wrap">
               {tokenInfo?.twitter && (
                 <SocialItem
-                  icon="/public/images/x.svg"
+                  icon="/images/x.svg"
                   label="Twitter"
                   link={tokenInfo?.twitter}
                 />
               )}
               {tokenInfo?.telegram && (
                 <SocialItem
-                  icon="/public/images/tg.svg"
+                  icon="/images/telegram.svg"
                   label="Telegram"
                   link={tokenInfo?.telegram}
                 />
               )}
               {tokenInfo?.youtube && (
                 <SocialItem
-                  icon="/public/images/youtube.svg"
+                  icon="/images/youtube.svg"
                   label="Youtube"
                   link={tokenInfo?.youtube}
+                />
+              )}
+              {tokenInfo?.website && (
+                <SocialItem
+                  icon="/images/website_white.svg"
+                  label="Website"
+                  link={tokenInfo?.website}
+                />
+              )}
+              {tokenInfo?.discord && (
+                <SocialItem
+                  icon="/images/discord_token_page.svg"
+                  label="Discord"
+                  link={tokenInfo?.discord}
                 />
               )}
             </div>
