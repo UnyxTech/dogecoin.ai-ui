@@ -10,6 +10,7 @@ import {
 import * as React from "react";
 import { datafeed } from "./datafeed";
 import { GetAgentInfoResponse } from "@/api/types";
+import { LoadingComp } from "@/components/loading";
 
 export interface ChartContainerProps {
   symbol: ChartingLibraryWidgetOptions["symbol"];
@@ -178,7 +179,13 @@ const TradingViewChart = ({
       }
     };
   }, [tokenInfo?.tokenAddress, tokenInfo?.symbol]);
-
+  if (!tokenInfo?.tokenAddress) {
+    return (
+      <div className="h-full w-full flex justify-center items-center">
+        <LoadingComp loading={true} size={32} />
+      </div>
+    );
+  }
   return <div ref={chartContainerRef} className="h-full" />;
 };
 export default TradingViewChart;

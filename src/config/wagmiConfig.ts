@@ -10,5 +10,4 @@ export const config = createConfig({
   transports: {
     [baseSepolia.id]: http(),
   },
-  storage: undefined,
 });

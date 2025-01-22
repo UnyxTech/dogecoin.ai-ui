@@ -7,6 +7,6 @@ export const useAgentInfo = (characterId: string) => {
     queryFn: () => getAgentInfo({ characterId }),
     retry: 2,
     enabled: Boolean(characterId),
-    refetchInterval: 5 * 1000,
+    refetchInterval: 3 * 1000,
   });
 };
