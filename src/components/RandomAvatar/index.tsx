@@ -2,7 +2,7 @@ import { minidenticon } from "minidenticons";
 import { useMemo } from "react";
 interface RandomAvatarProps {
   address: string;
-  bgColor?: string;
+  bgColor: string;
   saturation?: number;
   lightness?: number;
 }
