@@ -24,7 +24,7 @@ export const routes: Route[] = [
     exact: true,
   },
   {
-    path: "/token/:characterId/:address",
+    path: "/token/:characterId",
     Component: TokenDetailPage,
     exact: true,
   },
