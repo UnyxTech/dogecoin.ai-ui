@@ -5,7 +5,7 @@ export const formatTvPrice = (price: number) => {
   if (price === 0) {
     return "0.00";
   }
-  const parts = Number(price).toFixed(12).toString().split(".");
+  const parts = Number(price).toFixed(16).toString().split(".");
   if (parts.length === 1) {
     return `${parts[0]}.00`;
   }
@@ -36,5 +36,5 @@ export const formatTvPrice = (price: number) => {
     .map((digit) => subscripts[digit])
     .join("");
 
-  return `${integerPart}.0${subscriptZeros}${significantPart}00`;
+  return `${integerPart}.0${subscriptZeros}${significantPart}`;
 };
