@@ -4,11 +4,11 @@ import { usePostAgentsComments } from "@/hooks/tokenDetial/usePostAgentsComments
 import { useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 
-const PostComment = () => {
+const PostComment = ({ characterId }: { characterId: string }) => {
   const queryClient = useQueryClient();
   const [comment, setComment] = useState<string>("");
   const { mutateAsync: postCommentAsync, isPending } = usePostAgentsComments({
-    characterId: "73455860437954560",
+    characterId: characterId!,
     parentId: 0,
     rootId: 0,
     floor: "1",

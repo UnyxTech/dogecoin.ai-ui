@@ -17,15 +17,17 @@ export function ReplyComment({
   isReply,
   setIsReply,
   item,
+  characterId,
 }: {
   isReply: boolean;
   setIsReply: Dispatch<SetStateAction<boolean>>;
   item: CommentItem;
+  characterId: string;
 }) {
   const queryClient = useQueryClient();
   const [comment, setComment] = useState<string>("");
   const { mutateAsync: postCommentAsync } = usePostAgentsComments({
-    characterId: "73455860437954560",
+    characterId: characterId,
     parentId: item?.userId,
     rootId: 0,
     floor: "1",
