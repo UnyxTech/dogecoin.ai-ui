@@ -10,6 +10,7 @@ import { useMutation } from "@tanstack/react-query";
 import { LoginReq, LoginRes } from "@/api/types";
 import { useLoginStore } from "@/store/login";
 import { Address, createWalletClient, custom } from "viem";
+import { useNavigate } from "react-router-dom";
 
 interface ConnectWalletModalProps {
   open: boolean;
@@ -23,6 +24,7 @@ export const ConnectWalletModal = ({
   nestStep,
 }: ConnectWalletModalProps) => {
   const wallets = evmWalletList;
+  const navigate = useNavigate();
   const {
     getInstalledWallet,
     installWallets,
@@ -98,14 +100,40 @@ export const ConnectWalletModal = ({
     walletInstalled.provider?.on("accountsChanged", handleEvmAccountsChanged);
   }, [currentEvmWallet, installWallets]);
 
-  const handleEvmAccountsChanged = (accounts: any) => {
+  const handleEvmAccountsChanged = async (accounts: any) => {
     if (!currentEvmWallet) {
       updateCurrentEvmWallet("");
       return;
     } else {
       if (accounts.length > 0) {
+        const walletInstalled = installWallets.find(
+          (item: any) => item.info.rdns === currentEvmWallet
+        );
+        if (!walletInstalled) {
+          throw new Error("Wallet not installed.");
+        }
+        if (!walletInstalled.provider) {
+          throw new Error("Provider is undefined or null.");
+        }
+        const provider = walletInstalled.provider;
         updateEvmAddress(accounts[0]);
         updateCurrentEvmWallet(currentEvmWallet);
+        const walletClient = createWalletClient({
+          transport: custom(provider),
+          chain: defaultChain,
+        });
+        const timestamp = Date.now();
+        const signature = await walletClient?.signMessage({
+          account: accounts[0],
+          message: `Dogecoin.AI\nPlease sign this message to log in.\nTimestamp: ${timestamp}`,
+        });
+        const params: LoginReq = {
+          walletAddress: accounts[0],
+          timestamp: timestamp,
+          signature: signature as Address,
+        };
+        loginMutation.mutate(params);
+        navigate("/home");
       } else {
         updateEvmAddress("");
         updateCurrentEvmWallet("");

@@ -100,6 +100,24 @@ export const getAllAgentList = async (
   return data.data;
 };
 
+export const getcreateAgentList = async (
+  currentPage: number
+): Promise<AllAgentListRes> => {
+  const { data } = await api.get(`/v1/agents/list/create`, {
+    params: { pageSize: DEFAULT_PAGE_SIZE, currentPage },
+  });
+  return data.data;
+};
+
+export const getHeldAgentList = async (
+  currentPage: number
+): Promise<AllAgentListRes> => {
+  const { data } = await api.get(`/v1/agents/list/held`, {
+    params: { pageSize: DEFAULT_PAGE_SIZE, currentPage },
+  });
+  return data.data;
+};
+
 export const searchAgentList = async (
   searchStr: string
 ): Promise<AgentItem[]> => {

@@ -6,7 +6,6 @@ import {
   getColorByAgentType,
   getTextByAgentType,
 } from "@/utils";
-import { useAuth } from "@/hooks/useAuth";
 import { ConnectWalletModal } from "@/components/connectWalletModal";
 import { Input } from "@/components/ui/input";
 import { useNavigate } from "react-router-dom";
@@ -31,9 +30,11 @@ import { toast } from "@/hooks/use-toast";
 import { AgentType } from "@/types";
 import { useErc20 } from "@/hooks/useErc20";
 import { Address } from "viem";
+import { Button } from "@/components/ui/button";
+import { useAccount } from "wagmi";
 
 const Navbar = () => {
-  const { evmAddress } = useAuth();
+  const { address: evmAddress } = useAccount();
   const { getBalance } = useErc20();
   const navigate = useNavigate();
   const [showModal, setShowModal] = useState<boolean>(false);
@@ -126,25 +127,30 @@ const Navbar = () => {
                 Doge
               </div>
             )}
-            <div
-              className="p-[6px] border-[1px] border-first rounded-[2px] cursor-pointer text-14 text-first min-w-fit"
-              onClick={() => {
-                setShowModal(!showModal);
-              }}
-            >
-              {evmAddress ? (
-                <div className="flex items-center gap-1 font-SwitzerMedium">
-                  <img
-                    src="/images/icon_wallet.svg"
-                    className="w-[24px] h-[24px]"
-                    alt="wallet"
-                  />
-                  {formatAddress(evmAddress)}
-                </div>
-              ) : (
-                "Connect Wallet"
-              )}
-            </div>
+            {evmAddress ? (
+              <div
+                onClick={() => {
+                  navigate("/userDetail");
+                }}
+                className="flex items-center gap-1 font-SwitzerMedium cursor-pointer p-[6px] border-[1px] border-first rounded-[2px] text-14 text-first min-w-fit"
+              >
+                <img
+                  src="/images/icon_wallet.svg"
+                  className="w-[24px] h-[24px]"
+                  alt="wallet"
+                />
+                {formatAddress(evmAddress)}
+              </div>
+            ) : (
+              <Button
+                onClick={() => {
+                  setShowModal(!showModal);
+                }}
+                variant="white"
+              >
+                Connect Wallet
+              </Button>
+            )}
           </div>
         </div>
       </header>
@@ -221,7 +227,7 @@ const SearchAgentList: React.FC<ISearchAgentList> = ({
                           {formatAddressNew(agent.tokenAddress)}
                         </span>
                         <img
-                          className="w-[10px] h-[10px]"
+                          className="w-[10px] h-[10px] opacity-50"
                           src="/images/icon_copy.svg"
                           alt=""
                         />

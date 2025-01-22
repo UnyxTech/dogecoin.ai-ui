@@ -21,6 +21,8 @@ import { CreateAgentRes } from "@/api/types";
 import { toast } from "@/hooks/use-toast";
 import { AgentTypeSelect } from "@/components/agentTypeSelect";
 
+const urlRegex =
+  /^https?:\/\/(www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&//=]*)$/;
 const formSchema = z.object({
   file: z
     .string({
@@ -45,11 +47,50 @@ const formSchema = z.object({
   agentType: z
     .string({ required_error: "Please select an agent type" })
     .min(1, "Please select an agent type"),
-  twitterLink: z.string().optional(),
-  tgLink: z.string().optional(),
-  discordLink: z.string().optional(),
-  youTubeLink: z.string().optional(),
-  websiteLink: z.string().optional(),
+  twitterLink: z
+    .string()
+    .regex(/^https?:\/\/(www\.)?(twitter|x)\.com\/[a-zA-Z0-9_]{1,15}\/?$/, {
+      message:
+        "Invalid URL. Please start with https://twitter.com/ or https://x.com/",
+    })
+    .optional()
+    .or(z.literal("")),
+  tgLink: z
+    .string()
+    .regex(/^https?:\/\/(t\.me|telegram\.me)\/[a-zA-Z0-9_]{5,32}\/?$/, {
+      message: "Invalid URL. Please start with https://t.me/",
+    })
+    .optional()
+    .or(z.literal("")),
+  discordLink: z
+    .string()
+    .regex(
+      /^https?:\/\/(www\.)?(discord\.gg|discord\.com\/invite)\/[a-zA-Z0-9]+\/?$/,
+      {
+        message:
+          "Invalid URL. Please start with https://discord.gg/ or https://discord.com/",
+      }
+    )
+    .optional()
+    .or(z.literal("")),
+  youTubeLink: z
+    .string()
+    .regex(
+      /^https?:\/\/(www\.)?(youtube\.com\/(channel|c|user)\/[a-zA-Z0-9_-]+|youtube\.com\/@[a-zA-Z0-9_-]+|youtu\.be\/[a-zA-Z0-9_-]+)\/?$/,
+      {
+        message:
+          "Invalid URL. Please start with https://youtube.com or https://youtu.be",
+      }
+    )
+    .optional()
+    .or(z.literal("")),
+  websiteLink: z
+    .string()
+    .regex(urlRegex, {
+      message: "Invalid URL. Please start with http:// or https://",
+    })
+    .optional()
+    .or(z.literal("")),
 });
 const CreatePage = () => {
   const [image, setImage] = useState<string>("");
