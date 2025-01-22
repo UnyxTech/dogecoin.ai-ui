@@ -10,7 +10,7 @@ const TokenMarketInfo = () => {
   const { data: tokenInfo, isLoading } = useAgentInfo(characterId!);
   return (
     <div className="w-full rounded-[6px] overflow-hidden flex flex-col gap-4">
-      {isLoading ? (
+      {isLoading || !tokenInfo?.tokenAddress ? (
         <InfoAndTradingviewSkeletions />
       ) : (
         <div className="w-full bg-dayBg1 p-6">

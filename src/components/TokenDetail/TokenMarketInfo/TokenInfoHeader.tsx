@@ -33,7 +33,13 @@ const TokenInfoHeader = ({
     <div className="flex gap-3">
       {/* Logo  */}
       <div className="flex-shrink-0">
-        <img src={tokenInfo?.image} alt="tokenLogo" className="w-32 h-32" />
+        <img
+          src={tokenInfo?.image}
+          alt="tokenLogo"
+          className="w-32 h-32"
+          loading="eager"
+          fetchPriority="high"
+        />
       </div>
       {/* Info */}
       <div className="flex flex-col justify-between">

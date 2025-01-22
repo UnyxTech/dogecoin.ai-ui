@@ -9,8 +9,11 @@ const TokenSwapAndChat = () => {
   const { data: tokenInfo, isLoading } = useAgentInfo(characterId!);
   return (
     <div className="w-full rounded-[6px] overflow-hidden flex flex-col gap-4">
-      {isLoading ? <SwapSkeletons /> : <TokenSwap tokenInfo={tokenInfo!} />}
-
+      {isLoading || !tokenInfo?.tokenAddress ? (
+        <SwapSkeletons />
+      ) : (
+        <TokenSwap tokenInfo={tokenInfo!} />
+      )}
       <TokenChat characterId={characterId!} />
     </div>
   );

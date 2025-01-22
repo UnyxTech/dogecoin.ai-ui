@@ -31,7 +31,7 @@ type Holder = {
 };
 const EmptyState = () => (
   <div className="flex flex-col items-center justify-center h-48 text-dayT3">
-    <img src="/images/noRrsult.svg" alt="" />
+    <img src="/images/noRrsult.svg" alt="" fetchPriority="high" />
     <div className="text-base mb-2 text-dayT3">No search result</div>
   </div>
 );

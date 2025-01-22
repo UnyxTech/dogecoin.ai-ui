@@ -8,6 +8,7 @@ import { ReplyComment } from "./ReplyComment";
 import PostComment from "./PostComment";
 import ChatSkeletons from "@/components/skeletons/tokenDetail/ChatSkeletons";
 import RandomAvatar from "@/components/RandomAvatar";
+import { useAgentInfo } from "@/hooks/tokenDetial/useAgentInfo";
 
 const COLOR = [
   {
@@ -96,6 +97,7 @@ const ChatCard = ({
 };
 
 const TokenChat = ({ characterId }: { characterId: string }) => {
+  const { data: tokenInfo } = useAgentInfo(characterId!);
   const [showChat, setShowChat] = useState<boolean>(true);
   const [isReply, setIsReply] = useState<boolean>(false);
   const [selectedItem, setSelectedItem] = useState<CommentItem | null>(null);
@@ -110,7 +112,7 @@ const TokenChat = ({ characterId }: { characterId: string }) => {
       setCursor(commentsData.cursor);
     }
   }, [commentsData]);
-  if (isLoading) {
+  if (isLoading || !tokenInfo?.tokenAddress) {
     return <ChatSkeletons />;
   }
   return (
