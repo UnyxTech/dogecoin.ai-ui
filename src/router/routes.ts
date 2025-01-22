@@ -1,3 +1,4 @@
+import { UserDetail } from "@/pages/userDetail";
 import { lazy, type ComponentType } from "react";
 
 export interface Route {
@@ -31,6 +32,11 @@ export const routes: Route[] = [
   {
     path: "/create",
     Component: CreatePage,
+    exact: true,
+  },
+  {
+    path: "/userDetail",
+    Component: UserDetail,
     exact: true,
   },
 ];

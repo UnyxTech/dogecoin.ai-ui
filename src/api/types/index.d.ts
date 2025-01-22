@@ -258,6 +258,9 @@ export interface AgentItem {
   totalLocked: string;
   graduatedPercent: string;
   graduatedNeedAmount: string;
+  holdingAmount?: string;
+  holdingAmountUsd?: string;
+  createdTime?: string;
 }
 
 export interface AllAgentListRes {

@@ -18,7 +18,7 @@ const buttonVariants = cva(
         red: "rounded-[2px] bg-linear-red hover:bg-hover-red text-white border-[1.5px] border-first hover:border-first border-b-[3.5px]",
         pink: "rounded-[2px] bg-linear-pink hover:bg-hover-pink text-white border-[1.5px] border-first hover:border-first border-b-[3.5px]",
         white:
-          "rounded-[4px] bg-linear-white shadow-custom hover:opacity-50 text-first border-[1px] border-border",
+          "rounded-[2px] bg-white hover:opacity-95 text-first border-[1.5px] border-first hover:border-first border-b-[3.5px]",
         destructive:
           "bg-destructive text-destructive-foreground hover:bg-destructive/90",
         outline:

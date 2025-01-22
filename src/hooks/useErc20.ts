@@ -1,14 +1,14 @@
 import { Address, erc20Abi, getContract } from "viem";
 import useWalletService from "@/hooks/useWalletService";
 import { defaultChain } from "@/constant";
-import { useAuth } from "./useAuth";
 import { getBalance } from "@wagmi/core";
 import { config } from "@/config/wagmiConfig";
 import { formatTokenAmount } from "@/utils";
+import { useAccount } from "wagmi";
 
 export function useErc20() {
   const walletService = useWalletService();
-  const { evmAddress } = useAuth();
+  const { address: evmAddress } = useAccount();
   return {
     approve: async ({
       tokenAddress,
