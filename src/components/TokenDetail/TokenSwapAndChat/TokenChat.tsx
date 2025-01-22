@@ -152,12 +152,13 @@ const TokenChat = ({ characterId }: { characterId: string }) => {
           </div>
         </div>
       ) : (
-        <PostComment />
+        <PostComment characterId={characterId} />
       )}
       <ReplyComment
         isReply={isReply}
         setIsReply={setIsReply}
         item={selectedItem!}
+        characterId={characterId}
       />
     </div>
   );
