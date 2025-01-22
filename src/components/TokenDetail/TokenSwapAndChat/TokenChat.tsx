@@ -121,12 +121,12 @@ const TokenChat = ({ characterId }: { characterId: string }) => {
         <h1 className="text-2xl text-dayT1 font-SwitzerBold">Forum Chat</h1>
         {showChat ? (
           <ChevronFirst
-            className="rotate-90"
+            className="rotate-90 hover:cursor-pointer"
             onClick={() => setShowChat((show) => !show)}
           />
         ) : (
           <ChevronFirst
-            className="-rotate-90"
+            className="-rotate-90 hover:cursor-pointer"
             onClick={() => setShowChat((show) => !show)}
           />
         )}
