@@ -113,13 +113,21 @@ const TradingViewChart = ({
                 }
 
                 const integerPart = parts[0];
-                const fractionalPart = parts[1];
+                const originalFractionalPart = parts[1];
+                let fractionalPart = parts[1].replace(/0+$/, "");
+
+                if (fractionalPart.length < originalFractionalPart.length) {
+                  fractionalPart += "00";
+                }
+
                 const leadingZeros =
                   fractionalPart.match(/^0+/)?.[0].length ?? 0;
                 const significantPart = fractionalPart.slice(leadingZeros);
+
                 if (leadingZeros === 0) {
                   return `${integerPart}.${fractionalPart}`;
                 }
+
                 const subscripts: { [key: string]: string } = {
                   "0": "₀",
                   "1": "₁",
@@ -132,11 +140,13 @@ const TradingViewChart = ({
                   "8": "₈",
                   "9": "₉",
                 };
+
                 const subscriptZeros = leadingZeros
                   .toString()
                   .split("")
                   .map((digit) => subscripts[digit])
                   .join("");
+
                 return `${integerPart}.0${subscriptZeros}${significantPart}`;
               },
             };

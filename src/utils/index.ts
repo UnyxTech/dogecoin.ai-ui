@@ -367,3 +367,10 @@ export function effectiveBalance(balance: any) {
 
   return parseFloat(`${integer}.${temp.join("")}`);
 }
+export function formatTVDate(date: Date) {
+  return dayjs(date).format("DD MMM YYYY");
+}
+
+export function formatTVTime(date: Date) {
+  return dayjs(date).format("HH:mm");
+}
