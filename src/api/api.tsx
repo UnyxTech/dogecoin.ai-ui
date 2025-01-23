@@ -10,14 +10,19 @@ import {
   GetCommentFloor,
   GetCommentsParams,
   GetCommentsResponse,
-  GetPostsParams,
+  GetPostDataDetailParams,
   GetPostsResponse,
   KLineItem,
   KLineParams,
   KLineResponse,
   LoginReq,
   LoginRes,
+  PostAiDescGenerateParams,
+  PostAiDescGenerateResponse,
+  PostAiImageGenerateParams,
+  PostAiImageGenerateResponse,
   PostCommentParams,
+  PostPostsParams,
 } from "./types";
 import { AgentInfo } from "@/types";
 
@@ -195,12 +200,32 @@ export const getAgentsHolder = async (params: GetAgentHoldersParams) => {
   );
   return data.data;
 };
-export const getAgentsPosts = async (params: GetPostsParams) => {
+export const getAgentsPosts = async (params: GetPostDataDetailParams) => {
   const { data } = await api.get<ApiResponse<GetPostsResponse>>(
-    "v1/agents/comments",
+    `v1/posts/characters/${params.characterId}`,
     {
       params,
     }
+  );
+  return data.data;
+};
+export const postAiImageGenerate = async (
+  params: PostAiImageGenerateParams
+) => {
+  const { data } = await api.post<ApiResponse<PostAiImageGenerateResponse>>(
+    "v1/agents/ai/postImage/generate",
+    params
+  );
+  return data.data;
+};
+export const postAiImagePost = async (params: PostPostsParams) => {
+  console.log(params);
+  await api.post("v1/posts", params);
+};
+export const postAiDescGenerate = async (params: PostAiDescGenerateParams) => {
+  const { data } = await api.post<ApiResponse<PostAiDescGenerateResponse>>(
+    "v1/agents/ai/desc/generate",
+    params
   );
   return data.data;
 };

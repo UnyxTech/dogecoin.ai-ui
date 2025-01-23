@@ -3,20 +3,23 @@ export const formatTvPrice = (price: number) => {
     return "";
   }
   if (price === 0) {
-    return "0.00";
+    return "0.0000"; // 改为4位小数
   }
+
   const parts = Number(price).toFixed(18).toString().split(".");
   if (parts.length === 1) {
-    return `${parts[0]}.00`;
+    return `${parts[0]}.0000`; // 改为4位小数
   }
+
   const integerPart = parts[0];
   const fractionalPart = parts[1].replace(/0+$/, "");
   const leadingZeros = fractionalPart.match(/^0+/)?.[0].length ?? 0;
   const significantPart = fractionalPart.slice(leadingZeros);
   if (leadingZeros <= 5) {
-    const formattedFraction = fractionalPart.slice(0, 4).padEnd(2, "0");
+    const formattedFraction = fractionalPart.slice(0, 6).padEnd(4, "0");
     return `${integerPart}.${formattedFraction}`;
   }
+
   const subscripts: { [key: string]: string } = {
     "0": "₀",
     "1": "₁",
@@ -36,5 +39,8 @@ export const formatTvPrice = (price: number) => {
     .map((digit) => subscripts[digit])
     .join("");
 
-  return `${integerPart}.0${subscriptZeros}${significantPart}`;
+  // 保留4位有效小数
+  const formattedSignificantPart = significantPart.slice(0, 4).padEnd(4, "0");
+
+  return `${integerPart}.0${subscriptZeros}${formattedSignificantPart}`;
 };

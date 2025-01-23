@@ -1,20 +1,9 @@
 import { useEffect, useState } from "react";
 import { Masonry } from "masonic";
-import cats from "./cats";
 import { X } from "lucide-react";
 import { createPortal } from "react-dom";
 import PostCard from "./PostCard";
-
-const generateItems = (count: number) => {
-  return Array.from({ length: count }, (_, i) => ({
-    id: i,
-    name: `Cat ${i}`,
-    src: randomChoice(cats),
-  }));
-};
-
-// @ts-expect-error test
-const randomChoice = (items) => items[Math.floor(Math.random() * items.length)];
+import { GetPostsResponse } from "@/api/types";
 
 const ImageModal = ({ src, onClose }: { src: string; onClose: () => void }) => {
   useEffect(() => {
@@ -45,25 +34,26 @@ const ImageModal = ({ src, onClose }: { src: string; onClose: () => void }) => {
   );
 };
 
-const PostContent = () => {
-  const [items] = useState(() => generateItems(50));
+const PostContent = ({ agentsPosts }: { agentsPosts: GetPostsResponse }) => {
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
   return (
     <main className="w-full h-[600px]">
       <div className="w-full h-full overflow-y-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
-        <Masonry
-          items={items}
-          columnGutter={8}
-          columnWidth={150}
-          overscanBy={3}
-          render={(props) => (
-            <PostCard
-              {...props}
-              onImageClick={() => setSelectedImage(props.data.src)}
-            />
-          )}
-        />
+        {agentsPosts?.rows && agentsPosts?.rows?.length > 0 ? (
+          <Masonry
+            items={agentsPosts?.rows}
+            columnGutter={8}
+            columnWidth={150}
+            overscanBy={3}
+            render={(props) => (
+              <PostCard
+                {...props}
+                onImageClick={() => setSelectedImage(props.data.coverImage)}
+              />
+            )}
+          />
+        ) : null}
       </div>
       {selectedImage && (
         <ImageModal

@@ -1,3 +1,4 @@
+import { cn } from "@/lib/utils";
 import { minidenticon } from "minidenticons";
 import { useMemo } from "react";
 interface RandomAvatarProps {
@@ -5,12 +6,14 @@ interface RandomAvatarProps {
   bgColor: string;
   saturation?: number;
   lightness?: number;
+  className?: string;
 }
 const RandomAvatar = ({
   address,
   bgColor,
   saturation = 90,
   lightness = 30,
+  className,
 }: RandomAvatarProps) => {
   const svgURI = useMemo(
     () =>
@@ -23,7 +26,7 @@ const RandomAvatar = ({
     <img
       src={svgURI}
       alt={address}
-      className="w-6 h-6 rounded-full"
+      className={cn("w-6 h-6 rounded-full", className)}
       style={{
         backgroundColor: bgColor,
       }}

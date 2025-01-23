@@ -38,7 +38,6 @@ const TokenInfoHeader = ({
           alt="tokenLogo"
           className="w-32 h-32"
           loading="eager"
-          fetchPriority="high"
         />
       </div>
       {/* Info */}

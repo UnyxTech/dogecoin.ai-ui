@@ -51,7 +51,7 @@ export const datafeed = (
           format: "price",
           exchange: "DogeCoin.Ai",
           listed_exchange: "DogeCoin.Ai",
-          minmov: 10,
+          minmov: 100,
           pricescale: 10 ** 15,
           visible_plots_set: "ohlcv",
           has_daily: true,

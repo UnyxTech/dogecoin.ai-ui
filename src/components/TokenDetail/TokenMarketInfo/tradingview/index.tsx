@@ -74,13 +74,7 @@ const TradingViewChart = ({
         container: chartContainerRef.current,
         library_path: "/charting_library/" as string,
         locale: getLanguageFromURL() || "en",
-        disabled_features: [
-          "use_localstorage_for_settings",
-          "header_symbol_search",
-          "header_compare",
-          "header_quick_search",
-          // "header_undo_redo",
-        ],
+
         time_frames: [
           // Minutes group
           { text: "1M", resolution: "1", description: "1 Minute" },
@@ -99,14 +93,26 @@ const TradingViewChart = ({
             };
           },
         },
-
-        enabled_features: ["study_templates"],
+        disabled_features: [
+          "use_localstorage_for_settings",
+          "header_symbol_search",
+          "header_compare",
+          "header_quick_search",
+          // "create_volume_indicator_by_default",
+        ],
+        enabled_features: [
+          "study_templates",
+          "property_pages",
+          "legend_widget",
+          "pane_context_menu",
+          "header_saveload",
+          "header_screenshot",
+        ],
         charts_storage_url: "https://saveload.tradingview.com",
         charts_storage_api_version: "1.1",
         client_id: "tradingview.com",
         user_id: "public_user_id",
         fullscreen: false,
-        studies_overrides: {},
         theme: "light",
         settings_overrides: {},
       };

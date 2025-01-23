@@ -87,9 +87,6 @@ export interface PostLikeOrUnLikeParams {
   characterId: string;
   postId: number;
 }
-export interface GetPostsParams {
-  pageSize: number;
-}
 export interface PostItem {
   postId: number;
   characterId: string;
@@ -103,9 +100,6 @@ export interface PostItem {
   updatedTime: string;
   liked: boolean;
   content: string;
-  characterName: string;
-  characterOccupation: string;
-  characterAge: number;
 }
 export interface GetPostsResponse {
   pageSize: number;
@@ -114,17 +108,38 @@ export interface GetPostsResponse {
 }
 export interface PostPostsParams {
   characterId: string;
-  image: number;
+  image: string;
 }
 export interface GetPostDataDetailParams {
-  pageSize: number;
-  cursor: string;
   characterId: string;
+  pageSize: number;
+  cursor?: string;
 }
 export interface GetPostDataDetailResponse {
   pageSize: number;
   cursor: string;
   characterId: string;
+}
+export interface PostAiImageGenerateParams {
+  prompt: string;
+  agent_desc: string;
+}
+export interface PostAiImageGenerateResponse {
+  status: string;
+  image_url: string;
+  img_prompt: string;
+}
+export interface PostAiDescGenerateParams {
+  ticker: string;
+  user_id: string;
+  agent_id: string;
+  agent_name: string;
+  agent_type: string;
+  agent_desc: string;
+}
+export interface PostAiDescGenerateResponse {
+  status: string;
+  message: string;
 }
 //////////////////////////////////
 ////////////agent/////////////////

@@ -40,6 +40,12 @@ const COLOR = [
     text: "rgba(147, 163, 161, 0.2)",
   },
 ];
+const getColorByLastTwoChars = (addr: string) => {
+  const lastTwoChars = addr.slice(-2);
+  const decimal = parseInt(lastTwoChars, 16);
+  const index = decimal % COLOR.length;
+  return COLOR[index];
+};
 const ChatCard = ({
   item,
   setIsReply,
@@ -49,7 +55,7 @@ const ChatCard = ({
   setIsReply: Dispatch<SetStateAction<boolean>>;
   setSelectedItem: Dispatch<SetStateAction<CommentItem | null>>;
 }) => {
-  const bgColor = COLOR[Math.floor(Math.random() * COLOR.length)];
+  const bgColor = getColorByLastTwoChars(item?.userAddress);
   return (
     <div className="mb-8 flex flex-col gap-2">
       <div className="flex items-center gap-2">
