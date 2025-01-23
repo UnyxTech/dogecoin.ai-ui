@@ -10,6 +10,8 @@ import {
   GetCommentFloor,
   GetCommentsParams,
   GetCommentsResponse,
+  GetPostsParams,
+  GetPostsResponse,
   KLineItem,
   KLineParams,
   KLineResponse,
@@ -187,6 +189,15 @@ export const postAgentsComment = async (params: PostCommentParams) => {
 export const getAgentsHolder = async (params: GetAgentHoldersParams) => {
   const { data } = await api.get<ApiResponse<GetAgentHoldersResponse>>(
     `v1/agents/agent/${params.characterId}/holders`,
+    {
+      params,
+    }
+  );
+  return data.data;
+};
+export const getAgentsPosts = async (params: GetPostsParams) => {
+  const { data } = await api.get<ApiResponse<GetPostsResponse>>(
+    "v1/agents/comments",
     {
       params,
     }
