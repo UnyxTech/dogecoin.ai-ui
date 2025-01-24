@@ -82,6 +82,7 @@ const formSchema = z.object({
     })
     .optional()
     .or(z.literal("")),
+
   discordLink: z
     .string()
     .regex(
