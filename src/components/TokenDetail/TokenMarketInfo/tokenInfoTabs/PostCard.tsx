@@ -9,7 +9,7 @@ const PostCard = ({ data, onImageClick }: CardProps) => (
   <div className="group mb-2 bg-gray-800 w-full min-h-[100px] pb-2 font-Switzer">
     <img
       className="w-full block cursor-pointer"
-      alt=""
+      alt="Post"
       src={data?.coverImage}
       onClick={onImageClick}
     />
