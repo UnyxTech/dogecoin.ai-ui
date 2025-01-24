@@ -229,3 +229,10 @@ export const postAiDescGenerate = async (params: PostAiDescGenerateParams) => {
   );
   return data.data;
 };
+export const postAiAvatarGenerate = async (params: PostAiDescGenerateParams) => {
+  const { data } = await api.post<ApiResponse<PostAiImageGenerateResponse>>(
+    "v1/agents/ai/avatar/generate",
+    params
+  );
+  return data.data;
+};

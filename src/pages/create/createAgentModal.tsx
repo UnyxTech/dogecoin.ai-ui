@@ -24,6 +24,8 @@ import { formatUnits, parseUnits } from "viem";
 import { BASE_TOKEN, TOTAL_AMOUNT } from "@/constant";
 import { debounce } from "lodash";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "@/hooks/useAuth";
+import _ from "lodash";
 
 interface CreateAgentModalProps {
   open: boolean;
@@ -37,16 +39,18 @@ export const CreateAgentModal = ({
   agentInfo,
 }: CreateAgentModalProps) => {
   const navigate = useNavigate();
+  const { ethBalance } = useAuth();
   const { createAgent, getBuyAmountOut, getCreateFee } = useAIContract();
   const [createFee, setCreateFee] = useState<string>("0");
   const [amount, setAmount] = useState<string>("0");
+  const [error, setError] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
   const [receiveAmount, setReceiveAmount] = useState<string>("0");
 
   useEffect(() => {
     getCreateFee().then((res) => {
       const fee = new BigNumber(formatUnits(res, BASE_TOKEN.decimals));
-      setCreateFee(fee.toString());
+      setCreateFee(fee.toString() ?? "0");
     });
   }, []);
   const handleCreate = async () => {
@@ -70,10 +74,11 @@ export const CreateAgentModal = ({
         variant: "default",
       });
       onClose();
-    } catch (e) {
+    } catch (e: any) {
       console.log(e);
       toast({
         title: "created Failed!",
+        description: e?.message ?? "",
         variant: "destructive",
       });
     } finally {
@@ -84,8 +89,12 @@ export const CreateAgentModal = ({
   const handleChangeAmount = debounce(async (e: any) => {
     const val = e.target.value;
     setAmount(val);
-    if (new BigNumber(val).lte(0)) {
+    if (new BigNumber(val ?? "0").lte(0)) {
       setReceiveAmount("0");
+      return;
+    }
+    if (new BigNumber(val).plus(new BigNumber(createFee)).gt(ethBalance ?? 0)) {
+      setError("Insufficient Balance");
       return;
     }
     const buyAmount = parseUnits(val, BASE_TOKEN.decimals);
@@ -117,10 +126,14 @@ export const CreateAgentModal = ({
           <Label className="text-16">Doge</Label>
           <Input
             type="number"
-            className="bg-gray border-border border-[0.5px]"
+            className={cn(
+              "bg-gray border-[0.5px]",
+              error ? "!border-red" : "border-border"
+            )}
             placeholder="0"
             onChange={handleChangeAmount}
           />
+          {error && <div className="text-red text-14">{error}</div>}
           <div className="text-second text-14">
             You will receive{" "}
             <span className="text-first">
@@ -168,13 +181,16 @@ export const CreateAgentModal = ({
             <FeeItem
               classname="text-first font-SwitzerMedium"
               title="Total"
-              value={new BigNumber(amount).plus(createFee).toString()}
+              value={new BigNumber(_.isEmpty(amount) ? "0" : amount)
+                .plus(new BigNumber(createFee))
+                .toString()}
             />
           </div>
         </div>
         <Button
           className="mx-[51px]"
           loading={loading}
+          disabled={!_.isEmpty(error)}
           onClick={() => {
             handleCreate();
           }}

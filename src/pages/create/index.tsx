@@ -15,11 +15,21 @@ import { useEffect, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { CreateAgentModal } from "./createAgentModal";
 import { AgentInfo } from "@/types";
-import { createAgent, uploadImg } from "@/api/api";
+import {
+  createAgent,
+  // postAiAvatarGenerate,
+  // postAiDescGenerate,
+  uploadImg,
+} from "@/api/api";
 import { useMutation } from "@tanstack/react-query";
-import { CreateAgentRes } from "@/api/types";
+import {
+  CreateAgentRes,
+  // PostAiDescGenerateResponse,
+  // PostAiImageGenerateResponse,
+} from "@/api/types";
 import { toast } from "@/hooks/use-toast";
 import { AgentTypeSelect } from "@/components/agentTypeSelect";
+// import { usePosAiDescGenerate } from "@/hooks/tokenDetial/usePostAiDescGenarate";
 
 const urlRegex =
   /^https?:\/\/(www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&//=]*)$/;
@@ -175,6 +185,65 @@ const CreatePage = () => {
     document.getElementById("fileInput")?.click();
   };
 
+  // const aiDescMutation = useMutation({
+  //   mutationFn: postAiDescGenerate,
+  //   onSuccess: (data: PostAiDescGenerateResponse) => {
+  //     form.setValue("description", data.message);
+  //   },
+  // });
+
+  // const handleAiDescGenerate = () => {
+  //   const agentName = form.getValues().agentName;
+  //   const ticker = form.getValues().ticker;
+  //   const agentType = form.getValues().agentType;
+  //   if (agentName && agentType && ticker) {
+  //     aiDescMutation.mutate({
+  //       ticker: form.getValues().ticker ?? "",
+  //       user_id: "0",
+  //       agent_id: agentId ?? "",
+  //       agent_name: agentName,
+  //       agent_type: agentType,
+  //       agent_desc: form.getValues().description ?? "",
+  //     });
+  //   } else {
+  //     toast({
+  //       title:
+  //         "Agent name and ticker and agent type are required to generate description.",
+  //       variant: "destructive",
+  //     });
+  //   }
+  // };
+
+  // const aiAvatarMutation = useMutation({
+  //   mutationFn: postAiAvatarGenerate,
+  //   onSuccess: (data: PostAiImageGenerateResponse) => {
+  //     setImage(data.image_url);
+  //     form.setValue("file", data.image_url);
+  //   },
+  // });
+
+  // const handleAiAvatarGenerate = () => {
+  //   const agentName = form.getValues().agentName;
+  //   const ticker = form.getValues().ticker;
+  //   const agentType = form.getValues().agentType;
+  //   if (agentName && agentType && ticker) {
+  //     aiAvatarMutation.mutate({
+  //       ticker: form.getValues().ticker ?? "",
+  //       user_id: "0",
+  //       agent_id: agentId ?? "",
+  //       agent_name: agentName,
+  //       agent_type: agentType,
+  //       agent_desc: form.getValues().description ?? "",
+  //     });
+  //   } else {
+  //     toast({
+  //       title:
+  //         "Agent name and ticker and agent type are required to generate description.",
+  //       variant: "destructive",
+  //     });
+  //   }
+  // };
+
   return (
     <Container>
       <div className="flex flex-col items-center w-[790px] m-auto">
@@ -259,7 +328,7 @@ const CreatePage = () => {
                               AI agent description
                               <span className="text-red">*</span>
                             </div>
-                            <AiAgent onClick={() => {}} />
+                            {/* <AiAgent onClick={handleAiDescGenerate} /> */}
                           </div>
                         </FormLabel>
                         <FormControl className="flex flex-col">
@@ -284,7 +353,7 @@ const CreatePage = () => {
                           <div>
                             Logo<span className="text-red">*</span>
                           </div>
-                          <AiAgent onClick={() => {}} />
+                          {/* <AiAgent onClick={handleAiAvatarGenerate} /> */}
                         </div>
                       </FormLabel>
                       <FormControl>
@@ -433,51 +502,51 @@ const CreatePage = () => {
 
 export default CreatePage;
 
-interface IAiAgent {
-  onClick: () => void;
-}
-const AiAgent: React.FC<IAiAgent> = ({ onClick }) => {
-  const [gapTime, setGapTime] = useState<number>(0);
-  const [sendInterval, setSendInterval] = useState<any>(undefined);
+// interface IAiAgent {
+//   onClick: () => void;
+// }
+// const AiAgent: React.FC<IAiAgent> = ({ onClick }) => {
+//   const [gapTime, setGapTime] = useState<number>(0);
+//   const [sendInterval, setSendInterval] = useState<any>(undefined);
 
-  const startCountdown = async () => {
-    clearInterval(sendInterval);
-    setGapTime(120);
-    const interval = setInterval(() => {
-      setGapTime((prev: number) => {
-        if (prev === 0) {
-          clearInterval(sendInterval);
-          return 0;
-        } else {
-          return prev - 1;
-        }
-      });
-    }, 1000);
-    setSendInterval(interval);
-  };
+//   const startCountdown = async () => {
+//     clearInterval(sendInterval);
+//     setGapTime(120);
+//     const interval = setInterval(() => {
+//       setGapTime((prev: number) => {
+//         if (prev === 0) {
+//           clearInterval(sendInterval);
+//           return 0;
+//         } else {
+//           return prev - 1;
+//         }
+//       });
+//     }, 1000);
+//     setSendInterval(interval);
+//   };
 
-  return (
-    <div className="flex gap-[10px] items-center">
-      <div
-        onClick={() => {
-          if (gapTime > 0) return;
-          onClick();
-          startCountdown();
-        }}
-        className="py-[2px] px-2 rounded-full bg-white text-second text-14 cursor-pointer"
-      >
-        {gapTime > 0 ? (
-          <span>
-            Wait for{" "}
-            {`${Math.floor(gapTime / 60)}:${String(gapTime % 60).padStart(
-              2,
-              "0"
-            )}`}
-          </span>
-        ) : (
-          "AI generate"
-        )}
-      </div>
-    </div>
-  );
-};
+//   return (
+//     <div className="flex gap-[10px] items-center">
+//       <div
+//         onClick={() => {
+//           if (gapTime > 0) return;
+//           onClick();
+//           startCountdown();
+//         }}
+//         className="py-[2px] px-2 rounded-full bg-white text-second text-14 cursor-pointer"
+//       >
+//         {gapTime > 0 ? (
+//           <span>
+//             Wait for{" "}
+//             {`${Math.floor(gapTime / 60)}:${String(gapTime % 60).padStart(
+//               2,
+//               "0"
+//             )}`}
+//           </span>
+//         ) : (
+//           "AI generate"
+//         )}
+//       </div>
+//     </div>
+//   );
+// };

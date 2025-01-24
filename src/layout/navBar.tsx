@@ -32,19 +32,20 @@ import { useErc20 } from "@/hooks/useErc20";
 import { Address } from "viem";
 import { Button } from "@/components/ui/button";
 import { useAccount } from "wagmi";
+import { useAuth } from "@/hooks/useAuth";
 
 const Navbar = () => {
   const { address: evmAddress } = useAccount();
   const { getBalance } = useErc20();
+  const { updateEthBalance, ethBalance } = useAuth();
   const navigate = useNavigate();
   const [showModal, setShowModal] = useState<boolean>(false);
   const [searchStr, setSearchStr] = useState<string>("");
   const [searchResult, setSearchResult] = useState<AgentItem[]>();
-  const [balance, setBalance] = useState<string>("");
 
   const loadBalance = async () => {
     const balance = await getBalance({ address: evmAddress! as Address });
-    setBalance(balance);
+    updateEthBalance(balance);
   };
 
   useEffect(() => {
@@ -123,7 +124,7 @@ const Navbar = () => {
                   className="w-[24px] h-[24px]"
                   alt=""
                 />
-                <AdaptiveBalance balance={balance} />
+                <AdaptiveBalance balance={ethBalance ?? ""} />
                 Doge
               </div>
             )}
