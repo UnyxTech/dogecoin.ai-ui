@@ -221,7 +221,7 @@ const AgentItemView: React.FC<AgentItemProps> = ({ agent }) => {
   const navigate = useNavigate();
   return (
     <div
-      onClick={() => navigate(`/token/${agent.tokenAddress}`)}
+      onClick={() => navigate(`/token/${agent?.characterId}`)}
       className="p-2 bg-white hover:bg-hover min-w-fit border border-border rounded-[6px] flex flex-col gap-1 cursor-pointer"
     >
       <div
