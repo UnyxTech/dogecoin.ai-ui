@@ -89,6 +89,7 @@ export const CreateAgentModal = ({
   const handleChangeAmount = debounce(async (e: any) => {
     const val = e.target.value;
     setAmount(val);
+    setError("");
     if (new BigNumber(val ?? "0").lte(0)) {
       setReceiveAmount("0");
       return;
