@@ -6,7 +6,9 @@ import { toast } from "../use-toast";
 export function usePostAiImagePost(params: PostPostsParams) {
   return useMutation({
     mutationFn: () => postAiImagePost(params),
-    onSuccess: () => toast({ title: "Post Succeed", variant: "default" }),
-    onError: () => toast({ title: "Post Error", variant: "destructive" }),
+    onSuccess: () =>
+      toast({ title: "Post Succeed", variant: "default", duration: 3000 }),
+    onError: () =>
+      toast({ title: "Post Error", variant: "destructive", duration: 3000 }),
   });
 }

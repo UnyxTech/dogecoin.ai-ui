@@ -22,10 +22,14 @@ import { usePostAiImagePost } from "@/hooks/tokenDetial/usePostAgentPost";
 import { toast } from "@/hooks/use-toast";
 import { useQueryClient } from "@tanstack/react-query";
 import { usePosAiDescGenerate } from "@/hooks/tokenDetial/usePostAiDescGenarate";
+import { useAccount } from "wagmi";
+import { ConnectWalletModal } from "@/components/connectWalletModal";
 const Limit = 20;
 export function PostDialog() {
   const queryClient = useQueryClient();
   // init state
+  const account = useAccount();
+  const [showModal, setShowModal] = useState(false);
   const { characterId } = useParams();
   const { data: agentInfo } = useAgentInfo(characterId!);
   // Dialog state
@@ -86,6 +90,10 @@ export function PostDialog() {
     }
   };
   const handleGenerate = async () => {
+    if (!account.address) {
+      setShowModal(true);
+      return;
+    }
     await imageGenerate();
   };
   const handlePost = async () => {
@@ -185,16 +193,29 @@ export function PostDialog() {
             {/* version delete fee */}
             {/* <p className="mb-5 mt-4">Generating fee: 1 $DOGE</p> */}
             {!imageGenerateData?.image_url ? (
-              <Button
-                variant="yellow"
-                type="submit"
-                loading={imageGeneratePending}
-                onClick={handleGenerate}
-                disabled={!(prompt.length >= Limit)}
-                className="w-full rounded-sm py-4 focus:outline-none border-[1.5px] border-b-4 border-[#12122A] bg-gradient-to-tr from-[#FCD436] to-[#FFE478]"
-              >
-                Generate
-              </Button>
+              <div>
+                {account.address ? (
+                  <Button
+                    variant="yellow"
+                    type="submit"
+                    loading={imageGeneratePending}
+                    onClick={handleGenerate}
+                    disabled={!(prompt.length >= Limit)}
+                    className="w-full rounded-sm py-4 focus:outline-none border-[1.5px] border-b-4 border-[#12122A] bg-gradient-to-tr from-[#FCD436] to-[#FFE478]"
+                  >
+                    Generate
+                  </Button>
+                ) : (
+                  <Button
+                    variant="yellow"
+                    type="submit"
+                    onClick={() => setShowModal(true)}
+                    className="w-full rounded-sm py-4 focus:outline-none border-[1.5px] border-b-4 border-[#12122A] bg-gradient-to-tr from-[#FCD436] to-[#FFE478]"
+                  >
+                    Connect Wallet
+                  </Button>
+                )}
+              </div>
             ) : (
               <Button
                 variant="yellow"
@@ -239,6 +260,12 @@ export function PostDialog() {
           </div>
         </AlertDialogContent>
       </AlertDialog>
+      {showModal && (
+        <ConnectWalletModal
+          open={showModal}
+          onClose={() => setShowModal(false)}
+        />
+      )}
     </div>
   );
 }

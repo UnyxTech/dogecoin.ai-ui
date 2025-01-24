@@ -115,7 +115,7 @@ const TradingViewChart = ({
         enabled_features: [
           "side_toolbar_in_fullscreen_mode",
           "items_favoriting",
-          "hide_left_toolbar_by_default",
+          // "hide_left_toolbar_by_default",
           "iframe_loading_same_origin",
           "study_templates",
           "property_pages",

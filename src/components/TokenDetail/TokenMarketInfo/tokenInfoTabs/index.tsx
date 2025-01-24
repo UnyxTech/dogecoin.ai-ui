@@ -23,7 +23,7 @@ const TokenInfoTabs = () => {
     pageSize: 20,
     characterId: characterId!,
   });
-  const { isLoading: agentInfoLoading } = useAgentInfo(characterId!);
+  const { data: agentInfoData } = useAgentInfo(characterId!);
   const [activeTab, setActiveTab] = useState<TabType>(TAB_TYPES.POST);
   const getContent = (tab: TabType) => {
     switch (tab) {
@@ -35,7 +35,7 @@ const TokenInfoTabs = () => {
         return <HolderContent />;
     }
   };
-  if (isLoading || agentInfoLoading) {
+  if (isLoading || !agentInfoData?.tokenAddress) {
     return (
       <div className="min-h-[600px] ">
         <div className="flex justify-between">

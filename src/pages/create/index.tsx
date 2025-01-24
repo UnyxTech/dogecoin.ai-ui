@@ -20,7 +20,11 @@ import { useMutation } from "@tanstack/react-query";
 import { CreateAgentRes } from "@/api/types";
 import { toast } from "@/hooks/use-toast";
 import { AgentTypeSelect } from "@/components/agentTypeSelect";
-
+import { useAccount } from "wagmi";
+import { ConnectWalletModal } from "@/components/connectWalletModal";
+const getByteLength = (str: string) => {
+  return new TextEncoder().encode(str).length;
+};
 const urlRegex =
   /^https?:\/\/(www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&//=]*)$/;
 const formSchema = z.object({
@@ -33,12 +37,19 @@ const formSchema = z.object({
     .string({
       required_error: "Please enter your agent name",
     })
-    .min(1, "Please enter your agent name"),
+    .min(1, "Please enter your agent name")
+    .refine(
+      (val) => getByteLength(val) <= 64,
+      "Agent name cannot exceed 64 bytes"
+    ),
   ticker: z
     .string({
       required_error: "Please enter your agent ticker",
     })
-    .min(1, "Please enter your agent ticker"),
+    // .min(1, "Please enter your agent ticker")
+    .min(2, "Ticker must be at least 2 characters")
+    .max(10, "Ticker cannot exceed 10 characters")
+    .regex(/^[a-zA-Z0-9]+$/, "Ticker can only contain letters and numbers"),
   description: z
     .string({
       required_error: "Write something about your meme",
@@ -93,9 +104,9 @@ const formSchema = z.object({
     .or(z.literal("")),
 });
 const CreatePage = () => {
+  const account = useAccount();
   const [image, setImage] = useState<string>("");
   const [agentId, setAgentId] = useState<string>("");
-
   const [showCreateAgentModal, setShowCreateAgentModal] =
     useState<boolean>(false);
   const form = useForm<z.infer<typeof formSchema>>({
@@ -109,7 +120,7 @@ const CreatePage = () => {
     },
     mode: "onChange",
   });
-
+  const [showModal, setShowModal] = useState(false);
   useEffect(() => {
     form.reset();
   }, []);
@@ -400,16 +411,28 @@ const CreatePage = () => {
                   )}
                 />
               </div>
-              <Button
-                type="submit"
-                variant="yellow"
-                className="w-full gap-2"
-                size="lg"
-                loading={createAgentMutation.status === "pending"}
-                disabled={!form.formState.isValid}
-              >
-                <span>🚀</span> Continue
-              </Button>
+              {account.address ? (
+                <Button
+                  type="submit"
+                  variant="yellow"
+                  className="w-full gap-2"
+                  size="lg"
+                  loading={createAgentMutation.status === "pending"}
+                  disabled={!form.formState.isValid}
+                >
+                  <span>🚀</span> Continue
+                </Button>
+              ) : (
+                <Button
+                  type="button"
+                  variant="yellow"
+                  onClick={() => setShowModal(true)}
+                  className="w-full gap-2"
+                  size="lg"
+                >
+                  Connect Wallet
+                </Button>
+              )}
             </form>
           </Form>
         </div>
@@ -425,6 +448,12 @@ const CreatePage = () => {
             } as AgentInfo
           }
           onClose={() => setShowCreateAgentModal(false)}
+        />
+      )}
+      {showModal && (
+        <ConnectWalletModal
+          open={showModal}
+          onClose={() => setShowModal(false)}
         />
       )}
     </Container>

@@ -73,7 +73,7 @@ export const CreateAgentModal = ({
     } catch (e) {
       console.log(e);
       toast({
-        title: "created Failed!",
+        title: "Creation failed!",
         variant: "destructive",
       });
     } finally {

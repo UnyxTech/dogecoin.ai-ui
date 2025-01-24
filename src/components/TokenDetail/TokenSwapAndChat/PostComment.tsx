@@ -2,11 +2,19 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { usePostAgentsComments } from "@/hooks/tokenDetial/usePostAgentsComments";
 import { useQueryClient } from "@tanstack/react-query";
-import { useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
+import { useAccount } from "wagmi";
 
-const PostComment = ({ characterId }: { characterId: string }) => {
+const PostComment = ({
+  characterId,
+  setShowModal,
+}: {
+  characterId: string;
+  setShowModal: Dispatch<SetStateAction<boolean>>;
+}) => {
   const queryClient = useQueryClient();
   const [comment, setComment] = useState<string>("");
+  const account = useAccount();
   const { mutateAsync: postCommentAsync, isPending } = usePostAgentsComments({
     characterId: characterId!,
     parentId: 0,
@@ -15,6 +23,10 @@ const PostComment = ({ characterId }: { characterId: string }) => {
     content: comment,
   });
   const handleSubmit = async () => {
+    if (!account.address) {
+      setShowModal(true);
+      return;
+    }
     await postCommentAsync();
     queryClient.invalidateQueries({ queryKey: ["agentsComments"] });
     setComment("");

@@ -16,10 +16,10 @@ import {
   useTrade,
 } from "@/hooks/useAIContract";
 import { BASE_TOKEN } from "@/constant";
-import { useToast } from "@/hooks/use-toast";
 import { debounce } from "lodash";
 import { GetAgentInfoResponse } from "@/api/types";
 import AdaptiveBalance from "@/components/adaptiveBalance";
+import { toast } from "@/hooks/use-toast";
 const TokenLogoSwitch = ({
   isBuy,
   dogeImage,
@@ -52,7 +52,6 @@ const TokenLogoSwitch = ({
 const defaultSlippage = 10n;
 const TokenSwap = ({ tokenInfo }: { tokenInfo: GetAgentInfoResponse }) => {
   //
-  const { toast } = useToast();
   const account = useAccount();
   // state
   const [showModal, setShowModal] = useState(false);
@@ -140,6 +139,7 @@ const TokenSwap = ({ tokenInfo }: { tokenInfo: GetAgentInfoResponse }) => {
             </a>
           </div>
         ),
+        duration: 3000,
       });
       refetchDogeBalance();
       refetchMemeTokenBalance();
