@@ -418,7 +418,7 @@ const CreatePage = () => {
                   className="w-full gap-2"
                   size="lg"
                   loading={createAgentMutation.status === "pending"}
-                  disabled={!form.formState.isValid}
+                  disabled={!form.formState.isValid || !image}
                 >
                   <span>🚀</span> Continue
                 </Button>

@@ -118,6 +118,7 @@ export const datafeed = (
           // endTimestamp: periodParams.to * 1000,
           // endTimestamp: Math.floor(periodParams.to),
         });
+        console.log("getKLineHistory", klineList);
         if (klineList.length > 0) {
           const bars = klineList.map((item) => ({
             time: new Date(item.timestamp).getTime(),
