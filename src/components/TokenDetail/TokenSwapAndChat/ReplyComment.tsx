@@ -12,18 +12,22 @@ import { formatAddressNew } from "@/utils";
 import { useQueryClient } from "@tanstack/react-query";
 import dayjs from "dayjs";
 import { Dispatch, SetStateAction, useState } from "react";
+import { useAccount } from "wagmi";
 
 export function ReplyComment({
   isReply,
   setIsReply,
   item,
   characterId,
+  setShowModal,
 }: {
   isReply: boolean;
   setIsReply: Dispatch<SetStateAction<boolean>>;
   item: CommentItem;
   characterId: string;
+  setShowModal: Dispatch<SetStateAction<boolean>>;
 }) {
+  const account = useAccount();
   const queryClient = useQueryClient();
   const [comment, setComment] = useState<string>("");
   const { mutateAsync: postCommentAsync } = usePostAgentsComments({
@@ -34,6 +38,10 @@ export function ReplyComment({
     content: comment,
   });
   const handleSubmit = async () => {
+    if (!account.address) {
+      setShowModal(true);
+      return;
+    }
     await postCommentAsync();
     queryClient.invalidateQueries({ queryKey: ["agentsComments"] });
     setComment("");

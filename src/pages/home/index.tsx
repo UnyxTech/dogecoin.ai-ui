@@ -97,7 +97,7 @@ const HomePage = () => {
           }}
         >
           <img className="w-7 h-7" src="/images/logo2.svg" alt="" />
-          Create new AI agent
+          Create AI agent
         </Button>
       </div>
       <ScrollableTable

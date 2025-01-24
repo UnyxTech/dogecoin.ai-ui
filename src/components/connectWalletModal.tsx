@@ -10,7 +10,6 @@ import { useMutation } from "@tanstack/react-query";
 import { LoginReq, LoginRes } from "@/api/types";
 import { useLoginStore } from "@/store/login";
 import { Address, createWalletClient, custom } from "viem";
-import { useNavigate } from "react-router-dom";
 
 interface ConnectWalletModalProps {
   open: boolean;
@@ -24,7 +23,7 @@ export const ConnectWalletModal = ({
   nestStep,
 }: ConnectWalletModalProps) => {
   const wallets = evmWalletList;
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const {
     getInstalledWallet,
     installWallets,
@@ -133,7 +132,7 @@ export const ConnectWalletModal = ({
           signature: signature as Address,
         };
         loginMutation.mutate(params);
-        navigate("/home");
+        // navigate("/home");
       } else {
         updateEvmAddress("");
         updateCurrentEvmWallet("");

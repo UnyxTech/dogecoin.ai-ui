@@ -7,6 +7,7 @@ import { PostDialog } from "./PostDialog";
 import { useAgentsPosts } from "@/hooks/tokenDetial/useAgentPosts";
 import { useParams } from "react-router-dom";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useAgentInfo } from "@/hooks/tokenDetial/useAgentInfo";
 const TAB_TYPES = {
   POST: "Post",
   INFORMATION: "Information",
@@ -22,6 +23,7 @@ const TokenInfoTabs = () => {
     pageSize: 20,
     characterId: characterId!,
   });
+  const { data: agentInfoData } = useAgentInfo(characterId!);
   const [activeTab, setActiveTab] = useState<TabType>(TAB_TYPES.POST);
   const getContent = (tab: TabType) => {
     switch (tab) {
@@ -33,7 +35,7 @@ const TokenInfoTabs = () => {
         return <HolderContent />;
     }
   };
-  if (isLoading) {
+  if (isLoading || !agentInfoData?.tokenAddress) {
     return (
       <div className="min-h-[600px] ">
         <div className="flex justify-between">
