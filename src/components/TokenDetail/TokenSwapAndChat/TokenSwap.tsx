@@ -35,7 +35,7 @@ const TokenLogoSwitch = ({
 
   return (
     <div className="flex items-center gap-2">
-      <div className="w-7 h-7 relative flex items-center justify-center">
+      <div className="w-7 h-7 relative flex items-center justify-center rounded-full overflow-hidden">
         <img
           key={imageSrc}
           src={imageSrc}
