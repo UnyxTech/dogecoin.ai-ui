@@ -132,8 +132,8 @@ export function PostDialog() {
                 <span className="text-red ml-0.5">*</span>
               </div>
               <button
-                // disabled={prompt.length < Limit}
-                disabled={true}
+                disabled={prompt.length < Limit}
+                // disabled={true}
                 onClick={async () => {
                   const data = await descGenerate();
                   setPrompt(data.message);
