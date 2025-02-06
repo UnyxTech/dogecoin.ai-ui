@@ -57,7 +57,7 @@ const TokenInfoTabs = () => {
     );
   }
   return (
-    <>
+    <div className="w-full bg-dayBg1 px-5 demo_test:px-6  py-2 ">
       <div className="flex items-center justify-between ">
         <div className="flex gap-4 transition-all duration-100">
           {Object.values(TAB_TYPES).map((tab) => (
@@ -77,12 +77,8 @@ const TokenInfoTabs = () => {
         {activeTab === TAB_TYPES.POST && <PostDialog />}
       </div>
       <Separator className="mb-6" />
-      <div className="min-h-[600px]">
-        {/* <Suspense fallback={<LoadingComp loading={true} size={16} />}> */}
-        {getContent(activeTab)}
-      </div>
-      {/* </Suspense> */}
-    </>
+      <div className="min-h-[600px] w-full">{getContent(activeTab)}</div>
+    </div>
   );
 };
 export default TokenInfoTabs;
