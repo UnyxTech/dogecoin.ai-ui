@@ -140,7 +140,7 @@ export function PostDialog() {
                 }}
                 className={`text-dayT2 text-sm ${
                   prompt.length > Limit ? "opacity-100" : "opacity-30"
-                } hover:opacity-75 hover:outline-none hover:border-none focus:border-none focus:outline-none`}
+                } border-none hover:opacity-75 hover:outline-none hover:border-none focus:border-none focus:outline-none`}
               >
                 AI generate
               </button>
