@@ -68,7 +68,7 @@ const Navbar = () => {
   return (
     <>
       <header className="bg-yellow w-full h-16 flex justify-between items-center">
-        <div className="w-full h-full flex justify-between items-center py-4 px-6 cursor-pointer">
+        <div className="w-full h-full flex justify-between items-center py-4 px-5 md:px-6 cursor-pointer">
           <div
             onClick={() => navigate("/home")}
             className="flex items-center gap-3"
@@ -84,7 +84,7 @@ const Navbar = () => {
               alt="logo"
             />
           </div>
-          <div className="relative flex-1 max-w-[560px] mx-6">
+          <div className="relative flex-1 max-w-[560px] mx-6 hidden lg:block">
             <Input
               value={searchStr}
               className="px-10"
@@ -116,7 +116,10 @@ const Navbar = () => {
               </div>
             )}
           </div>
-          <div className="flex gap-6">
+          <div className="flex gap-3 md:gap-6">
+            <div className="flex items-center  lg:hidden">
+              <Search className="text-black w-5 h-5" />
+            </div>
             {evmAddress && (
               <div className="flex gap-2 items-center text-first text-14 font-SwitzerMedium">
                 <img
@@ -124,8 +127,10 @@ const Navbar = () => {
                   className="w-[24px] h-[24px]"
                   alt=""
                 />
-                <AdaptiveBalance balance={ethBalance ?? ""} />
-                Doge
+                <div className="hidden mdd:block">
+                  <AdaptiveBalance balance={ethBalance ?? ""} />
+                  Doge
+                </div>
               </div>
             )}
             {evmAddress ? (
@@ -133,14 +138,16 @@ const Navbar = () => {
                 onClick={() => {
                   navigate("/userDetail");
                 }}
-                className="flex items-center gap-1 font-SwitzerMedium cursor-pointer p-[6px] border-[1px] border-first rounded-[2px] text-14 text-first min-w-fit"
+                className="flex items-center gap-1 font-SwitzerMedium cursor-pointer p-[6px] md:border-[1px] md:border-first rounded-[2px] text-14 text-first min-w-fit"
               >
                 <img
                   src="/images/icon_wallet.svg"
                   className="w-[24px] h-[24px]"
                   alt="wallet"
                 />
-                {formatAddress(evmAddress)}
+                <span className="hidden md:block">
+                  {formatAddress(evmAddress)}
+                </span>
               </div>
             ) : (
               <Button
