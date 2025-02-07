@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import {
   copyToClipboard,
   formatAddress,
@@ -33,6 +33,7 @@ import { Address } from "viem";
 import { Button } from "@/components/ui/button";
 import { useAccount } from "wagmi";
 import { useAuth } from "@/hooks/useAuth";
+import { NavBarMobileSearchModal } from "@/components/modal/navBarMobileSearchModal";
 
 const Navbar = () => {
   const { address: evmAddress } = useAccount();
@@ -43,14 +44,14 @@ const Navbar = () => {
   const [searchStr, setSearchStr] = useState<string>("");
   const [searchResult, setSearchResult] = useState<AgentItem[]>();
 
-  const loadBalance = async () => {
+  const loadBalance = useCallback(async () => {
     const balance = await getBalance({ address: evmAddress! as Address });
     updateEthBalance(balance);
-  };
+  }, [evmAddress, getBalance, updateEthBalance]);
 
   useEffect(() => {
     loadBalance();
-  }, [evmAddress]);
+  }, [evmAddress, loadBalance]);
 
   const searchMutation = useMutation({
     mutationFn: searchAgentList,
@@ -97,7 +98,10 @@ const Navbar = () => {
             <Search className="absolute text-second left-3 top-1/2 transform -translate-y-1/2 w-5 h-5" />
             {searchStr && (
               <img
-                onClick={() => setSearchStr("")}
+                onClick={() => {
+                  setSearchStr("");
+                  setSearchResult(undefined);
+                }}
                 className="h-[16px] w-[16px] absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer"
                 src="/images/icon_close.svg"
                 alt=""
@@ -110,7 +114,10 @@ const Navbar = () => {
                 ) : (
                   <SearchAgentList
                     agentList={searchResult}
-                    onClose={() => setSearchStr("")}
+                    onClose={() => {
+                      setSearchStr("");
+                      setSearchResult(undefined);
+                    }}
                   />
                 )}
               </div>
@@ -118,7 +125,7 @@ const Navbar = () => {
           </div>
           <div className="flex gap-3 md:gap-6">
             <div className="flex items-center  lg:hidden">
-              <Search className="text-black w-5 h-5" />
+              <NavBarMobileSearchModal />
             </div>
             {evmAddress && (
               <div className="flex gap-2 items-center text-first text-14 font-SwitzerMedium">
@@ -329,7 +336,7 @@ interface LinkItemProps {
   icon: string;
 }
 
-const LinkItem: React.FC<LinkItemProps> = ({ url, icon }) => {
+export const LinkItem: React.FC<LinkItemProps> = ({ url, icon }) => {
   return (
     <div
       onClick={(e) => {
