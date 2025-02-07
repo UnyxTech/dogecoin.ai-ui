@@ -261,12 +261,12 @@ const CreatePage = () => {
         <div className="flex flex-col gap-8 items-center w-full">
           <img className="w-[120px] h-[120px]" src="/images/logo2.svg" alt="" />
           <img
-            className="h-[43px] w-[562px] hidden demo_test:block"
+            className="h-[43px] w-[562px] hidden mdd:block"
             src="/images/agent_details.svg"
             alt=""
           />
           <img
-            className="w-[60%]  demo_test:hidden block"
+            className="w-[60%]  mdd:hidden block"
             src="/images/agent_details_mobile.svg"
             alt=""
           />
@@ -279,7 +279,7 @@ const CreatePage = () => {
               onSubmit={form.handleSubmit(onSubmit)}
               className="grid gap-6 py-4 px-1"
             >
-              <div className="grid grid-cols-1 demo_test:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 mdd:grid-cols-2 gap-6">
                 <FormField
                   control={form.control}
                   name="agentName"
@@ -332,7 +332,7 @@ const CreatePage = () => {
                   </FormItem>
                 )}
               />
-              <div className="flex flex-col demo_test:flex-row demo_test:items-center gap-4">
+              <div className="flex flex-col mdd:flex-row mdd:items-center gap-4">
                 <div className="flex-1">
                   <FormField
                     control={form.control}
@@ -407,7 +407,7 @@ const CreatePage = () => {
                   )}
                 />
               </div>
-              <div className="grid grid-cols-1 demo_test:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 mdd:grid-cols-2 gap-4">
                 <FormField
                   control={form.control}
                   name="twitterLink"

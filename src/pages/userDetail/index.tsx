@@ -108,7 +108,7 @@ export const UserDetail = () => {
               <LoadingComp loading text="Loading..." />
             )}
             <div className="flex flex-col gap-6 justify-end">
-              <div className="grid lg:grid-cols-5 gap-x-3 gap-y-1 demo_test:grid-cols-4 md:grid-cols-3 grid-cols-2">
+              <div className="grid lg:grid-cols-5 gap-x-3 gap-y-1 mdd:grid-cols-4 md:grid-cols-3 grid-cols-2">
                 {heldAgentsData?.pages[currentPage - 1]?.rows?.map(
                   (agent, index) => (
                     <AgentItemView key={`held_${index}`} agent={agent} />
@@ -131,7 +131,7 @@ export const UserDetail = () => {
               <LoadingComp loading text="Loading..." />
             )}
             <div className="flex flex-col gap-6 justify-end">
-              <div className="grid grid-cols-5 gap-x-3 gap-y-1">
+              <div className="grid lg:grid-cols-5 gap-x-3 gap-y-1 mdd:grid-cols-4 md:grid-cols-3 grid-cols-2">
                 {createAgentsData?.pages[currentPage - 1]?.rows?.map(
                   (agent, index) => (
                     <AgentItemView key={`create_${index}`} agent={agent} />

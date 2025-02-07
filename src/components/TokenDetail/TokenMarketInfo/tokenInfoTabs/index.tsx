@@ -40,7 +40,7 @@ const TokenInfoTabs = ({ setActiveTab, activeTab }: Props) => {
   };
   if (isLoading || !agentInfoData?.tokenAddress) {
     return (
-      <div className="w-full bg-dayBg1 px-5 demo_test:px-6  py-2">
+      <div className="w-full bg-dayBg1 px-5 mdd:px-6  py-2">
         <div className="flex justify-between">
           <div className="flex gap-4">
             <Skeleton className="h-5 w-8 " />
@@ -60,7 +60,7 @@ const TokenInfoTabs = ({ setActiveTab, activeTab }: Props) => {
     );
   }
   return (
-    <div className="w-full bg-dayBg1 px-5 demo_test:px-6  py-2">
+    <div className="w-full bg-dayBg1 px-5 mdd:px-6  py-2">
       <div className="flex items-center justify-between ">
         <div className="flex gap-4 transition-all duration-100">
           {Object.values(TAB_TYPES).map((tab) => (

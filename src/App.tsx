@@ -31,9 +31,7 @@ function App() {
           <span className="hidden xs:block sm:hidden">XS</span>
           <span className="hidden sm:block md:hidden">SM</span>
           <span className="hidden md:block mdd:hidden">MD</span>
-          <span className="hidden md:block placeHolder_screen:hidden">
-            demo_test
-          </span>
+          <span className="hidden md:block placeHolder_screen:hidden">mdd</span>
           <span className="hidden mdd:block lg:hidden">MDD</span>
           <span className="hidden lg:block lgg:hidden">LG</span>
           <span className="hidden lgg:block xl:hidden">LGG</span>

@@ -36,7 +36,7 @@ const TokenInfoHeader = ({
         <img
           src={tokenInfo?.image}
           alt="tokenLogo"
-          className="w-[7.5rem] h-[7.5rem] demo_test:w-32 demo_test:h-32"
+          className="w-[7.5rem] h-[7.5rem] mdd:w-32 mdd:h-32"
           loading="eager"
         />
       </div>
@@ -45,7 +45,7 @@ const TokenInfoHeader = ({
         <div>
           {/* name Info */}
           <div className="flex justify-start items-center">
-            <span className="text-dayT1 font-Switzer text-xl demo_test:text-[28px] font-semibold leading-[120%]">
+            <span className="text-dayT1 font-Switzer text-xl mdd:text-[28px] font-semibold leading-[120%]">
               {tokenInfo?.name ?? "--"}
             </span>
             <span className="ml-2 text-dayT3 font-Switzer text-base font-normal ">
@@ -54,7 +54,7 @@ const TokenInfoHeader = ({
           </div>
           {/* Address Info */}
           <div className="flex items-center gap-2 mt-3">
-            <div className="flex items-center py-1 px-2 justify-center gap-1 demo_test:gap-2.5 bg-dayBg3 rounded-sm hover:text-yellow cursor-pointer">
+            <div className="flex items-center py-1 px-2 justify-center gap-1 mdd:gap-2.5 bg-dayBg3 rounded-sm hover:text-yellow cursor-pointer">
               <span className="text-xs font-medium">
                 {formatAddressNew(tokenInfo?.tokenAddress ?? "--", 4, 4)}
               </span>
@@ -64,7 +64,7 @@ const TokenInfoHeader = ({
                 className="text-sm"
               />
             </div>
-            <div className="flex items-center py-1 px-2 justify-center gap-1 demo_test:gap-2.5 bg-dayBg3 rounded-sm">
+            <div className="flex items-center py-1 px-2 justify-center gap-1 mdd:gap-2.5 bg-dayBg3 rounded-sm">
               <span className="text-xs font-medium ">Productivity</span>
               <User size={14} />
             </div>
@@ -77,7 +77,7 @@ const TokenInfoHeader = ({
                       href={link.url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="w-6 h-6 hidden rounded-full border border-dayL1 demo_test:flex items-center justify-center hover:bg-gray-200 transition-colors"
+                      className="w-6 h-6 hidden rounded-full border border-dayL1 mdd:flex items-center justify-center hover:bg-gray-200 transition-colors"
                     >
                       <img
                         src={link.icon}
@@ -99,7 +99,7 @@ const TokenInfoHeader = ({
                   href={link.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-6 h-6 flex  rounded-full border border-dayL1 demo_test:hidden items-center justify-center hover:bg-gray-200 transition-colors"
+                  className="w-6 h-6 flex  rounded-full border border-dayL1 mdd:hidden items-center justify-center hover:bg-gray-200 transition-colors"
                 >
                   <img src={link.icon} alt={link.name} className="w-4 h-4" />
                 </a>
@@ -121,7 +121,7 @@ const TokenInfoHeader = ({
                 {formatAddressNew(tokenInfo?.creator ?? "--", 5, 6)}
               </span>
             </div>
-            <span className="text-dayT3 hidden demo_test:block">
+            <span className="text-dayT3 hidden mdd:block">
               {getDetailedTimeDiff(tokenInfo?.agentCreatedTime ?? "--")}
             </span>
           </div>

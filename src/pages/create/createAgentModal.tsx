@@ -109,7 +109,7 @@ export const CreateAgentModal = ({
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="p-5 rounded-md shadow-lg gap-6  demo_test:max-w-[690px] max-w-[90%]">
+      <DialogContent className="p-5 rounded-md shadow-lg gap-6  mdd:max-w-[690px] max-w-[90%]">
         <DialogHeader hidden>
           <DialogTitle></DialogTitle>
         </DialogHeader>
@@ -188,7 +188,7 @@ export const CreateAgentModal = ({
           </div>
         </div>
         <Button
-          className="demo_test:mx-[51px] w-full"
+          className="mdd:mx-[51px] w-full"
           loading={loading}
           disabled={!_.isEmpty(error)}
           onClick={() => {

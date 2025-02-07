@@ -22,17 +22,17 @@ const TokenMarketInfo = ({ topic }: { topic: "INFO" | "TRADE" }) => {
       {isLoading || !tokenInfo?.tokenAddress ? (
         <InfoAndTradingviewSkeletions />
       ) : (
-        <div className="w-full bg-dayBg1 p-5 demo_test:p-6">
+        <div className="w-full bg-dayBg1 p-5 mdd:p-6">
           <TokenInfoHeader tokenInfo={tokenInfo!} />
           <div className="h-96 mt-4 w-full">
             <TradingViewChart key="tradingview" tokenInfo={tokenInfo!} />
           </div>
         </div>
       )}
-      <div className="hidden demo_test:block">
+      <div className="hidden mdd:block">
         <TokenInfoTabs setActiveTab={setActiveTab} activeTab={activeTab} />
       </div>
-      <div className="demo_test:hidden">
+      <div className="mdd:hidden">
         {topic === "INFO" ? (
           <TokenInfoTabs setActiveTab={setActiveTab} activeTab={activeTab} />
         ) : (

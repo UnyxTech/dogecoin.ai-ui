@@ -53,7 +53,7 @@ const HolderContent = () => {
           return <div className="text-left w-full pl-2.5">Address</div>;
         },
         cell: ({ row }) => (
-          <div className="lowercase text-sm demo_test:text-base text-left w-full  pl-2.5">
+          <div className="lowercase text-sm mdd:text-base text-left w-full  pl-2.5">
             {formatAddressNew(row.getValue("address"))}
           </div>
         ),
@@ -66,7 +66,7 @@ const HolderContent = () => {
         cell: ({ row }) => {
           const value = row.getValue("holding") as string;
           return (
-            <div className="text-end w-full text-sm demo_test:text-base">
+            <div className="text-end w-full text-sm mdd:text-base">
               <AdaptiveBalance balance={value.toString()} suffix="%" />
             </div>
           );
@@ -80,7 +80,7 @@ const HolderContent = () => {
         cell: ({ row }) => {
           const value = row.getValue("amount") as string;
           return (
-            <div className="text-end w-full text-sm demo_test:text-base">
+            <div className="text-end w-full text-sm mdd:text-base">
               <AdaptiveBalance balance={value.toString()} />
             </div>
           );
