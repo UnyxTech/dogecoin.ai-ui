@@ -21,10 +21,14 @@ const TokenMarketInfo = ({ topic }: { topic: "INFO" | "TRADE" }) => {
           </div>
         </div>
       )}
-      {/* <TokenInfoTabs /> */}
+      <div className="hidden demo_test:block">
+        <TokenInfoTabs />
+      </div>
       <div>
         {topic === "INFO" ? (
-          <TokenInfoTabs />
+          <div className="demo_test:hidden">
+            <TokenInfoTabs />
+          </div>
         ) : (
           <div className="demo_test:hidden">
             <TokenSwapAndChat />
