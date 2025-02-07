@@ -7,14 +7,14 @@ const TokenDetailPage = () => {
   const isInfo = topic === "INFO";
 
   return (
-    <main className="min-h-screen bg-dayBg3 font-Switzer leading-[140%] ">
+    <main className="min-h-screen bg-dayBg3 font-Switzer leading-[140%]">
       <div className="w-full demo_test:pt-8">
-        <div className="max-w-[1200px] mx-auto relative">
+        <div className="max-w-[1200px] mx-auto relative ">
           <div className="flex gap-8">
-            <section className="w-full demo_test:w-[680px] rounded-lg gap-6 flex-shrink-0">
+            <section className="flex-1 demo_test:w-[680px] demo_test:min-w-[448px] rounded-lg gap-6 flex-shrink-0">
               <TokenMarketInfo topic={topic} />
             </section>
-            <section className="hidden demo_test:block demo_test:w-[390px] gap-6 flex-shrink-0">
+            <section className="hidden demo_test:block demo_test:w-[390px] gap-6 ">
               <TokenSwapAndChat />
             </section>
           </div>

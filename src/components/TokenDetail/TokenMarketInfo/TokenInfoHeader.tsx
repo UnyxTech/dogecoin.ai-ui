@@ -107,7 +107,7 @@ const TokenInfoHeader = ({
             })}
         </div>
         <div className="flex items-end ">
-          <div className="flex items-center gap-2 text-xs">
+          <div className="flex items-center gap-2 text-xs flex-wrap">
             <span className="text-dayT3 text-right font-Switzer font-normal ">
               Created by
             </span>
