@@ -167,7 +167,7 @@ const Navbar = () => {
                 >
                   Connect Wallet
                 </Button>
-                <div>
+                <div className="sm:hidden">
                   <img
                     src="/images/wallet.svg"
                     alt=""
