@@ -12,6 +12,7 @@ import {
   GetCommentsResponse,
   GetPostDataDetailParams,
   GetPostsResponse,
+  KLineHistoryParams,
   KLineItem,
   KLineParams,
   KLineResponse,
@@ -154,15 +155,15 @@ export const getAgentInfo = async (params: { characterId: string }) => {
   return data.data;
 };
 export const getKLineHistory = async (
-  params: KLineParams
+  params: KLineHistoryParams
 ): Promise<KLineItem[]> => {
-  const { data } = await api.get<ApiResponse<KLineResponse>>(
-    "v1/wallets/agent/kline/trading-view",
+  const { data } = await api.get<ApiResponse<KLineResponse["klineList"]>>(
+    "v1/wallets/agent/candlestick",
     {
       params,
     }
   );
-  return data.data.klineList;
+  return data.data;
 };
 
 export const getKLineLast = async (params: KLineParams): Promise<KLineItem> => {

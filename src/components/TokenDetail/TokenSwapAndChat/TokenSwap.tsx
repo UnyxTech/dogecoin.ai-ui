@@ -3,7 +3,6 @@ import { useEffect, useMemo, useState } from "react";
 import { Input } from "@/components/ui/input";
 // import { HoverCard, HoverCardTrigger } from "@/components/ui/hover-card";
 // import { WrapperHoverCardConnect } from "@/components/ui/custom/WrapperHoverCardConnect";
-import { ConnectWalletModal } from "@/components/connectWalletModal";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { ProgressCard } from "./ProgressCard";
@@ -20,6 +19,7 @@ import { debounce } from "lodash";
 import { GetAgentInfoResponse } from "@/api/types";
 import AdaptiveBalance from "@/components/adaptiveBalance";
 import { toast } from "@/hooks/use-toast";
+import { useConnectWalletModalStore } from "@/store/connectWalletModal";
 const TokenLogoSwitch = ({
   isBuy,
   dogeImage,
@@ -35,7 +35,7 @@ const TokenLogoSwitch = ({
 
   return (
     <div className="flex items-center gap-2">
-      <div className="w-7 h-7 relative flex items-center justify-center">
+      <div className="w-7 h-7 relative flex items-center justify-center rounded-full overflow-hidden">
         <img
           key={imageSrc}
           src={imageSrc}
@@ -54,7 +54,7 @@ const TokenSwap = ({ tokenInfo }: { tokenInfo: GetAgentInfoResponse }) => {
   //
   const account = useAccount();
   // state
-  const [showModal, setShowModal] = useState(false);
+  const { open: openConnectWallet } = useConnectWalletModalStore();
   const [debouncedAmount, setDebouncedAmount] = useState<bigint>(0n);
   const [tradeData, setTradeData] = useState({
     isBuy: true,
@@ -310,7 +310,7 @@ const TokenSwap = ({ tokenInfo }: { tokenInfo: GetAgentInfoResponse }) => {
         </Button>
       ) : (
         <Button
-          onClick={() => setShowModal(true)}
+          onClick={() => openConnectWallet()}
           key="connectWallet"
           className={`w-full rounded-sm py-5 bg-[linear-gradient(to_bottom,#626286_-9.05%,#34344B_51.88%)]`}
         >
@@ -326,12 +326,6 @@ const TokenSwap = ({ tokenInfo }: { tokenInfo: GetAgentInfoResponse }) => {
       <h1 className="font-SwitzerMedium text-xl">
         Holder Distribution (7 holders)
       </h1> */}
-      {showModal && (
-        <ConnectWalletModal
-          open={showModal}
-          onClose={() => setShowModal(false)}
-        />
-      )}
     </div>
   );
 };

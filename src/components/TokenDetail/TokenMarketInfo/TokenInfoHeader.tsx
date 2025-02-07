@@ -36,7 +36,7 @@ const TokenInfoHeader = ({
         <img
           src={tokenInfo?.image}
           alt="tokenLogo"
-          className="w-32 h-32"
+          className="w-[7.5rem] h-[7.5rem] demo_test:w-32 demo_test:h-32"
           loading="eager"
         />
       </div>
@@ -45,44 +45,66 @@ const TokenInfoHeader = ({
         <div>
           {/* name Info */}
           <div className="flex justify-start items-center">
-            <span className="text-dayT1 font-Switzer text-[28px] font-semibold leading-[120%]">
+            <span className="text-dayT1 font-Switzer text-xl demo_test:text-[28px] font-semibold leading-[120%]">
               {tokenInfo?.name ?? "--"}
             </span>
-            <span className="ml-2 text-dayT3 font-Switzer text-16 font-normal ">
+            <span className="ml-2 text-dayT3 font-Switzer text-base font-normal ">
               {tokenInfo?.symbol ?? "--"}
             </span>
           </div>
           {/* Address Info */}
           <div className="flex items-center gap-2 mt-3">
-            <div className="flex items-center py-1 px-2 justify-center gap-2.5 bg-dayBg3 rounded-sm hover:text-yellow cursor-pointer">
-              <span className="text-xs font-medium ">
-                {formatAddressNew(tokenInfo?.tokenAddress ?? "--")}
+            <div className="flex items-center py-1 px-2 justify-center gap-1 demo_test:gap-2.5 bg-dayBg3 rounded-sm hover:text-yellow cursor-pointer">
+              <span className="text-xs font-medium">
+                {formatAddressNew(tokenInfo?.tokenAddress ?? "--", 4, 4)}
               </span>
               <Copy
                 size={14}
                 onClick={() => copyToClipboard(tokenInfo?.tokenAddress ?? "--")}
-                className=" text-sm"
+                className="text-sm"
               />
             </div>
-            <div className="flex items-center py-1 px-2 justify-center gap-2.5 bg-dayBg3 rounded-sm">
+            <div className="flex items-center py-1 px-2 justify-center gap-1 demo_test:gap-2.5 bg-dayBg3 rounded-sm">
               <span className="text-xs font-medium ">Productivity</span>
               <User size={14} />
             </div>
-            {tokenInfo?.pairAddress &&
-              externalLinks.map((link) => {
-                return (
-                  <a
-                    key={link.name}
-                    href={link.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="w-6 h-6 rounded-full border border-dayL1 flex items-center justify-center hover:bg-gray-200 transition-colors"
-                  >
-                    <img src={link.icon} alt={link.name} className="w-4 h-4" />
-                  </a>
-                );
-              })}
+            <div className="flex">
+              {tokenInfo?.pairAddress &&
+                externalLinks.map((link) => {
+                  return (
+                    <a
+                      key={link.name}
+                      href={link.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="w-6 h-6 hidden rounded-full border border-dayL1 demo_test:flex items-center justify-center hover:bg-gray-200 transition-colors"
+                    >
+                      <img
+                        src={link.icon}
+                        alt={link.name}
+                        className="w-4 h-4"
+                      />
+                    </a>
+                  );
+                })}
+            </div>
           </div>
+        </div>
+        <div className="flex">
+          {tokenInfo?.pairAddress &&
+            externalLinks.map((link) => {
+              return (
+                <a
+                  key={link.name}
+                  href={link.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-6 h-6 flex  rounded-full border border-dayL1 demo_test:hidden items-center justify-center hover:bg-gray-200 transition-colors"
+                >
+                  <img src={link.icon} alt={link.name} className="w-4 h-4" />
+                </a>
+              );
+            })}
         </div>
         <div className="flex items-end ">
           <div className="flex items-center gap-2 text-xs">
@@ -99,7 +121,7 @@ const TokenInfoHeader = ({
                 {formatAddressNew(tokenInfo?.creator ?? "--", 5, 6)}
               </span>
             </div>
-            <span className="text-dayT3">
+            <span className="text-dayT3 hidden demo_test:block">
               {getDetailedTimeDiff(tokenInfo?.agentCreatedTime ?? "--")}
             </span>
           </div>

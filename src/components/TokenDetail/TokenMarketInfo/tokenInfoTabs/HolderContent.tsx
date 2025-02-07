@@ -36,6 +36,7 @@ const EmptyState = () => (
   </div>
 );
 const fetchSize = 50;
+const GRID_TEMPLATE = "1fr 3fr 3fr 3fr";
 const HolderContent = () => {
   const { characterId } = useParams();
   const tableContainerRef = useRef<HTMLDivElement>(null);
@@ -49,10 +50,10 @@ const HolderContent = () => {
       {
         accessorKey: "address",
         header: () => {
-          return <div className="flex-1">Address</div>;
+          return <div className="text-left w-full pl-2.5">Address</div>;
         },
         cell: ({ row }) => (
-          <div className="lowercase">
+          <div className="lowercase text-sm demo_test:text-base text-left w-full  pl-2.5">
             {formatAddressNew(row.getValue("address"))}
           </div>
         ),
@@ -65,7 +66,7 @@ const HolderContent = () => {
         cell: ({ row }) => {
           const value = row.getValue("holding") as string;
           return (
-            <div className="text-end">
+            <div className="text-end w-full text-sm demo_test:text-base">
               <AdaptiveBalance balance={value.toString()} suffix="%" />
             </div>
           );
@@ -79,7 +80,7 @@ const HolderContent = () => {
         cell: ({ row }) => {
           const value = row.getValue("amount") as string;
           return (
-            <div className="text-end">
+            <div className="text-end w-full text-sm demo_test:text-base">
               <AdaptiveBalance balance={value.toString()} />
             </div>
           );
@@ -167,111 +168,78 @@ const HolderContent = () => {
   }
 
   return (
-    <div>
-      <div className="rounded-md">
-        <div
-          onScroll={(e) => fetchMoreOnBottomReached(e.currentTarget)}
-          ref={tableContainerRef}
-          className="relative w-full h-[660px] overflow-y-auto customScrollbar_two"
-        >
-          <Table style={{ display: "grid" }}>
-            <TableHeader className="bg-white sticky top-0 z-50 grid ">
-              {table.getHeaderGroups().map((headerGroup) => (
+    <div className="rounded-md">
+      <div
+        onScroll={(e) => fetchMoreOnBottomReached(e.currentTarget)}
+        ref={tableContainerRef}
+        className="relative h-[660px] overflow-y-auto customScrollbar_two font-Switzer"
+      >
+        <Table>
+          <TableHeader className="bg-white sticky top-0 z-50">
+            {table.getHeaderGroups().map((headerGroup) => (
+              <TableRow
+                key={headerGroup.id}
+                className="grid border-none"
+                style={{
+                  gridTemplateColumns: GRID_TEMPLATE,
+                }}
+              >
+                {headerGroup.headers.map((header, index) => {
+                  return (
+                    <TableHead
+                      key={index}
+                      className="text-dayT3 text-xs flex items-center px-0"
+                    >
+                      {header.isPlaceholder
+                        ? null
+                        : flexRender(
+                            header.column.columnDef.header,
+                            header.getContext()
+                          )}
+                    </TableHead>
+                  );
+                })}
+              </TableRow>
+            ))}
+          </TableHeader>
+          <TableBody
+            style={{
+              display: "grid",
+              height: `${rowVirtualizer.getTotalSize()}px`,
+              position: "relative",
+            }}
+            className="text-dayT1"
+          >
+            {rowVirtualizer.getVirtualItems().map((virtualRow) => {
+              const row = rows[virtualRow.index] as Row<Holder>;
+              return (
                 <TableRow
-                  key={headerGroup.id}
-                  className="w-full flex border-none"
+                  data-index={virtualRow.index}
+                  ref={(node) => rowVirtualizer.measureElement(node)}
+                  key={row.id}
+                  style={{
+                    display: "grid",
+                    gridTemplateColumns: GRID_TEMPLATE,
+                    position: "absolute",
+                    top: 0,
+                    left: 0,
+                    width: "100%",
+                    transform: `translateY(${virtualRow.start}px)`,
+                  }}
                 >
-                  {headerGroup.headers.map((header, index) => {
-                    return (
-                      <TableHead
-                        key={index}
-                        style={{
-                          width: header.getSize(),
-                        }}
-                        className="text-dayT3 text-xs flex items-center px-2.5"
-                      >
-                        {header.isPlaceholder
-                          ? null
-                          : flexRender(
-                              header.column.columnDef.header,
-                              header.getContext()
-                            )}
-                      </TableHead>
-                    );
-                  })}
+                  {row.getVisibleCells().map((cell) => (
+                    <TableCell key={cell.id} className="p-0">
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext()
+                      )}
+                    </TableCell>
+                  ))}
                 </TableRow>
-              ))}
-            </TableHeader>
-            <TableBody
-              style={{
-                display: "grid",
-                height: `${rowVirtualizer.getTotalSize()}px`,
-                position: "relative",
-              }}
-              className="text-dayT1"
-            >
-              {rowVirtualizer.getVirtualItems().map((virtualRow) => {
-                const row = rows[virtualRow.index] as Row<Holder>;
-                return (
-                  <TableRow
-                    data-index={virtualRow.index}
-                    ref={(node) => rowVirtualizer.measureElement(node)}
-                    key={row.id}
-                    style={{
-                      display: "flex",
-                      position: "absolute",
-                      top: 0,
-                      left: 0,
-                      width: "100%",
-                      transform: `translateY(${virtualRow.start}px)`,
-                    }}
-                  >
-                    {row.getVisibleCells().map((cell) => (
-                      <TableCell
-                        key={cell.id}
-                        className="p-2.5"
-                        style={{
-                          width: cell.column.getSize(),
-                        }}
-                      >
-                        {flexRender(
-                          cell.column.columnDef.cell,
-                          cell.getContext()
-                        )}
-                      </TableCell>
-                    ))}
-                  </TableRow>
-                );
-              })}
-              {/* {rows?.length ? (
-                rows.map((row) => (
-                  <TableRow
-                    key={row.id}
-                    data-state={row.getIsSelected() && "selected"}
-                  >
-                    {row.getVisibleCells().map((cell) => (
-                      <TableCell key={cell.id}>
-                        {flexRender(
-                          cell.column.columnDef.cell,
-                          cell.getContext()
-                        )}
-                      </TableCell>
-                    ))}
-                  </TableRow>
-                ))
-              ) : (
-                <TableRow>
-                  <TableCell
-                    colSpan={columns.length}
-                    className="h-24 text-center"
-                  >
-                    No results.
-                  </TableCell>
-                </TableRow>
-              )} */}
-            </TableBody>
-          </Table>
-        </div>
+              );
+            })}
+          </TableBody>
+        </Table>
       </div>
     </div>
   );

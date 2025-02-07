@@ -22,6 +22,13 @@ export type KlineTime =
   | "three_day"
   | "one_week"
   | "one_month";
+export interface KLineHistoryParams {
+  tokenAddress: Address;
+  symbol: string;
+  type: string;
+  startTimestamp: number;
+  endTimestamp?: number;
+}
 export interface KLineParams {
   tokenAddress: Address;
   type: KlineTime;

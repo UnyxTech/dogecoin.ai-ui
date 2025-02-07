@@ -23,13 +23,13 @@ import { toast } from "@/hooks/use-toast";
 import { useQueryClient } from "@tanstack/react-query";
 import { usePosAiDescGenerate } from "@/hooks/tokenDetial/usePostAiDescGenarate";
 import { useAccount } from "wagmi";
-import { ConnectWalletModal } from "@/components/connectWalletModal";
+import { useConnectWalletModalStore } from "@/store/connectWalletModal";
 const Limit = 20;
 export function PostDialog() {
   const queryClient = useQueryClient();
+  const { open: openConnectWallet } = useConnectWalletModalStore();
   // init state
   const account = useAccount();
-  const [showModal, setShowModal] = useState(false);
   const { characterId } = useParams();
   const { data: agentInfo } = useAgentInfo(characterId!);
   // Dialog state
@@ -91,7 +91,7 @@ export function PostDialog() {
   };
   const handleGenerate = async () => {
     if (!account.address) {
-      setShowModal(true);
+      openConnectWallet();
       return;
     }
     await imageGenerate();
@@ -119,9 +119,9 @@ export function PostDialog() {
             Add Post
           </Button>
         </DialogTrigger>
-        <DialogContent className="sm:max-w-[432px]">
+        <DialogContent className="max-w-[90%] rounded-lg sm:max-w-[432px] overflow-hidden">
           <DialogHeader>
-            <DialogTitle className="text-dayT1 font-SwitzerMedium">
+            <DialogTitle className="text-dayT1 font-SwitzerMedium text-left">
               Post a feed of Doggee
             </DialogTitle>
           </DialogHeader>
@@ -132,15 +132,15 @@ export function PostDialog() {
                 <span className="text-red ml-0.5">*</span>
               </div>
               <button
-                // disabled={prompt.length < Limit}
-                disabled={true}
+                disabled={prompt.length < Limit}
+                // disabled={true}
                 onClick={async () => {
                   const data = await descGenerate();
                   setPrompt(data.message);
                 }}
                 className={`text-dayT2 text-sm ${
                   prompt.length > Limit ? "opacity-100" : "opacity-30"
-                } hover:opacity-75 hover:outline-none hover:border-none focus:border-none focus:outline-none`}
+                } border-none hover:opacity-75 hover:outline-none hover:border-none focus:border-none focus:outline-none`}
               >
                 AI generate
               </button>
@@ -209,7 +209,7 @@ export function PostDialog() {
                   <Button
                     variant="yellow"
                     type="submit"
-                    onClick={() => setShowModal(true)}
+                    onClick={() => openConnectWallet()}
                     className="w-full rounded-sm py-4 focus:outline-none border-[1.5px] border-b-4 border-[#12122A] bg-gradient-to-tr from-[#FCD436] to-[#FFE478]"
                   >
                     Connect Wallet
@@ -233,7 +233,7 @@ export function PostDialog() {
       </Dialog>
 
       <AlertDialog open={showConfirmDialog} onOpenChange={setShowConfirmDialog}>
-        <AlertDialogContent className="sm:max-w-[432px]">
+        <AlertDialogContent className="max-w-[90%] rounded-lg sm:max-w-[432px]">
           <AlertDialogHeader>
             <AlertDialogDescription className="text-dayT1 font-Switzer text-start">
               Are you sure you want to cancel and discard the image.
@@ -260,12 +260,6 @@ export function PostDialog() {
           </div>
         </AlertDialogContent>
       </AlertDialog>
-      {showModal && (
-        <ConnectWalletModal
-          open={showModal}
-          onClose={() => setShowModal(false)}
-        />
-      )}
     </div>
   );
 }

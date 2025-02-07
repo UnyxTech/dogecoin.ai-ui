@@ -73,7 +73,7 @@ const InformationContent = () => {
         <>
           <div>
             <Title text={`${tokenInfo?.symbol} market info`} className="mb-5" />
-            <div className="flex gap-2 ">
+            <div className="flex flex-col demo_test:flex-row gap-2 ">
               <div className="flex-1 py-1 px-4 bg-[#FAFAFD]">
                 <div className="flex justify-between items-center py-4">
                   <span className="text-dayT3">Market cap(FDV)</span>

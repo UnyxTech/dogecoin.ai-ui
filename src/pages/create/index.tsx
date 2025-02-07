@@ -257,14 +257,20 @@ const CreatePage = () => {
 
   return (
     <Container>
-      <div className="flex flex-col items-center w-[790px] m-auto">
+      <div className="flex flex-col items-center max-w-[790px] m-auto">
         <div className="flex flex-col gap-8 items-center w-full">
           <img className="w-[120px] h-[120px]" src="/images/logo2.svg" alt="" />
           <img
-            className="h-[43px] w-[562px]"
+            className="h-[43px] w-[562px] hidden demo_test:block"
             src="/images/agent_details.svg"
             alt=""
           />
+          <img
+            className="w-[60%]  demo_test:hidden block"
+            src="/images/agent_details_mobile.svg"
+            alt=""
+          />
+
           <div className="border-b-[1px] border-solid border-border w-full"></div>
         </div>
         <div className="py-8 px-[67px] w-full">
@@ -273,7 +279,7 @@ const CreatePage = () => {
               onSubmit={form.handleSubmit(onSubmit)}
               className="grid gap-6 py-4 px-1"
             >
-              <div className="grid grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 demo_test:grid-cols-2 gap-6">
                 <FormField
                   control={form.control}
                   name="agentName"
@@ -326,7 +332,7 @@ const CreatePage = () => {
                   </FormItem>
                 )}
               />
-              <div className="flex items-center gap-4">
+              <div className="flex flex-col demo_test:flex-row demo_test:items-center gap-4">
                 <div className="flex-1">
                   <FormField
                     control={form.control}
@@ -401,7 +407,7 @@ const CreatePage = () => {
                   )}
                 />
               </div>
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 demo_test:grid-cols-2 gap-4">
                 <FormField
                   control={form.control}
                   name="twitterLink"
@@ -506,6 +512,7 @@ const CreatePage = () => {
           </Form>
         </div>
       </div>
+
       {showCreateAgentModal && (
         <CreateAgentModal
           open={showCreateAgentModal}
@@ -519,6 +526,7 @@ const CreatePage = () => {
           onClose={() => setShowCreateAgentModal(false)}
         />
       )}
+
       {showModal && (
         <ConnectWalletModal
           open={showModal}

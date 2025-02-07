@@ -44,7 +44,7 @@ export const datafeed = (
         const symbolInfo: LibrarySymbolInfo = {
           ticker: tokenInfo?.symbol ?? "MemeSymbol",
           name: tokenInfo?.name ?? "MemeName",
-          description: `${tokenInfo?.symbol ?? "MemeSymbol"}/Doge`,
+          description: `${tokenInfo?.symbol ?? "MemeSymbol"}/USD`,
           type: "crypto",
           session: "24x7",
           timezone: "Etc/UTC",
@@ -111,14 +111,15 @@ export const datafeed = (
         const startTime = endTime - timeRange * 1000;
         const klineList = await getKLineHistory({
           tokenAddress: tokenInfo.tokenAddress as Address,
-          type: getKlineType(resolution),
+          symbol: `${tokenInfo.symbol.toUpperCase()}USDT`,
+          type: "1m",
           startTimestamp: startTime,
           endTimestamp: endTime,
           // startTimestamp: periodParams.from * 1000,
           // endTimestamp: periodParams.to * 1000,
           // endTimestamp: Math.floor(periodParams.to),
         });
-        console.log("getKLineHistory", klineList);
+        console.log("getKLineHistory", klineList, resolution);
         if (klineList.length > 0) {
           const bars = klineList.map((item) => ({
             time: new Date(item.timestamp).getTime(),

@@ -15,6 +15,7 @@ const config: Config = {
       xs: "300px",
       sm: "450px",
       md: "600px",
+      demo_test: "720px",
       mdd: "768px",
       lg: "1025px",
       lgg: "1150px",
