@@ -5,10 +5,18 @@ import TradingViewChart from "./tradingview";
 import { useAgentInfo } from "@/hooks/tokenDetial/useAgentInfo";
 import InfoAndTradingviewSkeletions from "@/components/skeletons/tokenDetail/InfoAndTradingviewSkeletions";
 import TokenSwapAndChat from "../TokenSwapAndChat";
+import { useState } from "react";
+const TAB_TYPES = {
+  POST: "Post",
+  INFORMATION: "Information",
+  HOLDER: "Holder",
+} as const;
 
+export type TabType = (typeof TAB_TYPES)[keyof typeof TAB_TYPES];
 const TokenMarketInfo = ({ topic }: { topic: "INFO" | "TRADE" }) => {
   const { characterId } = useParams();
   const { data: tokenInfo, isLoading } = useAgentInfo(characterId!);
+  const [activeTab, setActiveTab] = useState<TabType>(TAB_TYPES.POST);
   return (
     <div className="w-full rounded-[6px] overflow-hidden flex flex-col gap-4">
       {isLoading || !tokenInfo?.tokenAddress ? (
@@ -22,17 +30,13 @@ const TokenMarketInfo = ({ topic }: { topic: "INFO" | "TRADE" }) => {
         </div>
       )}
       <div className="hidden demo_test:block">
-        <TokenInfoTabs />
+        <TokenInfoTabs setActiveTab={setActiveTab} activeTab={activeTab} />
       </div>
-      <div>
+      <div className="demo_test:hidden">
         {topic === "INFO" ? (
-          <div className="demo_test:hidden">
-            <TokenInfoTabs />
-          </div>
+          <TokenInfoTabs setActiveTab={setActiveTab} activeTab={activeTab} />
         ) : (
-          <div className="demo_test:hidden">
-            <TokenSwapAndChat />
-          </div>
+          <TokenSwapAndChat />
         )}
       </div>
     </div>

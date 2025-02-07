@@ -119,9 +119,9 @@ export function PostDialog() {
             Add Post
           </Button>
         </DialogTrigger>
-        <DialogContent className="sm:max-w-[432px]">
+        <DialogContent className="max-w-[90%] rounded-lg sm:max-w-[432px] overflow-hidden">
           <DialogHeader>
-            <DialogTitle className="text-dayT1 font-SwitzerMedium">
+            <DialogTitle className="text-dayT1 font-SwitzerMedium text-left">
               Post a feed of Doggee
             </DialogTitle>
           </DialogHeader>
@@ -233,7 +233,7 @@ export function PostDialog() {
       </Dialog>
 
       <AlertDialog open={showConfirmDialog} onOpenChange={setShowConfirmDialog}>
-        <AlertDialogContent className="sm:max-w-[432px]">
+        <AlertDialogContent className="max-w-[90%] rounded-lg sm:max-w-[432px]">
           <AlertDialogHeader>
             <AlertDialogDescription className="text-dayT1 font-Switzer text-start">
               Are you sure you want to cancel and discard the image.

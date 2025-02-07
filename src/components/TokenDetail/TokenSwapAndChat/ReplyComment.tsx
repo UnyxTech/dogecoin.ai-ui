@@ -49,7 +49,7 @@ export function ReplyComment({
   };
   return (
     <Dialog open={isReply} onOpenChange={setIsReply}>
-      <DialogContent className="sm:max-w-[432px]">
+      <DialogContent className="max-w-[90%] rounded-lg sm:max-w-[432px]">
         <DialogHeader>
           <DialogTitle className="text-dayT1 font-SwitzerMedium">
             Reply

@@ -1,5 +1,5 @@
 import { Separator } from "@/components/ui/separator";
-import { useState } from "react";
+import { Dispatch, SetStateAction } from "react";
 import PostContent from "./PostContent";
 import InformationContent from "./InformationContent";
 import HolderContent from "./HolderContent";
@@ -8,15 +8,18 @@ import { useAgentsPosts } from "@/hooks/tokenDetial/useAgentPosts";
 import { useParams } from "react-router-dom";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useAgentInfo } from "@/hooks/tokenDetial/useAgentInfo";
+import { TabType } from "..";
 const TAB_TYPES = {
   POST: "Post",
   INFORMATION: "Information",
   HOLDER: "Holder",
 } as const;
 
-type TabType = (typeof TAB_TYPES)[keyof typeof TAB_TYPES];
-
-const TokenInfoTabs = () => {
+interface Props {
+  setActiveTab: Dispatch<SetStateAction<TabType>>;
+  activeTab: TabType;
+}
+const TokenInfoTabs = ({ setActiveTab, activeTab }: Props) => {
   const { characterId } = useParams();
   const { data: agentsPosts, isLoading } = useAgentsPosts({
     // cursor: "",
@@ -24,7 +27,7 @@ const TokenInfoTabs = () => {
     characterId: characterId!,
   });
   const { data: agentInfoData } = useAgentInfo(characterId!);
-  const [activeTab, setActiveTab] = useState<TabType>(TAB_TYPES.POST);
+
   const getContent = (tab: TabType) => {
     switch (tab) {
       case TAB_TYPES.POST:
@@ -36,7 +39,6 @@ const TokenInfoTabs = () => {
     }
   };
   if (isLoading || !agentInfoData?.tokenAddress) {
-    console.log(isLoading || !agentInfoData?.tokenAddress);
     return (
       <div className="w-full bg-dayBg1 px-5 demo_test:px-6  py-2">
         <div className="flex justify-between">
@@ -78,7 +80,7 @@ const TokenInfoTabs = () => {
         {activeTab === TAB_TYPES.POST && <PostDialog />}
       </div>
       <Separator className="mb-6" />
-      <div className="min-h-[600px] w-full">{getContent(activeTab)}</div>
+      <div className="min-h-[600px] w-full pb-8">{getContent(activeTab)}</div>
     </div>
   );
 };
