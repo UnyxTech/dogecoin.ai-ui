@@ -3,8 +3,9 @@ import { cn } from "@/lib/utils";
 import { useState } from "react";
 
 const TokenDetailPage = () => {
-  const [topic, setTopic] = useState<"INFO" | "TRADE">("TRADE");
+  const [topic, setTopic] = useState<"INFO" | "TRADE">("INFO");
   const isInfo = topic === "INFO";
+
   return (
     <main className="min-h-screen bg-dayBg3 font-Switzer leading-[140%] ">
       <div className="w-full demo_test:pt-8">

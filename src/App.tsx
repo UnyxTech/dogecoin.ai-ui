@@ -7,6 +7,7 @@ import { MainContentLayout } from "./layout/mainContentLayout";
 import { Toaster } from "./components/ui/toaster";
 import { WagmiProvider } from "wagmi";
 import { config } from "./config/wagmiConfig";
+import { WrapperConnectWallet } from "./components/WrapperConnectWallet";
 
 function App() {
   const renderRoutes = (routes: RouteConfig[]) => {
@@ -44,6 +45,7 @@ function App() {
         <QueryClientProvider client={new QueryClient()}>
           <MainContentLayout>
             <Toaster />
+            <WrapperConnectWallet />
             <Routes>{renderRoutes(routes)}</Routes>
           </MainContentLayout>
         </QueryClientProvider>

@@ -36,15 +36,10 @@ const EmptyState = () => (
   </div>
 );
 const fetchSize = 50;
+const GRID_TEMPLATE = "1fr 3fr 3fr 3fr";
 const HolderContent = () => {
   const { characterId } = useParams();
   const tableContainerRef = useRef<HTMLDivElement>(null);
-  // const columnStyles = {
-  //   rank: "w-20",
-  //   address: "flex-1",
-  //   holding: "text-end w-full",
-  //   amount: "text-end",
-  // };
   const columns: ColumnDef<Holder>[] = useMemo(
     () => [
       {
@@ -55,10 +50,10 @@ const HolderContent = () => {
       {
         accessorKey: "address",
         header: () => {
-          return <div className="flex-1">Address</div>;
+          return <div className="text-left w-full pl-2.5">Address</div>;
         },
         cell: ({ row }) => (
-          <div className="lowercase">
+          <div className="lowercase text-sm demo_test:text-base text-left w-full  pl-2.5">
             {formatAddressNew(row.getValue("address"))}
           </div>
         ),
@@ -71,7 +66,7 @@ const HolderContent = () => {
         cell: ({ row }) => {
           const value = row.getValue("holding") as string;
           return (
-            <div className="text-end w-full">
+            <div className="text-end w-full text-sm demo_test:text-base">
               <AdaptiveBalance balance={value.toString()} suffix="%" />
             </div>
           );
@@ -85,7 +80,7 @@ const HolderContent = () => {
         cell: ({ row }) => {
           const value = row.getValue("amount") as string;
           return (
-            <div className="text-end w-full">
+            <div className="text-end w-full text-sm demo_test:text-base">
               <AdaptiveBalance balance={value.toString()} />
             </div>
           );
@@ -177,17 +172,23 @@ const HolderContent = () => {
       <div
         onScroll={(e) => fetchMoreOnBottomReached(e.currentTarget)}
         ref={tableContainerRef}
-        className="relative h-[660px] overflow-y-auto customScrollbar_two"
+        className="relative h-[660px] overflow-y-auto customScrollbar_two font-Switzer"
       >
         <Table>
-          <TableHeader className="bg-white sticky top-0 z-50 grid ">
+          <TableHeader className="bg-white sticky top-0 z-50">
             {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id} className="flex border-none">
+              <TableRow
+                key={headerGroup.id}
+                className="grid border-none"
+                style={{
+                  gridTemplateColumns: GRID_TEMPLATE,
+                }}
+              >
                 {headerGroup.headers.map((header, index) => {
                   return (
                     <TableHead
                       key={index}
-                      className="text-dayT3 text-xs flex items-center px-2.5 justify-between w-full"
+                      className="text-dayT3 text-xs flex items-center px-0"
                     >
                       {header.isPlaceholder
                         ? null
@@ -217,7 +218,8 @@ const HolderContent = () => {
                   ref={(node) => rowVirtualizer.measureElement(node)}
                   key={row.id}
                   style={{
-                    display: "flex",
+                    display: "grid",
+                    gridTemplateColumns: GRID_TEMPLATE,
                     position: "absolute",
                     top: 0,
                     left: 0,
@@ -226,13 +228,7 @@ const HolderContent = () => {
                   }}
                 >
                   {row.getVisibleCells().map((cell) => (
-                    <TableCell
-                      key={cell.id}
-                      className="flex items-center px-2.5 justify-between w-full"
-                      // style={{
-                      //   width: cell.column.getSize(),
-                      // }}
-                    >
+                    <TableCell key={cell.id} className="p-0">
                       {flexRender(
                         cell.column.columnDef.cell,
                         cell.getContext()

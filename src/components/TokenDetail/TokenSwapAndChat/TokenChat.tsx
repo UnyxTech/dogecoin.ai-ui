@@ -9,7 +9,7 @@ import PostComment from "./PostComment";
 import ChatSkeletons from "@/components/skeletons/tokenDetail/ChatSkeletons";
 import RandomAvatar from "@/components/RandomAvatar";
 import { useAgentInfo } from "@/hooks/tokenDetial/useAgentInfo";
-import { ConnectWalletModal } from "@/components/connectWalletModal";
+import { useConnectWalletModalStore } from "@/store/connectWalletModal";
 
 const COLOR = [
   {
@@ -105,7 +105,7 @@ const ChatCard = ({
 
 const TokenChat = ({ characterId }: { characterId: string }) => {
   const { data: tokenInfo } = useAgentInfo(characterId!);
-  const [showModal, setShowModal] = useState(false);
+  const { open: openConnectWallet } = useConnectWalletModalStore();
   const [showChat, setShowChat] = useState<boolean>(true);
   const [isReply, setIsReply] = useState<boolean>(false);
   const [selectedItem, setSelectedItem] = useState<CommentItem | null>(null);
@@ -162,21 +162,18 @@ const TokenChat = ({ characterId }: { characterId: string }) => {
           </div>
         </div>
       ) : (
-        <PostComment characterId={characterId} setShowModal={setShowModal} />
+        <PostComment
+          characterId={characterId}
+          setShowModal={openConnectWallet}
+        />
       )}
       <ReplyComment
         isReply={isReply}
         setIsReply={setIsReply}
         item={selectedItem!}
         characterId={characterId}
-        setShowModal={setShowModal}
+        setShowModal={openConnectWallet}
       />
-      {showModal && (
-        <ConnectWalletModal
-          open={showModal}
-          onClose={() => setShowModal(false)}
-        />
-      )}
     </div>
   );
 };

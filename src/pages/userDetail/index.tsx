@@ -77,7 +77,7 @@ export const UserDetail = () => {
   ]);
 
   return (
-    <Container className="max-w-[1000px]">
+    <Container className="max-w-[1000px] px-4">
       <UserInfo />
       <div className="mt-8">
         <Tabs defaultValue={selectTab} className="w-full outline-none">
@@ -108,7 +108,7 @@ export const UserDetail = () => {
               <LoadingComp loading text="Loading..." />
             )}
             <div className="flex flex-col gap-6 justify-end">
-              <div className="grid grid-cols-5 gap-x-3 gap-y-1">
+              <div className="grid lg:grid-cols-5 gap-x-3 gap-y-1 demo_test:grid-cols-4 md:grid-cols-3 grid-cols-2">
                 {heldAgentsData?.pages[currentPage - 1]?.rows?.map(
                   (agent, index) => (
                     <AgentItemView key={`held_${index}`} agent={agent} />
@@ -187,8 +187,8 @@ const UserInfo: React.FC = () => {
           }}
           className="flex flex-col gap-2 cursor-pointer"
         >
-          <div className="flex items-center gap-2 text-16">
-            {address}
+          <div className="flex items-center gap-2 text-16 w-full">
+            <span className="break-all">{address}</span>
             <img
               className="w-[16px] h-[16px]"
               src="/images/icon_copy.svg"
