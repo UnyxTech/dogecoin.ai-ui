@@ -39,7 +39,12 @@ export function NavBarMobileSearchModal() {
     setSearchStr("");
   };
   return (
-    <Drawer direction="right" activeSnapPoint="false" onOpenChange={reset}>
+    <Drawer
+      direction="right"
+      activeSnapPoint="false"
+      onOpenChange={reset}
+      repositionInputs={false}
+    >
       <DrawerTrigger asChild>
         <Search className="text-black w-5 h-5" />
       </DrawerTrigger>

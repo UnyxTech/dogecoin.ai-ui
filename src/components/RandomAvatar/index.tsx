@@ -3,7 +3,7 @@ import { minidenticon } from "minidenticons";
 import { useMemo } from "react";
 interface RandomAvatarProps {
   address: string;
-  bgColor: string;
+  bgColor?: string;
   saturation?: number;
   lightness?: number;
   className?: string;
@@ -34,7 +34,7 @@ const RandomAvatar = ({
       encodeURIComponent(minidenticon(address, saturation, lightness)),
     [address, saturation, lightness]
   );
-
+  console.log(defaultBgColor);
   return (
     <img
       src={svgURI}

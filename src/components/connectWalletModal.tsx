@@ -142,7 +142,7 @@ export const ConnectWalletModal = ({
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="w-[400px] p-5 bg-gray rounded-md shadow-lg">
+      <DialogContent className="max-w-[90%] sm:w-[400px] p-5 bg-gray rounded-md shadow-lg">
         <DialogHeader>
           <DialogTitle className="text-22 font-SwitzerBold text-first">
             Connect Wallet

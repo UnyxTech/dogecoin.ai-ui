@@ -157,14 +157,26 @@ const Navbar = () => {
                 </span>
               </div>
             ) : (
-              <Button
-                onClick={() => {
-                  setShowModal(!showModal);
-                }}
-                variant="white"
-              >
-                Connect Wallet
-              </Button>
+              <div>
+                <Button
+                  onClick={() => {
+                    setShowModal(!showModal);
+                  }}
+                  variant="white"
+                  className="hidden sm:block"
+                >
+                  Connect Wallet
+                </Button>
+                <div>
+                  <img
+                    src="/images/wallet.svg"
+                    alt=""
+                    onClick={() => {
+                      setShowModal(!showModal);
+                    }}
+                  />
+                </div>
+              </div>
             )}
           </div>
         </div>
