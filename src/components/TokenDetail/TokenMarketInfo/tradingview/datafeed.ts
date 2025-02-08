@@ -112,7 +112,7 @@ export const datafeed = (
         const klineList = await getKLineHistory({
           tokenAddress: tokenInfo.tokenAddress as Address,
           symbol: `${tokenInfo.symbol.toUpperCase()}USDT`,
-          type: "1m",
+          type: resolution,
           startTimestamp: startTime,
           endTimestamp: endTime,
           // startTimestamp: periodParams.from * 1000,
