@@ -155,11 +155,11 @@ const ScrollableTable: React.FC<TableProps> = ({
 }) => {
   const navigate = useNavigate();
   return (
-    <div className="mt-5 w-full h-[calc(100vh-260px)] overflow-hidden">
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead className="w-[30%]">AI agents</TableHead>
+    <div className="mt-5 w-full h-[calc(100vh-260px)] overflow-y-scroll relative">
+      <Table className="border-separate border-spacing-y-3">
+        <TableHeader className="sticky top-0 z-50 bg-[#f5f5fa] border-0 ">
+          <TableRow className="[&>th]:border-b [&>th]:border-border">
+            <TableHead>AI agents</TableHead>
             <TableHead
               onClick={() => {
                 const value = sortMarketValue === "desc" ? "asc" : "desc";
@@ -183,7 +183,7 @@ const ScrollableTable: React.FC<TableProps> = ({
                 />
               </div>
             </TableHead>
-            <TableHead className="w-[14%]">24h</TableHead>
+            <TableHead>24h</TableHead>
             <TableHead
               onClick={() => {
                 const value = sortTotalLockedValue === "desc" ? "asc" : "desc";
@@ -207,94 +207,102 @@ const ScrollableTable: React.FC<TableProps> = ({
                 />
               </div>
             </TableHead>
-            <TableHead className="w-[14%]">Holder count</TableHead>
-            <TableHead className="w-[14%]">24h Vol</TableHead>
+            <TableHead>Holder count</TableHead>
+            <TableHead className="text-start">24h Vol</TableHead>
           </TableRow>
         </TableHeader>
-      </Table>
-
-      <div className="overflow-y-auto h-[calc(100vh-320px)]">
-        <Table>
-          {status === "pending" && (
-            <LoadingComp
-              className="fixed w-full left-0 h-[50%]"
-              size={50}
-              loading
-              text="Loading..."
-            />
-          )}
+        {status === "pending" ? (
+          <LoadingComp
+            className="fixed w-full left-0 h-[50%]"
+            size={50}
+            loading
+            text="Loading..."
+          />
+        ) : (
           <TableBody>
             {data?.pages[currentPage - 1]?.rows?.map(
               (agent: AgentItem, index: number) => (
                 <TableRow
                   key={`agent_${index}`}
-                  className="last:mb-0 border-none"
+                  className={cn(
+                    "bg-white cursor-pointer",
+                    "hover:bg-hover",
+                    "rounded-[4px]",
+                    "[&>td]:border-t [&>td]:border-b [&>td]:border-border ",
+                    "[&>td:first-child]:border-l [&>td:first-child]:border-border ",
+                    "[&>td:last-child]:border-r [&>td:last-child]:border-border "
+                  )}
+                  onClick={() => navigate(`/token/${agent.characterId}`)}
                 >
-                  <TableCell colSpan={6} className="px-0 pt-3 pb-0">
-                    <div
-                      onClick={() => navigate(`/token/${agent.characterId}`)}
-                      className="bg-white cursor-pointer border border-border hover:bg-hover rounded-[4px] flex items-center gap-4"
-                    >
-                      <div className="flex items-center gap-3 w-[30%] p-3">
-                        <img
-                          src={agent.image || "/placeholder.svg"}
-                          alt="icon"
-                          className="w-[132px] h-[132px]"
-                        />
-                        <div className="flex flex-col gap-3">
-                          <div className="text-14 font-SwitzerMedium">
-                            {agent.name}
-                          </div>
-                          <div
-                            className={cn(
-                              "flex items-center gap-[2px] px-[6px] rounded-full",
-                              getColorByAgentType(agent.agentType)
-                            )}
-                          >
-                            <span className="text-10 text-nowrap">
-                              {getTextByAgentType(agent.agentType)}
-                            </span>
-                            <Users
-                              size={10}
-                              color={
-                                agent.agentType === AgentType.Productivity
-                                  ? "white"
-                                  : "black"
-                              }
-                            />
-                          </div>
-                          <span>${agent.symbol}</span>
+                  <TableCell>
+                    <div className="flex items-center gap-3">
+                      <img
+                        src={agent.image || "/placeholder.svg"}
+                        alt="icon"
+                        className="w-[132px] h-[132px]"
+                      />
+                      <div className="flex flex-col gap-3">
+                        <div className="text-14 font-SwitzerMedium">
+                          {agent.name}
                         </div>
+                        <div
+                          className={cn(
+                            "flex items-center gap-[2px] px-[6px] rounded-full",
+                            getColorByAgentType(agent.agentType)
+                          )}
+                        >
+                          <span className="text-10 text-nowrap">
+                            {getTextByAgentType(agent.agentType)}
+                          </span>
+                          <Users
+                            size={10}
+                            color={
+                              agent.agentType === AgentType.Productivity
+                                ? "white"
+                                : "black"
+                            }
+                          />
+                        </div>
+                        <span>${agent.symbol}</span>
                       </div>
-                      <div className="w-[14%]">
-                        $
-                        <AdaptiveBalance balance={agent.marketCap.toString()} />
-                      </div>
-                      <div
-                        className={cn(
-                          "w-[14%]",
-                          new BigNumber(agent.price24Change).gt(0)
-                            ? "text-green"
-                            : "text-red"
-                        )}
-                      >
-                        {agent.price24Change}%
-                      </div>
-                      <div className="w-[14%]">
-                        $<AdaptiveBalance balance={agent.totalLocked} />
-                      </div>
-                      <div className="w-[14%]">{agent.holder}</div>
-                      <div className="w-[14%]">
-                        $<AdaptiveBalance balance={agent.volume24h} />
-                      </div>
+                    </div>
+                  </TableCell>
+                  <TableCell>
+                    <div>
+                      $
+                      <AdaptiveBalance balance={agent.marketCap.toString()} />
+                    </div>
+                  </TableCell>
+                  <TableCell>
+                    <div
+                      className={cn(
+                        new BigNumber(agent.price24Change).gt(0)
+                          ? "text-green"
+                          : "text-red"
+                      )}
+                    >
+                      {agent.price24Change}%
+                    </div>
+                  </TableCell>
+                  <TableCell>
+                    <div>
+                      $<AdaptiveBalance balance={agent.totalLocked} />
+                    </div>
+                  </TableCell>
+                  <TableCell>
+                    <div>{agent.holder}</div>
+                  </TableCell>
+                  <TableCell>
+                    <div>
+                      $<AdaptiveBalance balance={agent.volume24h} />
                     </div>
                   </TableCell>
                 </TableRow>
               )
             )}
           </TableBody>
-        </Table>
-      </div>
+        )}
+      </Table>
     </div>
   );
 };

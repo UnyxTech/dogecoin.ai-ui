@@ -126,6 +126,7 @@ const HolderContent = () => {
     data: flatData,
     columns,
     getCoreRowModel: getCoreRowModel(),
+    enableRowPinning: true,
   });
   const { rows } = table.getRowModel();
   const rowVirtualizer = useVirtualizer({
