@@ -78,14 +78,79 @@ const HomePage = () => {
   };
 
   return (
-    <Container>
-      <div className="flex items-center justify-between pt-4">
+    <Container className="px-4">
+      {/*Mobile createButton */}
+      <Button
+        variant="yellow"
+        onClick={() => {
+          if (!evmAddress) {
+            setShowConnectWallet(true);
+          } else {
+            navigate("/create");
+          }
+        }}
+        className="flex mdd:hidden w-1/2 m-auto"
+      >
+        <img className="w-7 h-7" src="/images/logo2.svg" alt="" />
+        Create AI agent
+      </Button>
+      <div className="flex items-center justify-between pt-4 w-full">
         <AgentTypeSelect
-          className="w-[170px]"
+          className="w-auto"
           showAll
           onChange={(val: string) => setCurrentAgentType(val)}
           selectType={currentAgentType}
         />
+        {/* Mobile header*/}
+        <div className="flex w-full mdd:hidden justify-end text-xs gap-3">
+          <div
+            onClick={() => {
+              const value = sortMarketValue === "desc" ? "asc" : "desc";
+              setSortType({
+                sortBy: "price",
+                value: value,
+              });
+              setSortMarketValue(value);
+            }}
+            className="cursor-pointer hover:text-dayT3"
+          >
+            <div className="flex items-center gap-1">
+              Market cap
+              <img
+                src={
+                  sortMarketValue === "asc"
+                    ? "/images/sort_up.svg"
+                    : "/images/sort_down.svg"
+                }
+                alt=""
+              />
+            </div>
+          </div>
+          <div
+            onClick={() => {
+              const value = sortTotalLockedValue === "desc" ? "asc" : "desc";
+              setSortType({
+                sortBy: "totalValueLocked",
+                value: value,
+              });
+              setSortTotalLockedValue(value);
+            }}
+            className="cursor-pointer hover:text-dayT3"
+          >
+            <div className="flex items-center gap-1">
+              Total value locked
+              <img
+                src={
+                  sortTotalLockedValue === "asc"
+                    ? "/images/sort_up.svg"
+                    : "/images/sort_down.svg"
+                }
+                alt=""
+              />
+            </div>
+          </div>
+        </div>
+        {/* createButton */}
         <Button
           variant="yellow"
           onClick={() => {
@@ -95,11 +160,13 @@ const HomePage = () => {
               navigate("/create");
             }
           }}
+          className="hidden mdd:flex"
         >
           <img className="w-7 h-7" src="/images/logo2.svg" alt="" />
           Create AI agent
         </Button>
       </div>
+      {/* table */}
       <ScrollableTable
         data={data}
         status={isFetching}
@@ -110,6 +177,96 @@ const HomePage = () => {
         setSortMarketValue={setSortMarketValue}
         setSortTotalLockedValue={setSortTotalLockedValue}
       />
+      {/* Mobile List */}
+      <div className="py-3 h-[calc(100vh-260px)] overflow-y-scroll scrollbar-hide mdd:hidden">
+        {isFetching ? (
+          <LoadingComp
+            className="fixed w-full left-0 h-[50%] mdd:hidden flex"
+            size={50}
+            loading
+            text="Loading..."
+          />
+        ) : (
+          data?.pages[currentPage - 1]?.rows?.map(
+            (agent: AgentItem, index: number) => (
+              <div
+                key={`agent_${index}`}
+                onClick={() => navigate(`/token/${agent.characterId}`)}
+                className="flex flex-col gap-3 mt-3 py-3 px-4 bg-white rounded-md"
+              >
+                {/*  name symbol */}
+                <div className="flex items-center gap-3">
+                  <img
+                    src={agent.image || "/placeholder.svg"}
+                    alt="icon"
+                    className="w-[132px] h-[132px]"
+                  />
+                  <div className="flex flex-col gap-3">
+                    <div className="text-14 font-SwitzerMedium">
+                      {agent.name}
+                    </div>
+                    <div
+                      className={cn(
+                        "flex items-center gap-[2px] px-[6px] rounded-full",
+                        getColorByAgentType(agent.agentType)
+                      )}
+                    >
+                      <span className="text-10 text-nowrap">
+                        {getTextByAgentType(agent.agentType)}
+                      </span>
+                      <Users
+                        size={10}
+                        color={
+                          agent.agentType === AgentType.Productivity
+                            ? "white"
+                            : "black"
+                        }
+                      />
+                    </div>
+                    <span className="text-dayT3">${agent.symbol}</span>
+                  </div>
+                </div>
+
+                <div className="flex items-center justify-between text-sm">
+                  <span className="text-dayT3 text-xs">Market cap</span>
+                  <div>
+                    $
+                    <AdaptiveBalance balance={agent.marketCap.toString()} />
+                  </div>
+                </div>
+                <div className="flex items-center justify-between text-sm">
+                  <span className="text-dayT3 text-xs">24h</span>
+                  <div
+                    className={cn(
+                      new BigNumber(agent.price24Change).gt(0)
+                        ? "text-green"
+                        : "text-red"
+                    )}
+                  >
+                    {agent.price24Change}%
+                  </div>
+                </div>
+                <div className="flex items-center justify-between text-sm">
+                  <span className="text-dayT3 text-xs">Total value locked</span>
+                  <div>
+                    $<AdaptiveBalance balance={agent.totalLocked} />
+                  </div>
+                </div>
+                <div className="flex items-center justify-between text-sm">
+                  <span className="text-dayT3 text-xs">Holder count</span>
+                  <div>{agent.holder}</div>
+                </div>
+                <div className="flex items-center justify-between text-sm">
+                  <span className="text-dayT3 text-xs">24 Vol</span>
+                  <div>
+                    $<AdaptiveBalance balance={agent.volume24h} />
+                  </div>
+                </div>
+              </div>
+            )
+          )
+        )}
+      </div>
       <PaginationView
         // totalPages={totalPages}
         showCurrentPage
@@ -154,10 +311,9 @@ const ScrollableTable: React.FC<TableProps> = ({
   setSortTotalLockedValue,
 }) => {
   const navigate = useNavigate();
-  console.log("s", status);
   return (
-    <div className="mt-5 w-full h-[calc(100vh-260px)] overflow-y-scroll">
-      <Table className="border-separate border-spacing-y-3 relative">
+    <div className="mt-5 w-full h-[calc(100vh-260px)] overflow-y-scroll scrollbar-hide hidden mdd:block">
+      <Table className="border-separate border-spacing-y-3 relative ">
         <TableHeader className="sticky top-3 -translate-y-3 z-[50] bg-[#f5f5fa]  border-0">
           <TableRow className="[&>th]:border-b [&>th]:border-border">
             <TableHead className="w-[33%]">AI agents</TableHead>
@@ -212,9 +368,10 @@ const ScrollableTable: React.FC<TableProps> = ({
             <TableHead className="text-start w-[14%]">24h Vol</TableHead>
           </TableRow>
         </TableHeader>
+
         {status ? (
           <LoadingComp
-            className="fixed w-full left-0 h-[50%]"
+            className="fixed w-full left-0 h-[50%] hidden mdd:flex"
             size={50}
             loading
             text="Loading..."

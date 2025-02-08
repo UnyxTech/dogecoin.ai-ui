@@ -47,23 +47,20 @@ export const AgentTypeSelect: React.FC<Props> = ({
               <Users size={16} className="mr-2" />
             ))}
           {selectType ? (
-            <div>{getTextByAgentType(selectType)}</div>
+            <div className="whitespace-nowrap mr-2">
+              {getTextByAgentType(selectType)}
+            </div>
           ) : (
             <span className="text-second">Click to select</span>
           )}
         </div>
       </SelectTrigger>
-      <SelectContent
-        className="w-[170px]"
-        alignOffset={0}
-        side={side ?? "bottom"}
-        sideOffset={4}
-      >
+      <SelectContent alignOffset={0} side={side ?? "bottom"} sideOffset={4}>
         {showAll && (
           <SelectItem value="all">
             <div className="flex items-center gap-3">
               <Users size={16} />
-              <div>All agent</div>
+              <span className="whitespace-nowrap">All agent</span>
             </div>
           </SelectItem>
         )}
@@ -71,7 +68,9 @@ export const AgentTypeSelect: React.FC<Props> = ({
           <SelectItem key={type.value} value={type.value}>
             <div className="flex items-center gap-3">
               <img className="w-[16px] h-[16px]" src={type.icon} alt="" />
-              <div>{getTextByAgentType(type.value)}</div>
+              <span className="whitespace-nowrap">
+                {getTextByAgentType(type.value)}
+              </span>
             </div>
           </SelectItem>
         ))}
