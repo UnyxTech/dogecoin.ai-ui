@@ -78,7 +78,7 @@ const HomePage = () => {
   };
 
   return (
-    <Container className="px-4">
+    <Container className="px-2">
       {/*Mobile createButton */}
       <Button
         variant="yellow"
@@ -114,7 +114,7 @@ const HomePage = () => {
             }}
             className="cursor-pointer hover:text-dayT3"
           >
-            <div className="flex items-center gap-1">
+            <div className="flex items-center gap-0.5">
               Market cap
               <img
                 src={
@@ -137,7 +137,7 @@ const HomePage = () => {
             }}
             className="cursor-pointer hover:text-dayT3"
           >
-            <div className="flex items-center gap-1">
+            <div className="flex items-center gap-0.5">
               Total value locked
               <img
                 src={
@@ -178,7 +178,7 @@ const HomePage = () => {
         setSortTotalLockedValue={setSortTotalLockedValue}
       />
       {/* Mobile List */}
-      <div className="py-3 h-[calc(100vh-260px)] overflow-y-scroll scrollbar-hide mdd:hidden">
+      <div className="mt-3 h-[calc(100vh-260px)] flex flex-col gap-3 overflow-y-scroll scrollbar-hide mdd:hidden">
         {isFetching ? (
           <LoadingComp
             className="fixed w-full left-0 h-[50%] mdd:hidden flex"
@@ -192,7 +192,7 @@ const HomePage = () => {
               <div
                 key={`agent_${index}`}
                 onClick={() => navigate(`/token/${agent.characterId}`)}
-                className="flex flex-col gap-3 mt-3 py-3 px-4 bg-white rounded-md"
+                className="flex flex-col gap-3  py-3 px-4 bg-white rounded-md"
               >
                 {/*  name symbol */}
                 <div className="flex items-center gap-3">
