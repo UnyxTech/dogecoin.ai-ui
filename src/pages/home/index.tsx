@@ -44,7 +44,7 @@ const HomePage = () => {
   const [sortTotalLockedValue, setSortTotalLockedValue] =
     useState<string>("asc");
 
-  const { data, fetchNextPage, status } = useInfiniteQuery({
+  const { data, fetchNextPage, isFetching } = useInfiniteQuery({
     queryKey: ["agents", currentAgentType, sortType.sortBy, sortType.value],
     queryFn: ({ pageParam = currentPage }) =>
       getAllAgentList(
@@ -102,7 +102,7 @@ const HomePage = () => {
       </div>
       <ScrollableTable
         data={data}
-        status={status}
+        status={isFetching}
         currentPage={currentPage}
         sortMarketValue={sortMarketValue}
         sortTotalLockedValue={sortTotalLockedValue}
@@ -134,7 +134,7 @@ export default HomePage;
 
 interface TableProps {
   data: any;
-  status: string;
+  status: boolean;
   currentPage: number;
   sortMarketValue: string;
   sortTotalLockedValue: string;
@@ -154,12 +154,13 @@ const ScrollableTable: React.FC<TableProps> = ({
   setSortTotalLockedValue,
 }) => {
   const navigate = useNavigate();
+  console.log("s", status);
   return (
-    <div className="mt-5 w-full h-[calc(100vh-260px)] overflow-y-scroll relative">
-      <Table className="border-separate border-spacing-y-3">
-        <TableHeader className="sticky top-0 z-50 bg-[#f5f5fa] border-0 ">
+    <div className="mt-5 w-full h-[calc(100vh-260px)] overflow-y-scroll">
+      <Table className="border-separate border-spacing-y-3 relative">
+        <TableHeader className="sticky top-3 -translate-y-3 z-[50] bg-[#f5f5fa]  border-0">
           <TableRow className="[&>th]:border-b [&>th]:border-border">
-            <TableHead>AI agents</TableHead>
+            <TableHead className="w-[33%]">AI agents</TableHead>
             <TableHead
               onClick={() => {
                 const value = sortMarketValue === "desc" ? "asc" : "desc";
@@ -207,11 +208,11 @@ const ScrollableTable: React.FC<TableProps> = ({
                 />
               </div>
             </TableHead>
-            <TableHead>Holder count</TableHead>
-            <TableHead className="text-start">24h Vol</TableHead>
+            <TableHead className="w-[14%]">Holder count</TableHead>
+            <TableHead className="text-start w-[14%]">24h Vol</TableHead>
           </TableRow>
         </TableHeader>
-        {status === "pending" ? (
+        {status ? (
           <LoadingComp
             className="fixed w-full left-0 h-[50%]"
             size={50}
@@ -219,7 +220,7 @@ const ScrollableTable: React.FC<TableProps> = ({
             text="Loading..."
           />
         ) : (
-          <TableBody>
+          <TableBody className="-translate-y-3">
             {data?.pages[currentPage - 1]?.rows?.map(
               (agent: AgentItem, index: number) => (
                 <TableRow
@@ -227,10 +228,11 @@ const ScrollableTable: React.FC<TableProps> = ({
                   className={cn(
                     "bg-white cursor-pointer",
                     "hover:bg-hover",
-                    "rounded-[4px]",
+                    "overflow-hidden rounded-lg",
                     "[&>td]:border-t [&>td]:border-b [&>td]:border-border ",
-                    "[&>td:first-child]:border-l [&>td:first-child]:border-border ",
-                    "[&>td:last-child]:border-r [&>td:last-child]:border-border "
+                    "[&>td:first-child]:border-l [&>td:first-child]:border-border",
+                    "[&>td:last-child]:border-r [&>td:last-child]:border-border",
+                    "[&>td:last-child]:rounded-md [&>td:first-child]:rounded-md"
                   )}
                   onClick={() => navigate(`/token/${agent.characterId}`)}
                 >
