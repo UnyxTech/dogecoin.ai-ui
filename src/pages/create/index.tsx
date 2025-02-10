@@ -82,7 +82,6 @@ const formSchema = z.object({
     })
     .optional()
     .or(z.literal("")),
-
   discordLink: z
     .string()
     .regex(
@@ -151,6 +150,7 @@ const CreatePage = () => {
   });
 
   function onSubmit(values: z.infer<typeof formSchema>) {
+    if (!values.file) return;
     const params: AgentInfo = {
       name: values.agentName,
       symbol: values.ticker,
@@ -183,7 +183,6 @@ const CreatePage = () => {
       setImage(imageUrl);
       if (file && file.type.startsWith("image/")) {
         const formData = new FormData();
-        console.log(file);
         formData.append("file", file);
         uploadMutation.mutate(formData);
       } else {
@@ -493,7 +492,7 @@ const CreatePage = () => {
                   className="w-full gap-2"
                   size="lg"
                   loading={createAgentMutation.status === "pending"}
-                  disabled={!form.formState.isValid || !image}
+                  disabled={!form.formState.isValid || !form.getValues().file}
                 >
                   <span>🚀</span> Continue
                 </Button>
