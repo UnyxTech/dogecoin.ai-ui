@@ -183,13 +183,13 @@ export const getKlineType = (resolution: string): KlineTime => {
       return "eight_hour";
     case "720":
       return "twelve_hour";
-    case "D":
+    case "1D":
       return "one_day";
     case "3D":
       return "three_day";
-    case "W":
+    case "1W":
       return "one_week";
-    case "M":
+    case "1M":
       return "one_month";
     default:
       return "one_minute";

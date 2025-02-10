@@ -20,6 +20,8 @@ import { GetAgentInfoResponse } from "@/api/types";
 import AdaptiveBalance from "@/components/adaptiveBalance";
 import { toast } from "@/hooks/use-toast";
 import { useConnectWalletModalStore } from "@/store/connectWalletModal";
+import { useBondingCurveCalcInfo } from "@/hooks/tokenDetial/useBondingCurveCalc";
+
 const TokenLogoSwitch = ({
   isBuy,
   dogeImage,
@@ -60,6 +62,8 @@ const TokenSwap = ({ tokenInfo }: { tokenInfo: GetAgentInfoResponse }) => {
     isBuy: true,
     amount: "",
   });
+  const { maxBuyToken } = useBondingCurveCalcInfo(tokenInfo.tokenAddress);
+
   // amountOut
   // const { getBuyAmountOut, getSellAmountOut } = useAIContract();
   const { data: amountOut, refetch: refetchAmount } = useGetAmountOutQuery({
@@ -120,7 +124,7 @@ const TokenSwap = ({ tokenInfo }: { tokenInfo: GetAgentInfoResponse }) => {
     }));
   };
   // Swap
-  const { mutateAsync: treadeAsync, isPending: isTradePending } = useTrade({
+  const { mutateAsync: tradeAsync, isPending: isTradePending } = useTrade({
     onSuccess: (data) => {
       setTradeData((state) => ({ ...state, amount: "0" }));
       toast({
@@ -146,7 +150,6 @@ const TokenSwap = ({ tokenInfo }: { tokenInfo: GetAgentInfoResponse }) => {
       refetchAmount();
     },
   });
-
   const handleTrade = async () => {
     // let amountOut;
     // if (tradeData.isBuy) {
@@ -163,14 +166,24 @@ const TokenSwap = ({ tokenInfo }: { tokenInfo: GetAgentInfoResponse }) => {
     //   });
     //   amountOut = sellAmountOut[0];
     // }
+    refetchAmount();
     if (amountOut?.length === 0) {
-      console.log();
+      return;
     }
-    await treadeAsync({
+    let maxAmountOut;
+    if (tradeData.isBuy) {
+      maxAmountOut = amountOut![0] < maxBuyToken ? amountOut![0] : maxBuyToken;
+    }
+    if (!tradeData.isBuy) {
+      maxAmountOut = amountOut![0];
+    }
+    console.log("maxAmountOut", maxAmountOut);
+    console.log("amountIn", parseUnits(tradeData.amount, 18));
+    await tradeAsync({
       token: tokenInfo?.tokenAddress as Address,
       amount: parseUnits(tradeData.amount, 18),
       isBuy: tradeData.isBuy,
-      amountOutMinimum: (amountOut![0] * (100n - defaultSlippage)) / 100n,
+      amountOutMinimum: (maxAmountOut! * (100n - defaultSlippage)) / 100n,
     });
   };
   return (

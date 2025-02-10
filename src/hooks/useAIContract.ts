@@ -74,7 +74,7 @@ export function useAIContract() {
       };
     },
     getCreateFee: async () => {
-      return (await getViemContract().read._fee()) as bigint
+      return (await getViemContract().read._fee()) as bigint;
     },
     getBuyAmountOut: async ({
       token,
