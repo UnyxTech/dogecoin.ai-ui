@@ -1,11 +1,10 @@
-import { getIntervalByResolution, getKlineType } from "@/utils";
 import { SUPPORTED_RESOLUTIONS } from ".";
 import {
   ChartingLibraryWidgetOptions,
   LibrarySymbolInfo,
   ResolutionString,
 } from "../../../../../public/charting_library/charting_library";
-import { getKLineHistory, getKLineLast } from "@/api/api";
+import { getKLineHistory } from "@/api/api";
 import { Address } from "viem";
 import { GetAgentInfoResponse } from "@/api/types";
 // const getResolutionInSeconds = (resolution: string): number => {
