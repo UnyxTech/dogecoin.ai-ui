@@ -26,7 +26,7 @@ export interface KLineHistoryParams {
   tokenAddress: Address;
   symbol: string;
   type: string;
-  startTimestamp: number;
+  countBack: number;
   endTimestamp?: number;
 }
 export interface KLineParams {

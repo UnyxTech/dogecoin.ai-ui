@@ -8,19 +8,19 @@ import {
 import { getKLineHistory, getKLineLast } from "@/api/api";
 import { Address } from "viem";
 import { GetAgentInfoResponse } from "@/api/types";
-const getResolutionInSeconds = (resolution: string): number => {
-  const resolutionMap: { [key: string]: number } = {
-    "1": 60,
-    "5": 300,
-    "15": 900,
-    "30": 1800,
-    "60": 3600,
-    "240": 14400,
-    D: 86400,
-    W: 604800,
-  };
-  return resolutionMap[resolution] || 60;
-};
+// const getResolutionInSeconds = (resolution: string): number => {
+//   const resolutionMap: { [key: string]: number } = {
+//     "1": 60,
+//     "5": 300,
+//     "15": 900,
+//     "30": 1800,
+//     "60": 3600,
+//     "240": 14400,
+//     D: 86400,
+//     W: 604800,
+//   };
+//   return resolutionMap[resolution] || 60;
+// };
 export const datafeed = (
   tokenInfo: GetAgentInfoResponse
 ): ChartingLibraryWidgetOptions["datafeed"] => {
@@ -105,19 +105,14 @@ export const datafeed = (
       onHistoryCallback
     ) => {
       try {
-        const resolutionInSeconds = getResolutionInSeconds(resolution);
-        const timeRange = resolutionInSeconds * 2000;
         const endTime = periodParams.to * 1000;
-        const startTime = endTime - timeRange * 1000;
+        const countBack = periodParams.countBack;
         const klineList = await getKLineHistory({
           tokenAddress: tokenInfo.tokenAddress as Address,
           symbol: `${tokenInfo.symbol.toUpperCase()}USDT`,
           type: resolution,
-          startTimestamp: startTime,
+          countBack: countBack,
           endTimestamp: endTime,
-          // startTimestamp: periodParams.from * 1000,
-          // endTimestamp: periodParams.to * 1000,
-          // endTimestamp: Math.floor(periodParams.to),
         });
         console.log("getKLineHistory", klineList, resolution);
         if (klineList.length > 0) {
@@ -146,21 +141,24 @@ export const datafeed = (
     ) => {
       const fetchData = async () => {
         try {
-          const now = Math.floor(Date.now() / 1000);
-          const periodInterval = getIntervalByResolution(resolution) / 1000;
-          const lastValidKLine = await getKLineLast({
+          const now = Date.now();
+          const lastKLine = await getKLineHistory({
             tokenAddress: tokenInfo.tokenAddress as Address,
-            type: getKlineType(resolution),
-            startTimestamp: (now - periodInterval) * 1000,
+            symbol: `${tokenInfo.symbol.toUpperCase()}USDT`,
+            type: resolution,
+            countBack: 20,
+            endTimestamp: now + 60 * 100000,
           });
-          if (lastValidKLine) {
+          if (lastKLine && lastKLine.length !== 0) {
             const bar = {
-              time: new Date(lastValidKLine.timestamp).getTime(),
-              open: Number(lastValidKLine.o),
-              high: Number(lastValidKLine.h),
-              low: Number(lastValidKLine.l),
-              close: Number(lastValidKLine.c),
-              volume: Number(lastValidKLine.v),
+              time: new Date(
+                lastKLine[lastKLine.length - 1].timestamp
+              ).getTime(),
+              open: Number(lastKLine[lastKLine.length - 1].o),
+              high: Number(lastKLine[lastKLine.length - 1].h),
+              low: Number(lastKLine[lastKLine.length - 1].l),
+              close: Number(lastKLine[lastKLine.length - 1].c),
+              volume: Number(lastKLine[lastKLine.length - 1].v),
             };
             onRealtimeCallback(bar);
           }
@@ -169,7 +167,7 @@ export const datafeed = (
         }
       };
       await fetchData();
-      const intervalId = setInterval(fetchData, 5 * 1000);
+      const intervalId = setInterval(fetchData, 1 * 1000);
       subscriptions.set(listenerGuid, intervalId);
       return listenerGuid;
     },
