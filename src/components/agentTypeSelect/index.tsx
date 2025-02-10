@@ -66,9 +66,9 @@ export const AgentTypeSelect: React.FC<Props> = ({
         )}
         {agentTypes.map((type) => (
           <SelectItem key={type.value} value={type.value}>
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-3 ">
               <img className="w-[16px] h-[16px]" src={type.icon} alt="" />
-              <span className="whitespace-nowrap">
+              <span className="whitespace-nowrap mr-2">
                 {getTextByAgentType(type.value)}
               </span>
             </div>

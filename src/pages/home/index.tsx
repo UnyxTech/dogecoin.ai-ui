@@ -96,7 +96,7 @@ const HomePage = () => {
       </Button>
       <div className="flex items-center justify-between pt-4 w-full">
         <AgentTypeSelect
-          className="w-auto"
+          className="min-w-[min-content] max-w-[max-content]"
           showAll
           onChange={(val: string) => setCurrentAgentType(val)}
           selectType={currentAgentType}
