@@ -27,8 +27,8 @@ function App() {
     <>
       {isDev && (
         <div className="fixed z-[99999] bottom-0 left-0 p-2 bg-black text-white text-sm z-50">
-          <span className="block xs:hidden">XS</span>
-          <span className="hidden xs:block sm:hidden">XS</span>
+          <span className="block xs:hidden">XS1</span>
+          <span className="hidden xs:block sm:hidden">XS2</span>
           <span className="hidden sm:block md:hidden">SM</span>
           <span className="hidden md:block mdd:hidden">MD</span>
           <span className="hidden md:block placeHolder_screen:hidden">mdd</span>

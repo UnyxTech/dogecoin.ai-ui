@@ -163,12 +163,11 @@ const Navbar = () => {
                     setShowModal(!showModal);
                   }}
                   variant="white"
-                  // className="hidden sm:block"
-                  className="text-sm py-1 px-2 leading-[140%] h-9"
+                  className="hidden sm:block"
                 >
                   Connect Wallet
                 </Button>
-                {/* <div className="sm:hidden">
+                <div className="sm:hidden">
                   <img
                     src="/images/wallet.svg"
                     alt=""
@@ -176,7 +175,7 @@ const Navbar = () => {
                       setShowModal(!showModal);
                     }}
                   />
-                </div> */}
+                </div>
               </div>
             )}
           </div>
