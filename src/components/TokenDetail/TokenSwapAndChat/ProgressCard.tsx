@@ -26,8 +26,7 @@ export function ProgressCard() {
         <p className="text-dayT3 font-Switzer">
           An additional&nbsp;
           <span className="text-dayT1">
-            {Number(tokenInfo?.graduatedNeedAmount)?.toLocaleString("en-US") ??
-              "0"}
+            {Number(tokenInfo?.graduatedNeedAmount)?.toFixed(6) ?? "0"}
             &nbsp;Doge are required
           </span>
           &nbsp; before all the liquidity from the bonding curve will be

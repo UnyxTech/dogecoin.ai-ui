@@ -52,7 +52,16 @@ const PostContent = ({ agentsPosts }: { agentsPosts: GetPostsResponse }) => {
               />
             )}
           />
-        ) : null}
+        ) : (
+          <div className="mt-20 w-full flex flex-col items-center justify-center gap-[10px]">
+            <img
+              className="w-[120px] h-[120px]"
+              src="/images/no_data.svg"
+              alt=""
+            />
+            <span className="text-second">No search result</span>
+          </div>
+        )}
       </div>
       {selectedImage && (
         <ImageModal

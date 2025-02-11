@@ -166,7 +166,7 @@ const TokenSwap = ({ tokenInfo }: { tokenInfo: GetAgentInfoResponse }) => {
     //   });
     //   amountOut = sellAmountOut[0];
     // }
-    refetchAmount();
+    await refetchAmount();
     if (amountOut?.length === 0) {
       return;
     }
@@ -177,8 +177,6 @@ const TokenSwap = ({ tokenInfo }: { tokenInfo: GetAgentInfoResponse }) => {
     if (!tradeData.isBuy) {
       maxAmountOut = amountOut![0];
     }
-    console.log("maxAmountOut", maxAmountOut);
-    console.log("amountIn", parseUnits(tradeData.amount, 18));
     await tradeAsync({
       token: tokenInfo?.tokenAddress as Address,
       amount: parseUnits(tradeData.amount, 18),
