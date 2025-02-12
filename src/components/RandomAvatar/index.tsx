@@ -34,7 +34,7 @@ const RandomAvatar = ({
       encodeURIComponent(minidenticon(address, saturation, lightness)),
     [address, saturation, lightness]
   );
-  console.log(defaultBgColor);
+
   return (
     <img
       src={svgURI}

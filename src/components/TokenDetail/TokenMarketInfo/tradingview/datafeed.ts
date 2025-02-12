@@ -113,7 +113,6 @@ export const datafeed = (
           countBack: countBack,
           endTimestamp: endTime,
         });
-        console.log("getKLineHistory", klineList, resolution);
         if (klineList.length > 0) {
           const bars = klineList.map((item) => ({
             time: new Date(item.timestamp).getTime(),

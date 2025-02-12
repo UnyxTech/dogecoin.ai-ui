@@ -92,7 +92,6 @@ const HolderContent = () => {
   const { data, isFetching, fetchNextPage, status } = useInfiniteQuery({
     queryKey: ["queryHolders"],
     queryFn: async ({ pageParam = 1 }) => {
-      console.log("pageParam", pageParam);
       const fetchedData = await getAgentsHolder({
         characterId: characterId!,
         pageSize: fetchSize,
