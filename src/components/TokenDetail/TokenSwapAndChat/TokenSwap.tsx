@@ -184,6 +184,8 @@ const TokenSwap = ({ tokenInfo }: { tokenInfo: GetAgentInfoResponse }) => {
       amountOutMinimum: (maxAmountOut! * (100n - defaultSlippage)) / 100n,
     });
   };
+  // todo!()
+  // const handeUniswapTrade = async () => {};
   return (
     <div className="p-6 pb-8 bg-white">
       <h1 className="text-2xl text-dayT1 font-SwitzerBold">Swap</h1>
