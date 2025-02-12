@@ -1,5 +1,5 @@
 // import { CircleAlert } from "lucide-react";
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { Input } from "@/components/ui/input";
 // import { HoverCard, HoverCardTrigger } from "@/components/ui/hover-card";
 // import { WrapperHoverCardConnect } from "@/components/ui/custom/WrapperHoverCardConnect";
@@ -12,7 +12,7 @@ import { Address, erc20Abi, formatUnits, parseUnits } from "viem";
 import {
   // useAIContract,
   useGetAmountOutQuery,
-  useTrade,
+  useDogeAiTrade,
 } from "@/hooks/useAIContract";
 import { BASE_TOKEN } from "@/constant";
 import { debounce } from "lodash";
@@ -21,6 +21,7 @@ import AdaptiveBalance from "@/components/adaptiveBalance";
 import { toast } from "@/hooks/use-toast";
 import { useConnectWalletModalStore } from "@/store/connectWalletModal";
 import { useBondingCurveCalcInfo } from "@/hooks/tokenDetial/useBondingCurveCalc";
+import { useUniswapTrade } from "@/hooks/useUniswapSingleSwap";
 
 const TokenLogoSwitch = ({
   isBuy,
@@ -62,7 +63,11 @@ const TokenSwap = ({ tokenInfo }: { tokenInfo: GetAgentInfoResponse }) => {
     isBuy: true,
     amount: "",
   });
-  const { maxBuyToken } = useBondingCurveCalcInfo(tokenInfo.tokenAddress);
+  const {
+    maxBuyToken,
+    refetch: refetchMaxBuyToken,
+    error: fetchMaxBuyTokenError,
+  } = useBondingCurveCalcInfo(tokenInfo.tokenAddress);
 
   // amountOut
   // const { getBuyAmountOut, getSellAmountOut } = useAIContract();
@@ -123,53 +128,39 @@ const TokenSwap = ({ tokenInfo }: { tokenInfo: GetAgentInfoResponse }) => {
       amount: formattedValue,
     }));
   };
-  // Swap
-  const { mutateAsync: tradeAsync, isPending: isTradePending } = useTrade({
-    onSuccess: (data) => {
-      setTradeData((state) => ({ ...state, amount: "0" }));
-      toast({
-        title: "Transaction Successful",
-        variant: "default",
-        description: (
-          <div>
-            <p className="mb-2">Your transaction has been confirmed.</p>
-            <a
-              href={`https://sepolia.basescan.org/tx/${data}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-blue-500 hover:text-blue-600 underline"
-            >
-              View
-            </a>
-          </div>
-        ),
-        duration: 3000,
-      });
-      refetchDogeBalance();
-      refetchMemeTokenBalance();
-      refetchAmount();
-    },
-  });
-  const handleTrade = async () => {
-    // let amountOut;
-    // if (tradeData.isBuy) {
-    //   const buyAmountOut = await getBuyAmountOut({
-    //     token: "0x650b89f5e67927fc9081F211B2a2fAd9487D1A69",
-    //     amountIn: parseUnits(tradeData.amount, 18),
-    //   });
-    //   amountOut = buyAmountOut[0];
-    // }
-    // if (!tradeData.isBuy) {
-    //   const sellAmountOut = await getSellAmountOut({
-    //     token: "0x650b89f5e67927fc9081F211B2a2fAd9487D1A69",
-    //     amountIn: parseUnits(tradeData.amount, 18),
-    //   });
-    //   amountOut = sellAmountOut[0];
-    // }
-    await refetchAmount();
-    if (amountOut?.length === 0) {
-      return;
+  // Doge AI Swap
+  const { mutateAsync: dogeAiTradeAsync, isPending: isDogeAiTradePending } =
+    useDogeAiTrade({
+      onSuccess: (data) => {
+        setTradeData((state) => ({ ...state, amount: "0" }));
+        toast({
+          title: "Transaction Successful",
+          variant: "default",
+          description: (
+            <div>
+              <p className="mb-2">Your transaction has been confirmed.</p>
+              <a
+                href={`https://sepolia.basescan.org/tx/${data}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-blue-500 hover:text-blue-600 underline"
+              >
+                View
+              </a>
+            </div>
+          ),
+          duration: 3000,
+        });
+        refetchDogeBalance();
+        refetchMemeTokenBalance();
+        refetchAmount();
+      },
+    });
+  const handleDogeAiTrade = useCallback(async () => {
+    if (!refetchMaxBuyToken) {
+      return console.log("refetchMaxBuyToken Error", fetchMaxBuyTokenError);
     }
+    await refetchMaxBuyToken();
     let maxAmountOut;
     if (tradeData.isBuy) {
       maxAmountOut = amountOut![0] < maxBuyToken ? amountOut![0] : maxBuyToken;
@@ -177,15 +168,70 @@ const TokenSwap = ({ tokenInfo }: { tokenInfo: GetAgentInfoResponse }) => {
     if (!tradeData.isBuy) {
       maxAmountOut = amountOut![0];
     }
-    await tradeAsync({
+    await dogeAiTradeAsync({
       token: tokenInfo?.tokenAddress as Address,
       amount: parseUnits(tradeData.amount, 18),
       isBuy: tradeData.isBuy,
       amountOutMinimum: (maxAmountOut! * (100n - defaultSlippage)) / 100n,
     });
-  };
-  // todo!()
-  // const handeUniswapTrade = async () => {};
+  }, [
+    amountOut,
+    fetchMaxBuyTokenError,
+    maxBuyToken,
+    refetchMaxBuyToken,
+    tokenInfo?.tokenAddress,
+    dogeAiTradeAsync,
+    tradeData.amount,
+    tradeData.isBuy,
+  ]);
+  // uniswap Swap
+  const { mutateAsync: uniswapTradeAsync, isPending: isUniswapTradePending } =
+    useUniswapTrade({
+      onSuccess: (data) => {
+        setTradeData((state) => ({ ...state, amount: "0" }));
+        toast({
+          title: "Transaction Successful",
+          variant: "default",
+          description: (
+            <div>
+              <p className="mb-2">Your transaction has been confirmed.</p>
+              <a
+                href={`https://sepolia.basescan.org/tx/${data}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-blue-500 hover:text-blue-600 underline"
+              >
+                View
+              </a>
+            </div>
+          ),
+          duration: 3000,
+        });
+        refetchDogeBalance();
+        refetchMemeTokenBalance();
+        refetchAmount();
+      },
+    });
+  const handleUniswapTrade = useCallback(async () => {
+    await uniswapTradeAsync({
+      isBuy: tradeData.isBuy,
+      token: tokenInfo?.tokenAddress as Address,
+      amountIn: parseUnits(tradeData.amount, 18),
+      amountOutMinimum: 0n,
+      sqrtPriceLimitX96: 0n,
+    });
+  }, [
+    tokenInfo?.tokenAddress,
+    tradeData.amount,
+    tradeData.isBuy,
+    uniswapTradeAsync,
+  ]);
+  const handleTrade = useCallback(async () => {
+    if (tokenInfo?.pairAddress) {
+      return await handleUniswapTrade();
+    }
+    return await handleDogeAiTrade();
+  }, [handleDogeAiTrade, handleUniswapTrade, tokenInfo?.pairAddress]);
   return (
     <div className="p-6 pb-8 bg-white">
       <h1 className="text-2xl text-dayT1 font-SwitzerBold">Swap</h1>
@@ -292,7 +338,7 @@ const TokenSwap = ({ tokenInfo }: { tokenInfo: GetAgentInfoResponse }) => {
       {account.address ? (
         <Button
           key="trade"
-          onClick={() => handleTrade()}
+          onClick={async () => await handleTrade()}
           disabled={!isEfficientBalance}
           variant={
             !isEfficientBalance
@@ -302,10 +348,12 @@ const TokenSwap = ({ tokenInfo }: { tokenInfo: GetAgentInfoResponse }) => {
               : "red"
           }
           className={`trade-button py-5 mt-4 ${
-            isTradePending ? "opacity-50 pointer-events-none" : ""
+            isDogeAiTradePending || isUniswapTradePending
+              ? "opacity-50 pointer-events-none"
+              : ""
           }`}
         >
-          {isTradePending ? (
+          {isDogeAiTradePending || isUniswapTradePending ? (
             <div className="flex items-center gap-2 ">
               <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
               <span className="text-white [-webkit-text-stroke:1.5px_#12122A] [text-stroke:1.5px_#12122A]  font-WendyOne text-xl leading-[140%] tracking-wide capitalize">

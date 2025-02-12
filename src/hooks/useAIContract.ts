@@ -83,10 +83,7 @@ export function useAIContract() {
       token: Address;
       amountIn: bigint;
     }) => {
-      return (await getViemContract().read.getBuyAmountOut([
-        token,
-        amountIn,
-      ])) as bigint[];
+      return await getViemContract().read.getBuyAmountOut([token, amountIn]);
     },
     getInitLiquidity: async () => {
       return (await getViemContract().read._initialVirtualliquidity()) as bigint;
@@ -140,7 +137,7 @@ export function useAIContract() {
         contractAddress: CONTRACT_AI_ADDRESS,
       });
       const { request } = await publicClient.simulateContract({
-        value: 0n,
+        value: undefined,
         account: evmAddress! as Address,
         address: CONTRACT_AI_ADDRESS,
         abi: dogeCoinAbi,
@@ -163,10 +160,7 @@ export function useAIContract() {
       token: Address;
       amountIn: bigint;
     }) => {
-      return (await getViemContract().read.getSellAmountOut([
-        token,
-        amountIn,
-      ])) as bigint[];
+      return await getViemContract().read.getSellAmountOut([token, amountIn]);
     },
   };
 }
@@ -212,23 +206,22 @@ export function useGetGraduateThresholdQuery() {
   });
 }
 // writeContract
-export function useTrade(
-  {
-    onSuccess,
-  }: {
-    onSuccess?:
-      | ((
-          data: `0x${string}`,
-          variables: {
-            token: Address;
-            amount: bigint;
-            isBuy: boolean;
-            amountOutMinimum: bigint;
-          },
-          context: unknown
-        ) => Promise<unknown> | unknown)
-      | undefined;
-  } = {},
+export function useDogeAiTrade({
+  onSuccess,
+  onError,
+}: {
+  onSuccess?:
+    | ((
+        data: `0x${string}`,
+        variables: {
+          token: Address;
+          amount: bigint;
+          isBuy: boolean;
+          amountOutMinimum: bigint;
+        },
+        context: unknown
+      ) => Promise<unknown> | unknown)
+    | undefined;
   onError?:
     | ((
         error: Error,
@@ -240,8 +233,8 @@ export function useTrade(
         },
         context: unknown
       ) => Promise<unknown> | unknown)
-    | undefined
-) {
+    | undefined;
+} = {}) {
   const aiContract = useAIContract();
   return useMutation({
     mutationFn: async ({

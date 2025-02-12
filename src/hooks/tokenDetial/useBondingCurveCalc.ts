@@ -1,4 +1,5 @@
-import { Address } from "viem";
+import { QueryObserverResult, RefetchOptions } from "@tanstack/react-query";
+import { Address, ReadContractErrorType } from "viem";
 import { useReadContract } from "wagmi";
 
 // function getReserves()public view returns (uint256, uint256, uint256){return(_pool.reserve，_pool.reserve1，-pool.k);
@@ -24,6 +25,14 @@ interface BondingCurveInfo {
   k: bigint;
   isLoading: boolean;
   error: Error | null;
+  refetch?: (
+    options?: RefetchOptions
+  ) => Promise<
+    QueryObserverResult<
+      readonly [bigint, bigint, bigint],
+      ReadContractErrorType
+    >
+  >;
 }
 
 /**
@@ -34,7 +43,7 @@ interface BondingCurveInfo {
 export const useBondingCurveCalcInfo = (
   tokenAddress: string
 ): BondingCurveInfo => {
-  const { data, isLoading, error } = useReadContract({
+  const { data, isLoading, error, refetch } = useReadContract({
     abi: TOKEN_ABI,
     args: [],
     address: tokenAddress as Address,
@@ -48,6 +57,7 @@ export const useBondingCurveCalcInfo = (
       k: BigInt(0),
       isLoading,
       error: error as Error | null,
+      refetch: undefined,
     };
   }
   const [reserve0, reserve1, kValue] = data;
@@ -59,5 +69,6 @@ export const useBondingCurveCalcInfo = (
     k: kValue,
     isLoading,
     error: error as Error | null,
+    refetch,
   };
 };

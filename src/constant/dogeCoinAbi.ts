@@ -984,4 +984,4 @@ export const dogeCoinAbi = [
     stateMutability: "view",
     type: "function",
   },
-];
+] as const;
