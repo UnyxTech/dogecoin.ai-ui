@@ -108,7 +108,7 @@ const Navbar = () => {
               />
             )}
             {searchStr && (
-              <div className="absolute top-[calc(100%+10px)] max-h-[482px] overflow-y-auto p-6 min-w-[680px] left-0 w-full bg-white rounded-[4px] shadow-lg z-50">
+              <div className="absolute top-[calc(100%+10px)] max-h-[482px] overflow-y-auto p-6 min-w-[680px] left-0 w-full bg-white rounded-[4px] shadow-lg z-[100]">
                 {searchMutation.status === "pending" ? (
                   <LoadingComp loading size={32} className="py-6" />
                 ) : (
