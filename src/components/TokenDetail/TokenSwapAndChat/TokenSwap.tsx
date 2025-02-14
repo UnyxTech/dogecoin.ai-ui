@@ -78,7 +78,7 @@ const TokenSwap = ({ tokenInfo }: { tokenInfo: GetAgentInfoResponse }) => {
     isBuy: tradeData.isBuy,
     pairAddress: tokenInfo?.pairAddress as Address,
   });
-  const { data: uniswapQuoteData } = useQuote({
+  const { data: uniswapQuoteData, refetch: refetchQuote } = useQuote({
     tokenAddress: tokenInfo?.tokenAddress as Address,
     amount: debouncedAmount,
     isBuy: tradeData.isBuy,
@@ -217,7 +217,7 @@ const TokenSwap = ({ tokenInfo }: { tokenInfo: GetAgentInfoResponse }) => {
         });
         refetchDogeBalance();
         refetchMemeTokenBalance();
-        refetchAmount();
+        refetchQuote();
       },
     });
   const handleUniswapTrade = useCallback(async () => {
