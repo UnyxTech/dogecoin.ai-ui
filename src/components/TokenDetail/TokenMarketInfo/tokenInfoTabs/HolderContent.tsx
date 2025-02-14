@@ -24,7 +24,7 @@ import AdaptiveBalance from "@/components/adaptiveBalance";
 import { LoadingComp } from "@/components/loading";
 
 type Holder = {
-  rank: string;
+  rank: number;
   address: Address;
   holding: number;
   amount: number;
@@ -112,8 +112,8 @@ const HolderContent = () => {
   const flatData = useMemo(
     () =>
       data?.pages?.flatMap((page) =>
-        page.rows.map((holder) => ({
-          rank: "1",
+        page.rows.map((holder, index) => ({
+          rank: index + 1,
           address: holder.holderAddress as Address,
           holding: parseFloat(holder.holdingPercent),
           amount: parseFloat(holder.holdingAmount),
