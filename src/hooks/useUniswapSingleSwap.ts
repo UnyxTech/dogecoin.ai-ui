@@ -129,7 +129,7 @@ export function useUniswapTrade({
           tokenIn,
           tokenOut,
           amountIn,
-          amountOutMinimum: 0n,
+          amountOutMinimum: amountOutMinimum,
           sqrtPriceLimitX96: 0n,
         };
         console.log("params", params);

@@ -172,10 +172,12 @@ export function useGetAmountOutQuery({
   amountIn,
   isBuy,
   refetchInterval = 15000,
+  pairAddress,
 }: {
   token: Address;
   amountIn: bigint;
   isBuy: boolean;
+  pairAddress?: Address;
   refetchInterval?: number;
 }) {
   const aiContract = useAIContract();
@@ -190,7 +192,11 @@ export function useGetAmountOutQuery({
       }
     },
     enabled: Boolean(
-      token && amountIn && amountIn > 0n && typeof isBuy === "boolean"
+      token &&
+        amountIn &&
+        amountIn > 0n &&
+        typeof isBuy === "boolean" &&
+        !pairAddress
     ),
     refetchInterval: refetchInterval,
   });

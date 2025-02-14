@@ -22,6 +22,7 @@ import { toast } from "@/hooks/use-toast";
 import { useConnectWalletModalStore } from "@/store/connectWalletModal";
 import { useBondingCurveCalcInfo } from "@/hooks/tokenDetial/useBondingCurveCalc";
 import { useUniswapTrade } from "@/hooks/useUniswapSingleSwap";
+import { useQuote } from "@/hooks/useQuote";
 
 const TokenLogoSwitch = ({
   isBuy,
@@ -75,6 +76,13 @@ const TokenSwap = ({ tokenInfo }: { tokenInfo: GetAgentInfoResponse }) => {
     token: tokenInfo?.tokenAddress as Address,
     amountIn: debouncedAmount,
     isBuy: tradeData.isBuy,
+    pairAddress: tokenInfo?.pairAddress as Address,
+  });
+  const { data: uniswapQuoteData } = useQuote({
+    tokenAddress: tokenInfo?.tokenAddress as Address,
+    amount: debouncedAmount,
+    isBuy: tradeData.isBuy,
+    pairAddress: tokenInfo?.pairAddress as Address,
   });
   // debounce
   const debouncedSetAmount = useMemo(
@@ -213,17 +221,20 @@ const TokenSwap = ({ tokenInfo }: { tokenInfo: GetAgentInfoResponse }) => {
       },
     });
   const handleUniswapTrade = useCallback(async () => {
+    if (!uniswapQuoteData?.quote) return;
     await uniswapTradeAsync({
       isBuy: tradeData.isBuy,
       token: tokenInfo?.tokenAddress as Address,
       amountIn: parseUnits(tradeData.amount, 18),
-      amountOutMinimum: 0n,
+      amountOutMinimum:
+        (BigInt(uniswapQuoteData.quote) * (100n - defaultSlippage)) / 100n,
       sqrtPriceLimitX96: 0n,
     });
   }, [
     tokenInfo?.tokenAddress,
     tradeData.amount,
     tradeData.isBuy,
+    uniswapQuoteData?.quote,
     uniswapTradeAsync,
   ]);
   const handleTrade = useCallback(async () => {
@@ -297,25 +308,36 @@ const TokenSwap = ({ tokenInfo }: { tokenInfo: GetAgentInfoResponse }) => {
           })}
         </div>
       )}
-      {buyAmountOutUI && amountOut && (
+      {buyAmountOutUI && (
         <div className="text-dayT1">
-          <p className="font-semibold text-20 ">
-            {Number(formatUnits(amountOut[0], 18)).toFixed(6)}{" "}
-            {tokenInfo?.symbol}
-          </p>
-          {/* <p className="text-xs">$11.12</p> */}
+          {!tokenInfo?.pairAddress && amountOut && (
+            <p className="font-semibold text-20 ">
+              {Number(formatUnits(amountOut[0], 18)).toFixed(6)}&nbsp;
+              {tokenInfo?.symbol}
+            </p>
+          )}
+          {tokenInfo?.pairAddress && uniswapQuoteData?.quoteDecimals && (
+            <p className="font-semibold text-20 ">
+              {Number(uniswapQuoteData?.quoteDecimals).toFixed(6)}&nbsp;
+              {tokenInfo?.symbol}
+            </p>
+          )}
         </div>
       )}
-      {sellAmountOutUI && amountOut && (
+      {sellAmountOutUI && (
         <div className="text-dayT1">
-          <AdaptiveBalance
-            balance={formatUnits(amountOut[0], 18).toString()}
-            suffix=" Doge"
-          />
-          {/* <p className="font-semibold text-20 ">
-            {Number(formatUnits(amountOut[0], 18)).toFixed(6)} Doge
-          </p> */}
-          {/* <p className="text-xs">$1</p> */}
+          {!tokenInfo?.pairAddress && amountOut && (
+            <AdaptiveBalance
+              balance={formatUnits(amountOut[0], 18).toString()}
+              suffix=" Doge"
+            />
+          )}
+          {tokenInfo?.pairAddress && uniswapQuoteData?.quoteDecimals && (
+            <AdaptiveBalance
+              balance={uniswapQuoteData?.quoteDecimals}
+              suffix=" Doge"
+            />
+          )}
         </div>
       )}
       {/* <HoverCard>
