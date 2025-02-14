@@ -370,12 +370,18 @@ const ScrollableTable: React.FC<TableProps> = ({
         </TableHeader>
 
         {status ? (
-          <LoadingComp
-            className="fixed w-full left-0 h-[50%] hidden mdd:flex"
-            size={50}
-            loading
-            text="Loading..."
-          />
+          <TableBody>
+            <TableRow>
+              <TableCell>
+                <LoadingComp
+                  className="fixed w-full left-0 h-[50%] hidden mdd:flex"
+                  size={50}
+                  loading
+                  text="Loading..."
+                />
+              </TableCell>
+            </TableRow>
+          </TableBody>
         ) : (
           <TableBody className="-translate-y-3">
             {data?.pages[currentPage - 1]?.rows?.map(
