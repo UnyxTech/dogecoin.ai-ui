@@ -132,7 +132,6 @@ export function useUniswapTrade({
           amountOutMinimum: amountOutMinimum,
           sqrtPriceLimitX96: 0n,
         };
-        console.log("params", params);
         return await uniswapRouter.buy(params);
       } else {
         const tokenIn = token;
