@@ -16,7 +16,7 @@ interface QuoteResponse {
 }
 
 const QUOTE_URL =
-  "https://5tvaoqaqbh.execute-api.us-east-2.amazonaws.com/prod/quote";
+  "https://quote.rocketswap.ai/quote";
 
 export function useQuote({
   tokenAddress,
