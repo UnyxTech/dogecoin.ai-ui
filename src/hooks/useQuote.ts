@@ -1,4 +1,4 @@
-import { WETH_ADDRESS } from "@/constant";
+import { BLOCK_GENERATE_TIME, WETH_ADDRESS } from "@/constant";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { Address } from "viem";
@@ -23,7 +23,8 @@ export function useQuote({
   amount,
   isBuy,
   pairAddress,
-}: QuoteParams) {
+  refetchInterval = BLOCK_GENERATE_TIME,
+}: QuoteParams & { refetchInterval?: number }) {
   return useQuery({
     queryKey: ["quote", tokenAddress, amount.toString(), isBuy, pairAddress],
     queryFn: async (): Promise<QuoteResponse> => {
@@ -42,7 +43,7 @@ export function useQuote({
       return data;
     },
     enabled: Boolean(tokenAddress && !!pairAddress && amount && amount > 0n),
-    refetchInterval: 15000,
+    refetchInterval,
     retry: 1,
   });
 }

@@ -22,3 +22,5 @@ export const TOTAL_AMOUNT = 1000000000;
 export const defaultChain: Chain = {
   ...baseSepolia,
 };
+//
+export const BLOCK_GENERATE_TIME = 3 * 1000;

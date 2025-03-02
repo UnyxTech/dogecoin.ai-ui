@@ -2,7 +2,11 @@ import { Address, getContract, parseEventLogs } from "viem";
 import { dogeCoinAbi } from "@/constant/dogeCoinAbi";
 import useWalletService from "@/hooks/useWalletService";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { CONTRACT_AI_ADDRESS, defaultChain } from "@/constant";
+import {
+  BLOCK_GENERATE_TIME,
+  CONTRACT_AI_ADDRESS,
+  defaultChain,
+} from "@/constant";
 
 import { useAuth } from "./useAuth";
 import { useWalletClient } from "wagmi";
@@ -171,7 +175,7 @@ export function useGetAmountOutQuery({
   token,
   amountIn,
   isBuy,
-  refetchInterval = 15000,
+  refetchInterval = BLOCK_GENERATE_TIME,
   pairAddress,
 }: {
   token: Address;

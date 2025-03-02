@@ -121,8 +121,14 @@ const TokenSwap = ({ tokenInfo }: { tokenInfo: GetAgentInfoResponse }) => {
     return balance ? amountIn <= balance : false;
   }, [tradeData.isBuy, tradeData.amount, dogeBalance?.value, memeTokenBalance]);
   // Doge || Meme token
-  const buyAmountOutUI = tradeData.isBuy && +tradeData.amount > 0;
-  const sellAmountOutUI = !tradeData.isBuy && +tradeData.amount > 0;
+  const buyAmountOutUI = useMemo(
+    () => tradeData.isBuy && +tradeData.amount > 0,
+    [tradeData.amount, tradeData.isBuy]
+  );
+  const sellAmountOutUI = useMemo(
+    () => !tradeData.isBuy && +tradeData.amount > 0,
+    [tradeData.amount, tradeData.isBuy]
+  );
   // tradeAmount
   const handleAmountChange = (value: string) => {
     if (!/^\d*\.?\d*$/.test(value)) return;
