@@ -1,4 +1,5 @@
 import { getAgentInfo } from "@/api/api";
+import { BLOCK_GENERATE_TIME } from "@/constant";
 import { useQuery } from "@tanstack/react-query";
 
 export const useAgentInfo = (characterId: string) => {
@@ -7,6 +8,6 @@ export const useAgentInfo = (characterId: string) => {
     queryFn: () => getAgentInfo({ characterId }),
     retry: 2,
     enabled: Boolean(characterId),
-    refetchInterval: 3 * 1000,
+    refetchInterval: BLOCK_GENERATE_TIME,
   });
 };
