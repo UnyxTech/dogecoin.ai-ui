@@ -20,7 +20,7 @@ export function ProgressCard() {
       />
       {tokenInfo?.graduated ? (
         <p className="text-base text-dayT3">
-          {tokenInfo?.symbol} has graduated to Uniswap
+          {tokenInfo?.symbol} has graduated to RocketSwap
         </p>
       ) : (
         <p className="text-dayT3 font-Switzer">

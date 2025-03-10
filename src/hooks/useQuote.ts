@@ -15,8 +15,7 @@ interface QuoteResponse {
   quoteDecimals: string;
 }
 
-const QUOTE_URL =
-  "https://quote.rocketswap.ai/quote";
+const QUOTE_URL = "https://quote.rocketswap.ai/quote";
 
 export function useQuote({
   tokenAddress,
