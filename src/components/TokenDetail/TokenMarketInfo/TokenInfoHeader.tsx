@@ -4,6 +4,7 @@ import {
   formatAddressNew,
   getDetailedTimeDiff,
 } from "@/utils";
+import { capitalize } from "lodash";
 import { Copy, User } from "lucide-react";
 
 interface ExternalLink {
@@ -65,7 +66,9 @@ const TokenInfoHeader = ({
               />
             </div>
             <div className="flex items-center py-1 px-2 justify-center gap-1 mdd:gap-2.5 bg-dayBg3 rounded-sm">
-              <span className="text-xs font-medium ">Productivity</span>
+              <span className="text-xs font-medium ">
+                {capitalize(tokenInfo?.agentType ?? "--")}
+              </span>
               <User size={14} />
             </div>
             <div className="flex">
