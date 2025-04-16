@@ -19,8 +19,9 @@ import { LoadingComp } from "@/components/loading";
 import { PaginationView } from "../home/pagination";
 import { AgentItem } from "@/api/types";
 import { useNavigate } from "react-router-dom";
-import { useAccount, useDisconnect } from "wagmi";
+import { useAccount } from "wagmi";
 import AdaptiveBalance from "@/components/adaptiveBalance";
+import { useAuth } from "@/hooks/useAuth";
 
 export const UserDetail = () => {
   const [selectTab, setSelectTab] = useState<string>("held");
@@ -156,7 +157,7 @@ export const UserDetail = () => {
 };
 
 const UserInfo: React.FC = () => {
-  const { disconnect } = useDisconnect();
+  const { disconnectApp } = useAuth();
   const { address } = useAccount();
   const navigate = useNavigate();
 
@@ -165,7 +166,7 @@ const UserInfo: React.FC = () => {
       <div className="flex justify-end">
         <div
           onClick={() => {
-            disconnect();
+            disconnectApp();
             navigate(-1);
           }}
           className="flex items-center rounded-full border border-border py-2 px-3 gap-[10px] bg-white cursor-pointer text-second text-12 font-SwitzerMedium hover:text-first hover:border-second"

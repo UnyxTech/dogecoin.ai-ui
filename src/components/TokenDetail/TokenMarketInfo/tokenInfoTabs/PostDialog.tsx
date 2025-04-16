@@ -3,7 +3,7 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
+  // DialogTrigger,
 } from "@/components/ui/dialog";
 // import { CustomProgress } from "@/components/ui/custom/CustomProgress";
 import { Button } from "@/components/ui/button";
@@ -22,18 +22,33 @@ import { usePostAiImagePost } from "@/hooks/tokenDetial/usePostAgentPost";
 import { toast } from "@/hooks/use-toast";
 import { useQueryClient } from "@tanstack/react-query";
 import { usePosAiDescGenerate } from "@/hooks/tokenDetial/usePostAiDescGenarate";
-import { useAccount } from "wagmi";
+import { useAccount, useWalletClient } from "wagmi";
 import { useConnectWalletModalStore } from "@/store/connectWalletModal";
+import { useConnectModal } from "@tomo-inc/tomo-evm-kit";
+import { useAuth } from "@/hooks/useAuth";
+import { usePostDialogStore } from "@/store/PostDialog";
 const Limit = 20;
-export function PostDialog() {
+interface PostDialogProps {
+  isOpen: boolean;
+  parentId: number;
+  setIsOpen: (isOpen: boolean) => void;
+  onAddPostClick: () => void;
+}
+export function PostDialog({isOpen, setIsOpen, onAddPostClick, parentId}: PostDialogProps) {
+  const [id] = useState(Math.random() * 10000000);
   const queryClient = useQueryClient();
   const { open: openConnectWallet } = useConnectWalletModalStore();
+  const {openPageId} = usePostDialogStore();
   // init state
   const account = useAccount();
+  const evmAddress = account.address;
+  const { authed, appLoginStatus } = useAuth();
+  const { data: walletClient } = useWalletClient();
+  const { openConnectModal } = useConnectModal();
   const { characterId } = useParams();
   const { data: agentInfo } = useAgentInfo(characterId!);
   // Dialog state
-  const [isOpen, setIsOpen] = useState(false);
+  // const [isOpen, setIsOpen] = useState(false);
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
   // input state
   const [prompt, setPrompt] = useState<string>("");
@@ -58,6 +73,16 @@ export function PostDialog() {
     agent_type: agentInfo?.agentType ?? "",
     agent_desc: agentInfo?.description + prompt,
   });
+
+  console.log('need login:', evmAddress && !authed && walletClient && appLoginStatus === 'disconnected' && parentId === openPageId, 'id:', id, 'parentId:', parentId, 'openpageId:', openPageId);
+
+  // useEffect(() => {
+  //   if (evmAddress && !authed && walletClient && appLoginStatus === 'disconnected' && parentId === openPageId) {
+  //     console.log('login from PostDialog')
+  //     loginApp(evmAddress)
+  //   }
+  // }, [authed, evmAddress, walletClient, appLoginStatus, openPageId, parentId])
+
   const { mutateAsync: imagePost, isPending: imagePostPending } =
     usePostAiImagePost({
       characterId: characterId!,
@@ -110,7 +135,16 @@ export function PostDialog() {
   return (
     <div>
       <Dialog open={isOpen} onOpenChange={handleOpenChange}>
-        <DialogTrigger asChild>
+        <Button
+            onClick={() => {
+              setIsOpen(true)
+            }}
+            variant="yellow"
+            className="focus:outline-none active:outline-none rounded-sm py-2 px-4 border-[1.5px] border-b-4 border-[#12122A] bg-gradient-to-tr from-[#FCD436] to-[#FFE478]"
+          >
+            Add Post
+          </Button>
+        {/* <DialogTrigger asChild>
           <Button
             type="submit"
             variant="yellow"
@@ -118,7 +152,7 @@ export function PostDialog() {
           >
             Add Post
           </Button>
-        </DialogTrigger>
+        </DialogTrigger> */}
         <DialogContent className="max-w-[90%] rounded-lg sm:max-w-[432px] overflow-hidden">
           <DialogHeader>
             <DialogTitle className="text-dayT1 font-SwitzerMedium text-left">
@@ -194,7 +228,7 @@ export function PostDialog() {
             {/* <p className="mb-5 mt-4">Generating fee: 1 $DOGE</p> */}
             {!imageGenerateData?.image_url ? (
               <div>
-                {account.address ? (
+                {account.address && authed ? (
                   <Button
                     variant="yellow"
                     type="submit"
@@ -209,7 +243,12 @@ export function PostDialog() {
                   <Button
                     variant="yellow"
                     type="submit"
-                    onClick={() => openConnectWallet()}
+                    onClick={() => {
+                      setIsOpen(false)
+                      onAddPostClick()
+                      // openConnectWallet()
+                      openConnectModal && openConnectModal();
+                    }}
                     className="w-full rounded-sm py-4 focus:outline-none border-[1.5px] border-b-4 border-[#12122A] bg-gradient-to-tr from-[#FCD436] to-[#FFE478]"
                   >
                     Connect Wallet

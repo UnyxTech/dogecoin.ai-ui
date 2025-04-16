@@ -31,6 +31,7 @@ import { toast } from "@/hooks/use-toast";
 import { AgentTypeSelect } from "@/components/agentTypeSelect";
 import { useAccount } from "wagmi";
 import { ConnectWalletModal } from "@/components/connectWalletModal";
+import { useConnectModal } from "@tomo-inc/tomo-evm-kit";
 const getByteLength = (str: string) => {
   return new TextEncoder().encode(str).length;
 };
@@ -114,6 +115,10 @@ const formSchema = z.object({
 });
 const CreatePage = () => {
   const account = useAccount();
+  // const evmAddress = account.address;
+  const { openConnectModal } = useConnectModal();
+  // const { loginApp, authed, appLoginStatus } = useAuth();
+  // const { data: walletClient } = useWalletClient();
   const [image, setImage] = useState<string>("");
   const [agentId, setAgentId] = useState<string>("");
   const [showCreateAgentModal, setShowCreateAgentModal] =
@@ -133,6 +138,12 @@ const CreatePage = () => {
   useEffect(() => {
     form.reset();
   }, []);
+
+  // useEffect(() => {
+  //     if (evmAddress && !authed && walletClient && appLoginStatus === 'disconnected') {
+  //       loginApp(evmAddress);
+  //     }
+  //   }, [authed, evmAddress, walletClient, appLoginStatus])
 
   const uploadMutation = useMutation({
     mutationFn: uploadImg,
@@ -500,7 +511,10 @@ const CreatePage = () => {
                 <Button
                   type="button"
                   variant="yellow"
-                  onClick={() => setShowModal(true)}
+                  onClick={() => 
+                    //setShowModal(true)
+                    openConnectModal && openConnectModal()
+                  }
                   className="w-full gap-2"
                   size="lg"
                 >

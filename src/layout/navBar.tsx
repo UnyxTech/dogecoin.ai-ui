@@ -11,6 +11,7 @@ import { Input } from "@/components/ui/input";
 import { useNavigate } from "react-router-dom";
 import { Search, Users } from "lucide-react";
 import { debounce } from "lodash";
+import { useConnectModal } from '@tomo-inc/tomo-evm-kit';
 import { useMutation } from "@tanstack/react-query";
 import { searchAgentList } from "@/api/api";
 import { AgentItem } from "@/api/types";
@@ -31,20 +32,27 @@ import { AgentType } from "@/types";
 import { useErc20 } from "@/hooks/useErc20";
 import { Address } from "viem";
 import { Button } from "@/components/ui/button";
-import { useAccount } from "wagmi";
+import { useAccount, useWalletClient } from "wagmi";
 import { useAuth } from "@/hooks/useAuth";
 import { NavBarMobileSearchModal } from "@/components/modal/navBarMobileSearchModal";
 
 const Navbar = () => {
   const { address: evmAddress } = useAccount();
+  const { data: walletClient } = useWalletClient();
   const { getBalance } = useErc20();
-  const { updateEthBalance, ethBalance } = useAuth();
+  const { updateEthBalance, ethBalance, loginApp, authed, appLoginStatus } = useAuth();
   const navigate = useNavigate();
   const [showModal, setShowModal] = useState<boolean>(false);
   const [searchStr, setSearchStr] = useState<string>("");
   const [searchResult, setSearchResult] = useState<AgentItem[]>();
 
+  const { openConnectModal } = useConnectModal();
+
+  // console.log('evm address:', evmAddress, 'wallet client:', walletClient, 'app login status:', appLoginStatus, authed);
   const loadBalance = useCallback(async () => {
+    if (!evmAddress) {
+      return;
+    }
     const balance = await getBalance({ address: evmAddress! as Address });
     updateEthBalance(balance);
   }, [evmAddress, getBalance, updateEthBalance]);
@@ -52,6 +60,12 @@ const Navbar = () => {
   useEffect(() => {
     loadBalance();
   }, [evmAddress, loadBalance]);
+
+  useEffect(() => {
+    if (evmAddress && !authed && walletClient && appLoginStatus === 'disconnected') {
+      loginApp(evmAddress);
+    }
+  }, [authed, evmAddress, walletClient, appLoginStatus])
 
   const searchMutation = useMutation({
     mutationFn: searchAgentList,
@@ -127,7 +141,7 @@ const Navbar = () => {
             <div className="flex items-center  lg:hidden">
               <NavBarMobileSearchModal />
             </div>
-            {evmAddress && (
+            {evmAddress && authed && (
               <div className="flex gap-2 items-center text-first text-14 font-SwitzerMedium">
                 <img
                   src="/images/icon_doge.svg"
@@ -140,7 +154,7 @@ const Navbar = () => {
                 </div>
               </div>
             )}
-            {evmAddress ? (
+            {evmAddress && authed ? (
               <div
                 onClick={() => {
                   navigate("/userDetail");
@@ -160,14 +174,15 @@ const Navbar = () => {
               <div>
                 <Button
                   onClick={() => {
-                    setShowModal(!showModal);
+                    // setShowModal(!showModal);
+                    openConnectModal && openConnectModal()
                   }}
                   variant="white"
                   className="hidden sm:block"
                 >
                   Connect Wallet
                 </Button>
-                <div className="sm:hidden">
+                {/* <div className="sm:hidden">
                   <img
                     src="/images/wallet.svg"
                     alt=""
@@ -175,7 +190,7 @@ const Navbar = () => {
                       setShowModal(!showModal);
                     }}
                   />
-                </div>
+                </div> */}
               </div>
             )}
           </div>
