@@ -1,24 +1,8 @@
-import { login } from "@/api/api";
-import { LoginReq, LoginRes } from "@/api/types";
-import { defaultChain } from "@/constant";
 import { useUserStore } from "@/store/address";
-import { useLoginStore } from "@/store/login";
-import { useLoginStatusStore } from "@/store/LoginStatus";
-import { useMutation } from "@tanstack/react-query";
 import _ from "lodash";
-import { useEffect } from "react";
-import { Address } from "viem";
-import { useWalletClient, useDisconnect, useAccount, useSwitchChain } from "wagmi";
 
 export const useAuth = () => {
-  const { data: walletClient } = useWalletClient();
-  const { disconnect } = useDisconnect();
-  const { switchChain } = useSwitchChain();
-  const { loggining, setLoggining} = useLoginStatusStore();
-  const setToken = useLoginStore((state) => state.setToken);
   const evmAddress = useUserStore((state) => state.evmAddress);
-  const { address: wagmiEvmAddress } = useAccount();
-  const appLoginStatus = useUserStore((state) => state.appLoginStatus); // now it's only used for login process
   const authed = !!evmAddress;
   const installWallets = useUserStore((state) => state.installWallets);
   const currentEvmWallet = useUserStore((state) => state.currentEvmWallet);
@@ -36,9 +20,7 @@ export const useAuth = () => {
     (state) => state.setEvmProviderNameState
   );
   const setEthBalance = useUserStore((state) => state.setEthBalance);
-  const setAppLoginStatus = useUserStore((state) => state.setAppLoginStatus);
 
-  // console.log('app evm address:', evmAddress);
   const getInstalledWallet = () => {
     const windowObj: any = window;
     if (windowObj.ethereum) {
@@ -68,56 +50,6 @@ export const useAuth = () => {
     setEvmProviderNameState(name);
   };
 
-  const loginApp = async (evmAddress: `0x${string}` | undefined) => {
-    // console.log("login");
-    if (!walletClient) {
-      throw new Error("Wallet client not found");
-    }
-    // console.log('loggining:', loggining);
-    if (loggining) {
-      return;
-    }
-    setLoggining(true);
-    try {
-      if (evmAddress) {
-        const timestamp = Date.now();
-        const signature = await walletClient?.signMessage({
-          account: evmAddress,
-          message: `Dogecoin.AI\nPlease sign this message to log in.\nTimestamp: ${timestamp}`,
-        });
-        const params: LoginReq = {
-          walletAddress: evmAddress,
-          timestamp: timestamp,
-          signature: signature as Address,
-        };
-        loginMutation.mutate(params);
-        setEvmAddress(evmAddress);
-        setAppLoginStatus("authed");
-        setTimeout(() => {
-          setLoggining(false);
-        }, 1000);
-      }
-    } catch(e) {
-      setLoggining(false);
-    }
-  }
-
-  const loginMutation = useMutation({
-    mutationFn: login,
-    onSuccess(data: LoginRes) {
-      setToken(data.token);
-      switchChain({ chainId: defaultChain.id as any});
-    },
-  });
-
-  useEffect(() => {
-    if (!wagmiEvmAddress) {
-      // console.log('set disconnected');
-      setAppLoginStatus("disconnected");
-      return;
-    }
-  }, [wagmiEvmAddress])
-
   return {
     authed,
     evmAddress,
@@ -125,13 +57,6 @@ export const useAuth = () => {
     installWallets,
     currentEvmWallet,
     evmProviderNameState,
-    appLoginStatus,
-    loginApp,
-    disconnectApp: () => {
-      disconnect();
-      setEvmAddress("");
-      setAppLoginStatus("disconnecting");
-    },
     disconnectWalletEvm() {
       return new Promise(() => {
         if (!currentEvmWallet) return;
@@ -178,8 +103,5 @@ export const useAuth = () => {
     updateEthBalance(balance: string) {
       setEthBalance(balance);
     },
-    updateAppLoginStatus(status: "authed" | "disconnecting" | "disconnected") {
-      setAppLoginStatus(status);
-    }
   };
 };
