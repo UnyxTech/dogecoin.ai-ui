@@ -2,12 +2,14 @@ import "./App.css";
 import "./index.css";
 import { Route, Routes } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { TomoEVMKitProvider } from '@tomo-inc/tomo-evm-kit';
 import { type Route as RouteConfig, routes } from "./router/routes";
 import { MainContentLayout } from "./layout/mainContentLayout";
 import { Toaster } from "./components/ui/toaster";
 import { WagmiProvider } from "wagmi";
-import { config } from "./config/wagmiConfig";
+import { tomoConfig } from "./config/wagmiConfig";
 import { WrapperConnectWallet } from "./components/WrapperConnectWallet";
+import '@tomo-inc/tomo-evm-kit/styles.css';
 
 function App() {
   const renderRoutes = (routes: RouteConfig[]) => {
@@ -39,13 +41,15 @@ function App() {
           <span className="hidden 2xl:block">2XL</span>
         </div>
       )}
-      <WagmiProvider config={config}>
+      <WagmiProvider config={tomoConfig as any}>
         <QueryClientProvider client={new QueryClient()}>
-          <MainContentLayout>
-            <Toaster />
-            <WrapperConnectWallet />
-            <Routes>{renderRoutes(routes)}</Routes>
-          </MainContentLayout>
+          <TomoEVMKitProvider>
+            <MainContentLayout>
+              <Toaster />
+              <WrapperConnectWallet />
+              <Routes>{renderRoutes(routes)}</Routes>
+            </MainContentLayout>
+          </TomoEVMKitProvider>
         </QueryClientProvider>
       </WagmiProvider>
     </>

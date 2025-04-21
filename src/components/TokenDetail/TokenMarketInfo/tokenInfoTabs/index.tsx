@@ -1,5 +1,5 @@
 import { Separator } from "@/components/ui/separator";
-import { Dispatch, SetStateAction } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import PostContent from "./PostContent";
 import InformationContent from "./InformationContent";
 import HolderContent from "./HolderContent";
@@ -9,6 +9,8 @@ import { useParams } from "react-router-dom";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useAgentInfo } from "@/hooks/tokenDetial/useAgentInfo";
 import { TabType } from "..";
+import { useConnectModal } from "@tomo-inc/tomo-evm-kit";
+import { usePostDialogStore } from "@/store/PostDialog";
 const TAB_TYPES = {
   POST: "Post",
   INFORMATION: "Information",
@@ -20,7 +22,11 @@ interface Props {
   activeTab: TabType;
 }
 const TokenInfoTabs = ({ setActiveTab, activeTab }: Props) => {
+  const [id] = useState(Math.floor(Math.random() * 10000000));
   const { characterId } = useParams();
+  const [isOpen, setIsOpen] = useState(false);
+  const { connectModalOpen } = useConnectModal();
+  const { needReopen, setNeedReopen, openPageId, setOpenPageId } = usePostDialogStore();
   const { data: agentsPosts, isLoading } = useAgentsPosts({
     // cursor: "",
     pageSize: 20,
@@ -28,6 +34,26 @@ const TokenInfoTabs = ({ setActiveTab, activeTab }: Props) => {
   });
   const { data: agentInfoData } = useAgentInfo(characterId!);
 
+  // reopen logic start
+  useEffect(() => {
+    if (connectModalOpen) {
+      setNeedReopen(true);
+    }
+  }, [connectModalOpen])
+
+  // console.log("connectModalOpen:", connectModalOpen, "needReopen:", needReopen, "pageId", id);
+  // console.log("openPageId:", openPageId);
+  useEffect(() => {
+    if (needReopen && !connectModalOpen && openPageId === id) {
+      setIsOpen(true);
+      setNeedReopen(false);
+    }
+  }, [needReopen, connectModalOpen]);
+  // reopen login end
+
+  const onAddPostClick = () => {
+    setOpenPageId(id);
+  }
   const getContent = (tab: TabType) => {
     switch (tab) {
       case TAB_TYPES.POST:
@@ -77,7 +103,13 @@ const TokenInfoTabs = ({ setActiveTab, activeTab }: Props) => {
             </div>
           ))}
         </div>
-        {activeTab === TAB_TYPES.POST && <PostDialog />}
+        {activeTab === TAB_TYPES.POST && 
+        <PostDialog 
+          isOpen={isOpen} 
+          setIsOpen={setIsOpen} 
+          onAddPostClick={onAddPostClick} 
+          parentId={id}
+        />}
       </div>
       <Separator className="mb-6" />
       <div className="min-h-[600px] w-full pb-8">{getContent(activeTab)}</div>

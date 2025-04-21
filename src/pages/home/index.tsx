@@ -24,6 +24,7 @@ import AdaptiveBalance from "@/components/adaptiveBalance";
 import { AgentTypeSelect } from "@/components/agentTypeSelect";
 import { AgentType } from "@/types";
 import { AgentItem } from "@/api/types";
+import { useConnectModal } from "@tomo-inc/tomo-evm-kit";
 
 interface SortType {
   sortBy: string;
@@ -32,6 +33,7 @@ interface SortType {
 
 const HomePage = () => {
   const { evmAddress } = useAuth();
+  const { openConnectModal } = useConnectModal();
   const navigate = useNavigate();
   const [showConnectWallet, setShowConnectWallet] = useState<boolean>(false);
   const [currentPage, setCurrentPage] = useState<number>(1);
@@ -84,7 +86,8 @@ const HomePage = () => {
         variant="yellow"
         onClick={() => {
           if (!evmAddress) {
-            setShowConnectWallet(true);
+            // setShowConnectWallet(true);
+            openConnectModal && openConnectModal();
           } else {
             navigate("/create");
           }
@@ -155,7 +158,8 @@ const HomePage = () => {
           variant="yellow"
           onClick={() => {
             if (!evmAddress) {
-              setShowConnectWallet(true);
+              // setShowConnectWallet(true);
+              openConnectModal && openConnectModal();
             } else {
               navigate("/create");
             }
@@ -314,7 +318,7 @@ const ScrollableTable: React.FC<TableProps> = ({
   return (
     <div className="mt-5 w-full h-[calc(100vh-260px)] overflow-y-scroll scrollbar-hide hidden mdd:block">
       <Table className="border-separate border-spacing-y-3 relative ">
-        <TableHeader className="sticky top-3 -translate-y-3 z-[50] bg-[#f5f5fa]  border-0">
+        <TableHeader className="sticky top-3 -translate-y-3 bg-[#f5f5fa]  border-0">
           <TableRow className="[&>th]:border-b [&>th]:border-border">
             <TableHead className="w-[33%]">AI agents</TableHead>
             <TableHead

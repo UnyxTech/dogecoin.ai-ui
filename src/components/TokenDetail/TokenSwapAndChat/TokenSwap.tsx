@@ -19,10 +19,11 @@ import { debounce } from "lodash";
 import { GetAgentInfoResponse } from "@/api/types";
 import AdaptiveBalance from "@/components/adaptiveBalance";
 import { toast } from "@/hooks/use-toast";
-import { useConnectWalletModalStore } from "@/store/connectWalletModal";
 import { useBondingCurveCalcInfo } from "@/hooks/tokenDetial/useBondingCurveCalc";
 import { useUniswapTrade } from "@/hooks/useUniswapSingleSwap";
 import { useQuote } from "@/hooks/useQuote";
+import { useConnectModal } from "@tomo-inc/tomo-evm-kit";
+import { useAuth } from "@/hooks/useAuth";
 
 const TokenLogoSwitch = ({
   isBuy,
@@ -57,8 +58,13 @@ const defaultSlippage = 10n;
 const TokenSwap = ({ tokenInfo }: { tokenInfo: GetAgentInfoResponse }) => {
   //
   const account = useAccount();
+  const {authed} = useAuth();
+  // const evmAddress = account.address;
+  const { openConnectModal } = useConnectModal();
+  // const { loginApp, authed, appLoginStatus } = useAuth();
+  // const { data: walletClient } = useWalletClient();
   // state
-  const { open: openConnectWallet } = useConnectWalletModalStore();
+  // const { open: openConnectWallet } = useConnectWalletModalStore();
   const [debouncedAmount, setDebouncedAmount] = useState<bigint>(0n);
   const [tradeData, setTradeData] = useState({
     isBuy: true,
@@ -69,6 +75,12 @@ const TokenSwap = ({ tokenInfo }: { tokenInfo: GetAgentInfoResponse }) => {
     refetch: refetchMaxBuyToken,
     error: fetchMaxBuyTokenError,
   } = useBondingCurveCalcInfo(tokenInfo.tokenAddress);
+
+  // useEffect(() => {
+  //   if (evmAddress && !authed && walletClient && appLoginStatus === 'disconnected') {
+  //     loginApp(evmAddress);
+  //   }
+  // }, [authed, evmAddress, walletClient, appLoginStatus])
 
   // amountOut
   // const { getBuyAmountOut, getSellAmountOut } = useAIContract();
@@ -363,7 +375,7 @@ const TokenSwap = ({ tokenInfo }: { tokenInfo: GetAgentInfoResponse }) => {
         </WrapperHoverCardConnect>
       </HoverCard> */}
       {/*Trade button  */}
-      {account.address ? (
+      {account.address && authed? (
         <Button
           key="trade"
           onClick={async () => await handleTrade()}
@@ -399,7 +411,10 @@ const TokenSwap = ({ tokenInfo }: { tokenInfo: GetAgentInfoResponse }) => {
         </Button>
       ) : (
         <Button
-          onClick={() => openConnectWallet()}
+          onClick={() => {
+            // openConnectWallet()
+            openConnectModal && openConnectModal()
+          }}
           key="connectWallet"
           className={`w-full rounded-sm py-5 bg-[linear-gradient(to_bottom,#626286_-9.05%,#34344B_51.88%)]`}
         >
