@@ -7,7 +7,7 @@ declare global {
       ethereum: any;
     };
     solana: any;
-    ethereum?: any;
+    ethereum: any;
   }
 }
 
@@ -23,5 +23,4 @@ export interface WalletItem {
   injected: any[];
   img: string;
   wId: string;
-  connector?: any;
 }
