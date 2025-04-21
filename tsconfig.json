@@ -9,6 +9,7 @@
     "paths": {
       "@/*": ["./src/*"]
     },
-    "typeRoots": ["./node_modules/@types", "./declarations"]
+    "typeRoots": ["./node_modules/@types", "./declarations"],
+    "strict": true
   }
 }

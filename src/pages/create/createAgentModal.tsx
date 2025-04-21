@@ -2,7 +2,6 @@ import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
@@ -15,28 +14,108 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { toast } from "@/hooks/use-toast";
+import { CreateAgentParams, useAIContract } from "@/hooks/useAIContract";
 import { cn } from "@/lib/utils";
+import { AgentInfo } from "@/types";
 import { CircleAlert } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import BigNumber from "bignumber.js";
+import { formatUnits, parseUnits } from "viem";
+import { BASE_TOKEN, TOTAL_AMOUNT } from "@/constant";
+import { debounce } from "lodash";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "@/hooks/useAuth";
+import _ from "lodash";
 
 interface CreateAgentModalProps {
   open: boolean;
   onClose: () => void;
-  ticker: string;
+  agentInfo: AgentInfo;
 }
 
 export const CreateAgentModal = ({
   open,
   onClose,
-  ticker,
+  agentInfo,
 }: CreateAgentModalProps) => {
-  const [amount, setAmount] = useState<string>("");
+  const navigate = useNavigate();
+  const { ethBalance } = useAuth();
+  const { createAgent, getBuyAmountOut, getCreateFee } = useAIContract();
+  const [createFee, setCreateFee] = useState<string>("0");
+  const [amount, setAmount] = useState<string>("0");
+  const [error, setError] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(false);
+  const [receiveAmount, setReceiveAmount] = useState<string>("0");
+
+  useEffect(() => {
+    getCreateFee().then((res) => {
+      const fee = new BigNumber(formatUnits(res, BASE_TOKEN.decimals));
+      setCreateFee(fee.toString() ?? "0");
+    });
+  }, []);
+  const handleCreate = async () => {
+    try {
+      setLoading(true);
+      const buyAmount = parseUnits(
+        new BigNumber(amount).plus(new BigNumber(createFee)).toString(),
+        BASE_TOKEN.decimals
+      );
+      const obj: CreateAgentParams = {
+        agentId: agentInfo.agentId ?? "",
+        symbol: agentInfo.symbol,
+        name: agentInfo.name,
+        buyAmount,
+      };
+      const txInfo = await createAgent(obj);
+      console.log(txInfo.hash);
+      navigate(`/token/${agentInfo.agentId}`);
+      toast({
+        title: "Agent successfully created !",
+        variant: "default",
+      });
+      onClose();
+    } catch (e: any) {
+      console.log(e);
+      toast({
+        title: "Creation failed!",
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleChangeAmount = debounce(async (e: any) => {
+    const val = e.target.value;
+    setAmount(val);
+    setError("");
+    if (new BigNumber(val ?? "0").lte(0)) {
+      setReceiveAmount("0");
+      return;
+    }
+    if (new BigNumber(val).plus(new BigNumber(createFee)).gt(ethBalance ?? 0)) {
+      setError("Insufficient Balance");
+      return;
+    }
+    const buyAmount = parseUnits(val, BASE_TOKEN.decimals);
+    const receive: any = await getBuyAmountOut({
+      token: BASE_TOKEN.address,
+      amountIn: buyAmount,
+    });
+    setReceiveAmount(
+      new BigNumber(formatUnits(receive[0], BASE_TOKEN.decimals)).toFixed(2)
+    );
+  }, 300);
+
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="w-[690px] p-5 rounded-md shadow-lg gap-6">
+      <DialogContent className="p-5 rounded-md shadow-lg gap-6  mdd:max-w-[690px] max-w-[90%]">
+        <DialogHeader hidden>
+          <DialogTitle></DialogTitle>
+        </DialogHeader>
         <div className="flex flex-col gap-2 border-b-[1px] border-border pb-2">
           <div className="text-24 font-SwitzerMedium">
-            Choose the amount of ${ticker} you want to buy
+            Choose the amount of ${agentInfo.symbol} you want to buy
           </div>
           <div className="text-second text-14">
             It's optional, but buying a small amount of coins can help protect
@@ -47,12 +126,24 @@ export const CreateAgentModal = ({
           <Label className="text-16">Doge</Label>
           <Input
             type="number"
-            className="bg-gray border-border border-[0.5px]"
+            className={cn(
+              "bg-gray border-[0.5px]",
+              error ? "!border-red" : "border-border"
+            )}
             placeholder="0"
-            onChange={(e) => setAmount(e.target.value)}
+            onChange={handleChangeAmount}
           />
+          {error && <div className="text-red text-14">{error}</div>}
           <div className="text-second text-14">
-            You will receive 393 ${ticker}( 0% )
+            You will receive{" "}
+            <span className="text-first">
+              {receiveAmount} ${agentInfo.symbol} (
+              {new BigNumber(receiveAmount)
+                .div(new BigNumber(TOTAL_AMOUNT))
+                .multipliedBy(100)
+                .toFixed(2)}
+              %)
+            </span>
           </div>
           <div className="text-second text-14 flex items-center gap-2">
             Trading fee
@@ -65,38 +156,45 @@ export const CreateAgentModal = ({
                   />
                 </TooltipTrigger>
                 <TooltipContent side="right" className="w-[180px]">
-                  <p>Creation requires a fee of 3 $DOGE.</p>
+                  <p>Creation requires a fee of {createFee} $DOGE.</p>
                 </TooltipContent>
               </Tooltip>
             </TooltipProvider>
           </div>
           <div className="bg-gray p-[14px] rounded-[2px] border-[0.5px] border-border flex flex-col gap-2">
-            <FeeItem title="Agent creation fee" value="100" />
-            <FeeItem title="Your initial buy" value="0" />
-            <div className="flex justify-end">
+            <FeeItem
+              title="Agent creation fee"
+              value={createFee.toString()}
+              classname="text-second"
+            />
+            <FeeItem
+              title="Your initial buy"
+              value={amount}
+              classname="text-second"
+            />
+            {/* <div className="flex justify-end">
               <div className="flex items-center gap-3 rounded-full bg-white px-3 py-[6px] text-second text-14">
                 <span>0 ( 100% )</span>
                 <img className="w-[20px]" src="/images/icon_doge2.svg" alt="" />
               </div>
-            </div>
+            </div> */}
             <FeeItem
               classname="text-first font-SwitzerMedium"
               title="Total"
-              value="100"
+              value={new BigNumber(_.isEmpty(amount) ? "0" : amount)
+                .plus(new BigNumber(createFee))
+                .toString()}
             />
           </div>
         </div>
         <Button
-          className="mx-[51px]"
+          className="mdd:mx-[51px] w-full"
+          loading={loading}
+          disabled={!_.isEmpty(error)}
           onClick={() => {
-            toast({
-              title: "Agent successfully created !",
-              variant: "default",
-            });
-            onClose();
+            handleCreate();
           }}
           variant="yellow"
-          disabled={!amount}
         >
           🚀 Create agent
         </Button>
@@ -113,15 +211,10 @@ interface IFeeItem {
 
 const FeeItem: React.FC<IFeeItem> = ({ title, value, classname }) => {
   return (
-    <div
-      className={cn(
-        "text-second text-14 flex items-center justify-between py-3 pr-3",
-        classname
-      )}
-    >
-      <span>{title}</span>
+    <div className="flex items-center justify-between py-3 pr-3">
+      <span className={cn("text-second text-14", classname)}>{title}</span>
       <div className="flex items-center gap-3">
-        <span>{value}</span>
+        <span className={cn("text-second text-14", classname)}>{value}</span>
         <img className="w-[20px]" src="/images/icon_doge2.svg" alt="" />
       </div>
     </div>

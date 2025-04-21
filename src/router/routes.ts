@@ -1,3 +1,4 @@
+import { UserDetail } from "@/pages/userDetail";
 import { lazy, type ComponentType } from "react";
 
 export interface Route {
@@ -9,6 +10,9 @@ export interface Route {
 
 const HomePage = lazy(() => import("@/pages/home"));
 const CreatePage = lazy(() => import("@/pages/create"));
+const TokenDetailPage = lazy(
+  () => import("@/pages/tokenDetail/TokenDetailPage")
+);
 
 export const routes: Route[] = [
   {
@@ -21,8 +25,18 @@ export const routes: Route[] = [
     exact: true,
   },
   {
+    path: "/token/:characterId",
+    Component: TokenDetailPage,
+    exact: true,
+  },
+  {
     path: "/create",
     Component: CreatePage,
+    exact: true,
+  },
+  {
+    path: "/userDetail",
+    Component: UserDetail,
     exact: true,
   },
 ];

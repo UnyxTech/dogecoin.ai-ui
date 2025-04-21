@@ -3,6 +3,7 @@ import { persist, createJSONStorage, devtools } from "zustand/middleware";
 
 interface InfoState {
   evmAddress?: string;
+  appLoginStatus: 'authed'|'disconnecting'|'disconnected';
   installWallets: any; // or another appropriate type
   currentEvmWallet?: string;
   evmProviderNameState: string | undefined;
@@ -19,6 +20,7 @@ interface UserAction {
     evmProviderNameState: InfoState["evmProviderNameState"]
   ) => void;
   setEthBalance: (ethBalance: InfoState["ethBalance"]) => void;
+  setAppLoginStatus: (appLoginStatus: InfoState["appLoginStatus"]) => void;
 }
 
 export const useUserStore = create<InfoState & UserAction>()(
@@ -29,6 +31,7 @@ export const useUserStore = create<InfoState & UserAction>()(
         installWallets: undefined,
         currentEvmWallet: undefined,
         evmProviderNameState: undefined,
+        appLoginStatus: 'disconnected',
         evmBalance: undefined,
         setEvmAddress: (evmAddress: InfoState["evmAddress"]) =>
           set({ evmAddress }),
@@ -42,6 +45,8 @@ export const useUserStore = create<InfoState & UserAction>()(
         ) => set({ evmProviderNameState }),
         setEthBalance: (ethBalance: InfoState["ethBalance"]) =>
           set({ ethBalance }),
+        setAppLoginStatus: (appLoginStatus: InfoState["appLoginStatus"]) =>
+          set({ appLoginStatus }),
       }),
       {
         name: "dogecoin",

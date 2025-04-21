@@ -2,7 +2,7 @@ import { WalletItem } from "@/types/wallet";
 
 export const evmWalletList: WalletItem[] = [
   {
-    id: "tomoWallet",
+    id: "inc.tomo",
     name: "Tomo Wallet",
     homepage: "https://tomo.inc/",
     order: 15,
@@ -22,15 +22,10 @@ export const evmWalletList: WalletItem[] = [
     wId: "tomoWallet",
   },
   {
-    id: "metaMask",
+    id: "io.metamask",
     name: "MetaMask",
     homepage: "https://metamask.io/",
-    image_id: "5195e9db-94d8-4579-6f11-ef553be95100",
     order: 10,
-    mobile_link: "metamask://",
-    desktop_link: null,
-    link_mode: "https://metamask.app.link",
-    webapp_link: null,
     app_store: "https://apps.apple.com/us/app/metamask/id1438144202",
     play_store: "https://play.google.com/store/apps/details?id=io.metamask",
     rdns: "io.metamask",
@@ -46,15 +41,10 @@ export const evmWalletList: WalletItem[] = [
     wId: "c57ca95b47569778a828d19178114f4db188b89b763c899ba0be274e97267d96",
   },
   {
-    id: "okxWallet",
+    id: "com.okex.wallet",
     name: "OKX Wallet",
     homepage: "https://www.okx.com/web3",
-    image_id: "45f2f08e-fc0c-4d62-3e63-404e72170500",
     order: 140,
-    mobile_link: "okex://main",
-    desktop_link: null,
-    link_mode: null,
-    webapp_link: "https://www.okx.com/download",
     app_store:
       "https://apps.apple.com/us/app/okx-buy-bitcoin-eth-crypto/id1327268470",
     play_store:
